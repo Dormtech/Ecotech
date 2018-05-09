@@ -1,0 +1,277 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <title>Ecozone - Manual Mode</title>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <link rel="shortcut icon" href="{{ url_for('static', filename='favicon.ico') }}">
+    <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/css/bootstrap.min.css">
+    <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.2.1/jquery.min.js"></script>
+    <script src="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/js/bootstrap.min.js"></script>
+    <style>
+      /*Make navbar blue*/
+      .navbar-inverse {
+        background-color: #008000;
+        border-color: #008000;
+      }
+      .navbar-inverse .navbar-brand {
+        color: #fff;
+      }
+      .navbar-inverse .navbar-brand:hover,
+      .navbar-inverse .navbar-brand:focus {
+        color: #fff;
+        background-color: transparent;
+      }
+      .navbar-inverse .navbar-text {
+        color: #fff;
+      }
+      .navbar-inverse .navbar-nav > li > a {
+        color: #fff;
+      }
+      .navbar-inverse .navbar-nav > li > a:hover,
+      .navbar-inverse .navbar-nav > li > a:focus {
+        color: #90EE90;
+        background-color: transparent;
+      }
+      .navbar-inverse .navbar-nav > .active > a,
+      .navbar-inverse .navbar-nav > .active > a:hover,
+      .navbar-inverse .navbar-nav > .active > a:focus {
+        color: #fff;
+        background-color: #006400;
+      }
+      .navbar-inverse .navbar-nav > .disabled > a,
+      .navbar-inverse .navbar-nav > .disabled > a:hover,
+      .navbar-inverse .navbar-nav > .disabled > a:focus {
+        color: #fff;
+        background-color: transparent;
+      }
+      .navbar-inverse .navbar-toggle {
+        border-color: #fff;
+      }
+      .navbar-inverse .navbar-toggle:hover,
+      .navbar-inverse .navbar-toggle:focus {
+        background-color: #90EE90;
+      }
+      .navbar-inverse .navbar-toggle .icon-bar {
+        background-color: #fff;
+      }
+      .navbar-inverse .navbar-collapse,
+      .navbar-inverse .navbar-form {
+        border-color: #90EE90;
+      }
+      .navbar-inverse .navbar-nav > .open > a,
+      .navbar-inverse .navbar-nav > .open > a:hover,
+      .navbar-inverse .navbar-nav > .open > a:focus {
+        background-color: #008000;
+        color: #fff;
+      }
+
+      /* Make the alert boarder to 0px */
+      .alert-info{
+        margin-bottom: 0;
+        margin-top: 0;
+        border-radius: 0;
+      }
+
+      /* Remove the navbar's default margin-bottom and rounded borders */
+      .navbar {
+        margin-bottom: 0;
+        margin-top: 0;
+        border-radius: 0;
+      }
+
+      /* Add a gray background color and some padding to the footer */
+      footer {
+        background-color: #f2f2f2;
+        padding: 25px;
+      }
+    </style>
+  </head>
+  <body>
+    <nav class="navbar navbar-inverse navbar-fixed-top">
+      <div class="container-fluid">
+        <div class="navbar-header">
+          <button type="button" class="navbar-toggle" data-toggle="collapse" data-target="#myNavbar">
+            <span class="icon-bar"></span>
+            <span class="icon-bar"></span>
+            <span class="icon-bar"></span>
+          </button>
+          <a class="navbar-brand" href="/">Ecozone</a>
+        </div>
+        <div class="collapse navbar-collapse" id="myNavbar">
+          <ul class="nav navbar-nav navbar-right">
+            <li role="presentation" ><a href="/">Auto Mode</a></li>
+          </ul>
+        </div>
+      </div>
+    </nav>
+
+    <!-- Header Banner -->
+    <div class="container-fluid" style="padding-top:65px">
+      <dev class="text-right">
+        <h4><a class="text-muted" href="/LogOut">{{user}}</a></h4>
+      </dev>
+      <div class="jumbotron">
+        <div class="container text-center">
+          <h1>Manual Mode</h1>
+          <a class="btn btn-lg btn-danger" href="/PowerOff/M" role="button">Power Off</a>
+          <a class="btn btn-lg btn-success" href="/PowerOn/M" role="button">Power On</a>
+        </div>
+      </div>
+    </div>
+
+    <!-- Main Body -->
+    <div class="container-fluid">
+      <!-- Sensor Data -->
+      <div class="col-sm-6">
+        <div class="text-center">
+          <h1>Sensors Stats</h1>
+        </div>
+
+        <div class="col-sm-6">
+          <div class="text-center">
+            <h3>Tempature</h3>
+            <button type="button" class="btn" data-toggle="modal" data-target="#tempInfo" style="background:#008000;color:#fff;">View Sensors</button>
+            <!-- Modal -->
+            <div class="modal fade" id="tempInfo" role="dialog">
+              <div class="modal-dialog">
+                <!-- Modal content-->
+                <div class="modal-content">
+                  <div class="modal-header">
+                    <button type="button" class="close" data-dismiss="modal">&times;</button>
+                    <h3 class="modal-title">Tempature Information</h3>
+                  </div>
+                  <div class="modal-body">
+                    <p>Sensor Data</p>
+                  </div>
+                  <div class="modal-footer">
+                    <button type="button" class="btn btn-default" data-dismiss="modal">Close</button>
+                  </div>
+                </div>
+              </div>
+            </div>
+
+            <br><br>
+            <h3>Distance</h3>
+            <button type="button" class="btn" data-toggle="modal" data-target="#distInfo" style="background:#008000;color:#fff;">View Sensors</button>
+            <!-- Modal -->
+            <div class="modal fade" id="distInfo" role="dialog">
+              <div class="modal-dialog">
+                <!-- Modal content-->
+                <div class="modal-content">
+                  <div class="modal-header">
+                    <button type="button" class="close" data-dismiss="modal">&times;</button>
+                    <h3 class="modal-title">Distance Information</h3>
+                  </div>
+                  <div class="modal-body">
+                    <p>Sensor Data</p>
+                  </div>
+                  <div class="modal-footer">
+                    <button type="button" class="btn btn-default" data-dismiss="modal">Close</button>
+                  </div>
+                </div>
+              </div>
+            </div>
+
+          </div>
+        </div>
+
+        <div class="col-sm-6">
+          <div class="text-center">
+            <h3>Humidity</h3>
+            <button type="button" class="btn" data-toggle="modal" data-target="#humidInfo" style="background:#008000;color:#fff;">View Sensors</button>
+            <!-- Modal -->
+            <div class="modal fade" id="humidInfo" role="dialog">
+              <div class="modal-dialog">
+                <!-- Modal content-->
+                <div class="modal-content">
+                  <div class="modal-header">
+                    <button type="button" class="close" data-dismiss="modal">&times;</button>
+                    <h3 class="modal-title">Humidity Information</h3>
+                  </div>
+                  <div class="modal-body">
+                    <p>Sensor Data</p>
+                  </div>
+                  <div class="modal-footer">
+                    <button type="button" class="btn btn-default" data-dismiss="modal">Close</button>
+                  </div>
+                </div>
+              </div>
+            </div>
+
+          </div>
+        </div>
+
+      </div>
+
+      <!-- Device Stats -->
+      <div class="col-sm-6">
+        <div class="text-left">
+          <h1>Device Settings</h1>
+          <div class="text-right">
+            <button id="btnUpdate" class="btn btn-sm" data-toggle="modal" data-target="#updateSP" style="background:#008000;color:#fff;">Update</button>
+          </div>
+          <!-- Modal -->
+          <div class="modal fade" id="updateSP" role="dialog">
+            <div class="modal-dialog">
+              <!-- Modal content-->
+              <div class="modal-content">
+                <div class="modal-header">
+                  <button type="button" class="close" data-dismiss="modal">&times;</button>
+                  <div class="text-center">
+                    <h3 class="modal-title">Manual Setpoints</h3>
+                  </div>
+                </div>
+                <div class="modal-body">
+                  <p>Sensor Data</p>
+                </div>
+                <div class="modal-footer">
+                  <button type="button" class="btn btn-default" data-dismiss="modal">Close</button>
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+
+        <div class="col-sm-6">
+          <div class="text-left">
+            <h3>Power</h3>
+            <p>{{power}}</p>
+            <h3>Plant Type</h3>
+            <p>{{plant}}</p>
+            <h3>Tempature</h3>
+            <p>{{temp}}</p>
+            <h3>Humidity</h3>
+            <p>{{humid}}</p>
+            <h3>PH</h3>
+            <p>{{ph}}</p>
+            <h3>Current Index</h3>
+            <p>{{index}}</p>
+          </div>
+        </div>
+        <div class="col-sm-6">
+          <div class="text-left">
+            <h3>Date</h3>
+            <p>{{date}}</p>
+            <h3>Light</h3>
+            <p>{{light}}</p>
+            <h3>Temp Setpoint</h3>
+            <p>{{tempsetpoint}}</p>
+            <h3>Humidity Setpoint</h3>
+            <p>{{humidsetpoint}}</p>
+            <h3>PH Setpoint</h3>
+            <p>{{phsetpoint}}</p>
+            <h3>Cycle Length</h3>
+            <p>{{cycle}}</p>
+          </div>
+        </div>
+      </div>
+
+    </div>
+
+    <footer class="footer">
+      <p>&copy; Ecozone 2018</p>
+    </footer>
+
+  </body>
+</html>
