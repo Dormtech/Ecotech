@@ -69,8 +69,6 @@ def InitalizeIn(Pin):
 
 #Power control for light
 def Light(Pin, Light):
-    Pin = 13 #Hard coded overwrite
-    Light = 100 #Hard coded overwrite
     InitalizeOut(Pin)
 
     #Handling of day Ligh
@@ -85,8 +83,6 @@ def Light(Pin, Light):
 
 #Power control for pump
 def Pump(P_Pin, WS_Pin):
-    WS_Pin = 5 #Hard coded overwrite
-    P_Pin = 6 #Hard coded overwrite
     InitalizeOut(P_Pin)
     InitalizeIn(WS_Pin)
 
@@ -97,3 +93,11 @@ def Pump(P_Pin, WS_Pin):
     else:
         GPIO.output(P_Pin, GPIO.LOW)
         return True
+
+if __name__ == "__main__":
+    WS1_Pin = 5 #Water sensor
+    P1_Pin = 6 #Pump
+    L1_Pin = 13 #Light
+    Light = 100 #Amount of daylight
+    Light(L1_Pin,Light)
+    Pump(P1_Pin, WS1_Pin)
