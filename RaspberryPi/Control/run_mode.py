@@ -52,14 +52,26 @@ def PID(SP,PV,Kp,Ki,Kd,I,E):
         Output = 100
     return Output,E
 
-#Power control for overhead light
-def TopLight(Pin, Light):
-    Pin = 13 #Hard coded overwrite
-    Light = 100 #Hard coded overwrite
+#Setup for raspberrypi gpio output
+def InitalizeOut(Pin):
     GPIO.setmode(GPIO.BCM)
     GPIO.setup(Pin, GPIO.OUT)
     GPIO.output(Pin, GPIO.HIGH) #Initalize as off
     time.sleep(0.5)
+    return True
+
+#Setup for raspberrypi gpio output
+def InitalizeIn(Pin):
+    GPIO.setmode(GPIO.BCM)
+    GPIO.setup(Pin, GPIO.IN)
+    time.sleep(0.5)
+    return True
+
+#Power control for light
+def Light(Pin, Light):
+    Pin = 13 #Hard coded overwrite
+    Light = 100 #Hard coded overwrite
+    InitalizeOut(Pin)
 
     #Handling of day Ligh
     Light_SP = int((float(Light)/(100.00))*(24.00))
@@ -70,3 +82,18 @@ def TopLight(Pin, Light):
     elif Hour > Light_SP:
         GPIO.output(Pin, GPIO.HIGH)
         return False
+
+#Power control for pump
+def Pump(P_Pin, WS_Pin):
+    WS_Pin = 5 #Hard coded overwrite
+    P_Pin = 6 #Hard coded overwrite
+    InitalizeOut(P_Pin)
+    InitalizeIn(WS_Pin)
+
+    #Handaling of water pumps
+    if GPIO.input(WS_Pin):
+        GPIO.output(P_Pin, GPIO.HIGH)
+        return False
+    else:
+        GPIO.output(P_Pin, GPIO.LOW)
+        return True
