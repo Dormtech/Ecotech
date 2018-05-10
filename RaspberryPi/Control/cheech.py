@@ -9,7 +9,7 @@ from time import gmtime,strftime
 import csv
 import serial
 import RPi.GPIO as GPIO
-#FUCK YOU STEVE
+
 #PID controler that returns value of 0%-100%
 def PID(SP,PV,Kp,Ki,Kd,I,E):
     E2 = E
@@ -202,7 +202,6 @@ if __name__ == "__main__":
             Humid = H1
 
             #Handling of tempature
-            Deadband = 5
             if Temp > Temp_SP:
                 GPIO.output(F_Pin, GPIO.LOW)
             elif Temp <= Temp_SP:
