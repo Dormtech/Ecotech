@@ -94,10 +94,25 @@ def Pump(P_Pin, WS_Pin):
         GPIO.output(P_Pin, GPIO.LOW)
         return True
 
+#Power control for mister
+def Mister(Pin, Output):
+    InitalizeOut(Pin)
+
+    #Handling of mister
+    if Output == True:
+        GPIO.output(Pin, GPIO.LOW)
+        return True
+    elif Output == False:
+        GPIO.output(Pin, GPIO.HIGH)
+        return False
+
 if __name__ == "__main__":
     WS1_Pin = 5 #Water sensor
     P1_Pin = 6 #Pump
     L1_Pin = 13 #Light
+    M1_Pin = 14 #Mister
     Light = 100 #Amount of daylight
+    
     Light(L1_Pin,Light)
     Pump(P1_Pin, WS1_Pin)
+    Mister(M1_Pin, True)
