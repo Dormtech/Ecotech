@@ -60,7 +60,7 @@ def InitalizeOut(Pin):
     time.sleep(0.5)
     return True
 
-#Setup for raspberrypi gpio output
+#Setup for raspberrypi gpio input
 def InitalizeIn(Pin):
     GPIO.setmode(GPIO.BCM)
     GPIO.setup(Pin, GPIO.IN)
@@ -106,13 +106,41 @@ def Mister(Pin, Output):
         GPIO.output(Pin, GPIO.HIGH)
         return False
 
+#Power control for fan
+def Fan(Pin, Output):
+    InitalizeOut(Pin)
+
+    #Handling of fan
+    if Output == True:
+        GPIO.output(Pin, GPIO.LOW)
+        return True
+    elif Output == False:
+        GPIO.output(Pin, GPIO.HIGH)
+        return False
+
+#Power control for hot plate
+def HotPlate(Pin, Output):
+    InitalizeOut(Pin)
+
+    #Handling of hot plate
+    if Output == True:
+        GPIO.output(Pin, GPIO.LOW)
+        return True
+    elif Output == False:
+        GPIO.output(Pin, GPIO.HIGH)
+        return False
+
 if __name__ == "__main__":
     WS1_Pin = 5 #Water sensor
     P1_Pin = 6 #Pump
     L1_Pin = 13 #Light
     M1_Pin = 14 #Mister
+    F1_Pin = 15 #Fan
+    HP1_Pin = 16 #Hot Plate
     Light = 100 #Amount of daylight
-    
+
     Light(L1_Pin,Light)
     Pump(P1_Pin, WS1_Pin)
     Mister(M1_Pin, True)
+    Fan(F1_Pin, True)
+    HotPlate(HP1_Pin, True)
