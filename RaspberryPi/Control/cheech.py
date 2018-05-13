@@ -45,6 +45,10 @@ def Fan(SP,I,E):
 def read_sensor():
     try:
         ser = serial.Serial('/dev/ttyACM0', 9600)
+        ser = serial.Serial('/dev/ttyACM0', 9600)
+        byte_count = ser.in_waiting
+        hold = ser.read(byte_count)
+        print(hold)
         hold1 = ser.readline().replace("\r", "")
         hold2 = ser.readline().replace("\r", "")
         hold3 = ser.readline().replace("\r", "")
@@ -57,7 +61,7 @@ def read_sensor():
         hold2 = hold2.split("=")
         hold3 = hold3.split("=")
         hold4 = hold4.split("=")
-    except e as exception:
+    except Exception as e:
         print(e)
         hold1 = "NA"
         hold2 = "NA"
