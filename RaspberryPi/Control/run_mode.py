@@ -10,24 +10,29 @@ from time import gmtime,strftime
 
 #Communication with arduino displaying our sensors
 def read_sensor():
-    ser = serial.Serial('/dev/ttyACM0', 9600)
-    hold1 = ser.readline().replace("\r", "")
-    hold2 = ser.readline().replace("\r", "")
-    hold3 = ser.readline().replace("\r", "")
-    hold1 = hold1.replace("\n", "")
-    hold2 = hold2.replace("\n", "")
-    hold3 = hold3.replace("\n", "")
-    hold1 = hold1.split("=")
-    hold2 = hold2.split("=")
-    hold3 = hold3.split("=")
-    return hold1, hold2, hold3
+    try:
+        ser = serial.Serial('/dev/ttyACM0', 9600)
+        hold1 = ser.readline().replace("\r", "")
+        hold1 = hold1.replace("\n", "")
+        hold1 = hold1.split("-")
+        bank = []
+        x = 0
+        while x < len(hold1):
+            hold = hold1[x].split("=")
+            bank.insert(len(bank), hold)
+            x = x + 1
+    except Exception as e:
+        print(e)
+        bank = ["NA"]
+    #print(hold1)
+    return bank
 
 #Find the sensor value by reading ardunio
 def sensor_value(Sensor,Unit):
     try:
         x = 0
         values = read_sensor()
-        #print(values)
+	    #print(values)
         while x < len(values):
             if values[x][0] == Sensor:
                 sens_val = values[x][1].replace(Unit, "")
@@ -35,9 +40,9 @@ def sensor_value(Sensor,Unit):
                 x = len(values)
             x = x + 1
         return sens_val
-    except:
-        #print("error reading " + str(Sensor))
-        return "ERROR"
+    except Exception as e:
+        #print(e)
+        sens_val = "ERROR"
 
 #PID controler that returns value of 0%-100%
 def PID(SP,PV,Kp,Ki,Kd,I,E):
@@ -95,15 +100,14 @@ def Pump(P_Pin, WS_Pin):
         return True
 
 #Power control for mister
-def Mister(Pin, Output):
+def Mister(Pin, Humidity, Humidity_SP):
     InitalizeOut(Pin)
 
-    #Handling of mister
-    if Output == True:
-        GPIO.output(Pin, GPIO.LOW)
+    if int(Humidity) < int(Humidity_SP):
+        GPIO.output(Pin, True)
         return True
-    elif Output == False:
-        GPIO.output(Pin, GPIO.HIGH)
+    else:
+        GPIO.output(Pin, False)
         return False
 
 #Power control for fan
@@ -131,16 +135,36 @@ def HotPlate(Pin, Output):
         return False
 
 if __name__ == "__main__":
-    WS1_Pin = 5 #Water sensor
-    P1_Pin = 6 #Pump
-    L1_Pin = 13 #Light
-    M1_Pin = 14 #Mister
-    F1_Pin = 15 #Fan
-    HP1_Pin = 16 #Hot Plate
-    Light = 100 #Amount of daylight
+    #Output Pin variables
+    L1_Pin = 26 #Light GPIO 25
+    P0_Pin = 9 #Main resevoir pump GPIO 13
+    P1_Pin = 5 #Dosing pump GPIO 21
+    P2_Pin = 13 #Dosing pump GPIO 23
+    P3_Pin = 16 #Dosing pump GPIO 27
+    P4_Pin = 1 #Dosing pump GPIO
+    P5_Pin = 22 #Dosing pump GPIO 3
+    P6_Pin = 27 #Dosing pump GPIO 2
+    F1_Pin = 6 #Circulation fan GPIO 22
+    F2_Pin = 8 #Exhaust fan GPIO 10
+    Drain_Pin =  19 #Drain solenoid GPIO 24
+    Mister_Pin = 25 #Mister GPIO 6
 
+    #Inputs
+    T1 = sensor_value("T1","C")
+    H1 = sensor_value("H1","%")
+    WL1 = sensor_value("WL1","")
+    F1 = sensor_value("F1","")
+
+    #Processing of inputs
+    Temp = T1
+    Humid = H1
+
+    #Output control
     Light(L1_Pin,Light)
-    Pump(P1_Pin, WS1_Pin)
     Mister(M1_Pin, True)
     Fan(F1_Pin, True)
-    HotPlate(HP1_Pin, True)
+    Fan(F2_Pin, True)
+    Mister(Mister_Pin, Humid, Humidity_SP)
+
+    #Pump(P0_Pin, WL1)
+    #HotPlate(HP1_Pin, True)
