@@ -45,30 +45,20 @@ def Fan(SP,I,E):
 def read_sensor():
     try:
         ser = serial.Serial('/dev/ttyACM0', 9600)
-        ser = serial.Serial('/dev/ttyACM0', 9600)
-        byte_count = ser.in_waiting
-        hold = ser.read(byte_count)
-        print(hold)
         hold1 = ser.readline().replace("\r", "")
-        hold2 = ser.readline().replace("\r", "")
-        hold3 = ser.readline().replace("\r", "")
-        hold4 = ser.readline().replace("\r", "")
         hold1 = hold1.replace("\n", "")
-        hold2 = hold2.replace("\n", "")
-        hold3 = hold3.replace("\n", "")
-        hold4 = hold4.replace("\n", "")
-        hold1 = hold1.split("=")
-        hold2 = hold2.split("=")
-        hold3 = hold3.split("=")
-        hold4 = hold4.split("=")
+        hold1 = hold1.split("-")
+        bank = []
+        x = 0
+        while x < len(hold1):
+            hold = hold1[x].split("=")
+            bank.insert(len(bank), hold)
+            x = x + 1
     except Exception as e:
         print(e)
-        hold1 = "NA"
-        hold2 = "NA"
-        hold3 = "NA"
-        hold4 = "NA"
+        bank = ["NA"]
     #print(hold1)
-    return hold1, hold2, hold3, hold4
+    return bank
 
 #Find the temp from reading
 def sensor_value(Sensor,Unit):
