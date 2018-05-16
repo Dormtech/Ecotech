@@ -299,6 +299,8 @@ if __name__ == "__main__":
         time.sleep(0.1)
         camera.capture(rawCapture, format="bgr")
         image = rawCapture.array
+        cv2.imwrite('/home/pi/Desktop/plant.png',image)
+        #cv2.imread('/home/pi/Desktop/plant.png', 1)
         cv2.imshow("Image", image)
         cv2.waitKey(0)
         #Clear Outputs
