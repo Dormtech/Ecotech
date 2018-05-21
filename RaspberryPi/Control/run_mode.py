@@ -18,7 +18,7 @@ from time import gmtime,strftime
 def read_Sensor():
     try:
         if serial.Serial('/dev/ttyACM0', 9600):
-            ser = serial.Serial('/dev/ttyACM0', 9600)
+            ser = serial.Serial('/dev/ttyACM0', 9600) #/dev/ttyACM0 location of serial device
             hold1 = ser.readline().replace("\r", "")
             hold1 = hold1.replace("\n", "")
             hold1 = hold1.split("-")

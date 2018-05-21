@@ -1,8 +1,12 @@
-#*********************************************************************
-#Cheech V_01
-#Authors:Jake Smiley & Ben Bellerose & Steven Kalapos
-#Description: Main control for Ecozone
-#*********************************************************************
+"""
+ * @file cheech.py
+ * @authors Ben Bellerose
+ * @date May 2018
+ * @modified May 21 2018
+ * @modifiedby Ben Bellerose
+ * @brief proof of concept that device is possible
+ */
+ """
 import os
 import sys
 import time
@@ -14,7 +18,15 @@ import cv2
 from picamera.array import PiRGBArray
 from picamera import PiCamera
 
-#PID controler that returns value of 0%-100%
+"""Input: SP - integer containing the setpoint value
+          PV - integer containing the present value
+          Kp - integer containing the propotional weight value
+          Ki - integer containing the integral weight value
+          Kd - integer containing the derivetive weight value
+          I - integer containing the integral value
+          E - integer containing the error value
+   Function: this is a PID control loop useful for fine tuning controls
+   Output: writes out integer value between 0-100"""
 def PID(SP,PV,Kp,Ki,Kd,I,E):
     E2 = E
     E = SP - PV
@@ -27,40 +39,35 @@ def PID(SP,PV,Kp,Ki,Kd,I,E):
         Output = 100
     return Output,E
 
-#Controler for the fan
-def Fan(SP,I,E):
-    sensor = read_sensor()
-    PV = sensor[1][1].replace("C", "")
-    PV = PV.replace("%", "")
-    PV = float(PV)
-    #print(PV)
-    Kp = 1.00
-    Ki = 0.02
-    Kd = 0.01
-    Output = PID(SP,PV,Kp,Ki,Kd,I,E)
-    E = Output[1]
-    return(Output[0],I,Output[1])
-
-#Communication with arduino displaying our sensors
+"""Input: no input needed for function
+   Function: reads sensor values over serial communication
+   Output: writes out array of values for all sensors or NA if there is a problem"""
 def read_sensor():
     try:
-        ser = serial.Serial('/dev/ttyACM0', 9600)
-        hold1 = ser.readline().replace("\r", "")
-        hold1 = hold1.replace("\n", "")
-        hold1 = hold1.split("-")
-        bank = []
-        x = 0
-        while x < len(hold1):
-            hold = hold1[x].split("=")
-            bank.insert(len(bank), hold)
-            x = x + 1
+        if serial.Serial('/dev/ttyACM0', 9600):
+            ser = serial.Serial('/dev/ttyACM0', 9600) #/dev/ttyACM0 location of serial device
+            hold1 = ser.readline().replace("\r", "")
+            hold1 = hold1.replace("\n", "")
+            hold1 = hold1.split("-")
+            bank = []
+            x = 0
+            while x < len(hold1):
+                hold = hold1[x].split("=")
+                bank.insert(len(bank), hold)
+                x = x + 1
+            return bank
+        else:
+            bank = ["NA"]
+            return bank
     except Exception as e:
-        print(e)
+        #print(e)
         bank = ["NA"]
-    #print(hold1)
-    return bank
+        return bank
 
-#Find the temp from reading
+"""Input: sensor - string containing the sensor you are trying to find
+          unit - string containing the unit of the sensor you are looking for
+   Function: finds your chosen sensor value from the sensor array
+   Output: writes float value for the desired sensor or NA if there is a problem"""
 def sensor_value(Sensor,Unit):
     try:
         x = 0
@@ -76,18 +83,21 @@ def sensor_value(Sensor,Unit):
     except Exception as e:
         sens_val = "ERROR"
 
+"""Input: csv_file - string containing the name of the file
+   Function: read full contents of a csv file
+   Output: writes list containing the content in the csv"""
+def read_csv(csv_file):
+    external_txt = ''
+    full_file = os.getcwd() + "/" + csv_file
+    external_txt = open(full_file, "r")
+    external_txt = csv.reader(external_txt)
+    external_txt = list(external_txt)
+    return external_txt
 
-#Reads values from a csv file
-def read_csv(CSV_File):
-    External_txt = ''
-    File = os.getcwd() + "/" + CSV_File
-    External_txt = open(File, "r")
-    External_txt = csv.reader(External_txt)
-    External_txt = list(External_txt)
-    del External_txt[0]
-    return External_txt
-
-#Writes to csv file
+"""Input: content - list containing data you want to input into csv
+          csv_file - string containing the name of the file
+   Function: overwrite all data inside of the csv with chosen data
+   Output: writes boolean value to show user state of input"""
 def input_csv(Content, CSV_File):
     if len(Content) >= 1:
         with open(CSV_File, 'wb') as csvfile:
@@ -101,9 +111,9 @@ def input_csv(Content, CSV_File):
                     a = a + 1
                 spamwriter.writerow(Hold)
                 x = x + 1
-        return("Input Complete")
+        return True
     else:
-        return("Error With Input")
+        return False
 
 if __name__ == "__main__":
     #Pin variables
