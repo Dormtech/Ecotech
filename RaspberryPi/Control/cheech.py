@@ -43,8 +43,8 @@ def PID(SP,PV,Kp,Ki,Kd,I,E):
    Function: reads sensor values over serial communication
    Output: writes out array of values for all sensors or NA if there is a problem"""
 def read_sensor():
-    try:
-        if serial.Serial('/dev/ttyACM0', 9600):
+    if serial.Serial('/dev/ttyACM0', 9600):
+        try:
             ser = serial.Serial('/dev/ttyACM0', 9600) #/dev/ttyACM0 location of serial device
             hold1 = ser.readline().replace("\r", "")
             hold1 = hold1.replace("\n", "")
@@ -56,11 +56,12 @@ def read_sensor():
                 bank.insert(len(bank), hold)
                 x = x + 1
             return bank
-        else:
+        except Exception as e:
+            #print("ERROR READING SERIAL")
             bank = ["NA"]
             return bank
-    except Exception as e:
-        #print(e)
+    else:
+        #Print("NO SERIAL CONNECTION")
         bank = ["NA"]
         return bank
 
@@ -68,51 +69,83 @@ def read_sensor():
           unit - string containing the unit of the sensor you are looking for
    Function: finds your chosen sensor value from the sensor array
    Output: writes float value for the desired sensor or NA if there is a problem"""
-def sensor_value(Sensor,Unit):
-    try:
-        x = 0
-        values = read_sensor()
-	#print(values)
-        while x < len(values):
-            if values[x][0] == Sensor:
-                sens_val = values[x][1].replace(Unit, "")
-                sens_val = float(sens_val)
-                x = len(values)
-            x = x + 1
-        return sens_val
-    except Exception as e:
+def sensor_value(sensor,unit):
+    if sensor not None:
+        if unit not None:
+            try:
+                values = read_sensor()
+                x = 0
+        	    #print(values)
+                while x < len(values):
+                    if str(values[x][0]) == str(sensor):
+                        sens_val = values[x][1].replace(str(unit), "")
+                        sens_val = float(sens_val)
+                        x = len(values)
+                    else:
+                        sens_val = "NA"
+                    x = x + 1
+                return sens_val
+            except Exception as e:
+                #print("ERROR FINDING SENSOR")
+                sens_val = "ERROR"
+                return sens_val
+        else:
+            #print("NO UNIT GIVEN")
+            sens_val = "ERROR"
+            return sens_val
+    else:
+        #print("NO SENSOR GIVEN")
         sens_val = "ERROR"
+        return sens_val
 
 """Input: csv_file - string containing the name of the file
    Function: read full contents of a csv file
    Output: writes list containing the content in the csv"""
 def read_csv(csv_file):
-    external_txt = ''
-    full_file = os.getcwd() + "/" + csv_file
-    external_txt = open(full_file, "r")
-    external_txt = csv.reader(external_txt)
-    external_txt = list(external_txt)
-    return external_txt
+    if csv_file not None:
+        full_file = os.getcwd() + "/" + csv_file
+        try:
+            external_txt = open(full_file, "r")
+            external_txt = csv.reader(external_txt)
+            external_txt = list(external_txt)
+            return external_txt
+        except Exception as e:
+            #Print("ERROR READING CSV")
+            external_txt = ["Error"]
+            return external_txt
+    else:
+        #Print("NO FILE GIVEN")
+        external_txt = ["Error"]
+        return external_txt
 
 """Input: content - list containing data you want to input into csv
           csv_file - string containing the name of the file
    Function: overwrite all data inside of the csv with chosen data
-   Output: writes boolean value to show user state of input"""
-def input_csv(Content, CSV_File):
-    if len(Content) >= 1:
-        with open(CSV_File, 'wb') as csvfile:
-            spamwriter = csv.writer(csvfile, delimiter=',',quotechar=',', quoting=csv.QUOTE_MINIMAL)
-            x = 0
-            while x < len(Content):
-                a = 0
-                Hold = []
-                while a < len(Content[x]):
-                    Hold.insert(len(Hold),Content[x][a])
-                    a = a + 1
-                spamwriter.writerow(Hold)
-                x = x + 1
-        return True
+   Output: writes boolean value to show user success of csv write"""
+def input_csv(content, csv_file):
+    if content not None:
+        if csv_file not None:
+            try:
+                with open(csv_file, 'wb') as csvfile:
+                    spamwriter = csv.writer(csvfile, delimiter=',',quotechar=',', quoting=csv.QUOTE_MINIMAL)
+                    x = 0
+                    while x < len(content):
+                        a = 0
+                        Hold = []
+                        while a < len(content[x]):
+                            Hold.insert(len(Hold),content[x][a])
+                            a = a + 1
+                        spamwriter.writerow(Hold)
+                        x = x + 1
+                return True
+            except Exception as e:
+                #Print("ERROR WRITING CSV")
+                return False
+        else:
+            #Print("NO FILE GIVEN")
+            return False
     else:
+        #Print("NO CONTENT GIVEN")
         return False
 
 if __name__ == "__main__":

@@ -30,10 +30,11 @@ def read_Sensor():
                 x = x + 1
             return bank
         else:
+            #print("ERROR READING SERIAL")
             bank = ["NA"]
             return bank
     except Exception as e:
-        #print(e)
+        #Print("NO SERIAL CONNECTION")
         bank = ["NA"]
         return bank
 
@@ -42,21 +43,31 @@ def read_Sensor():
    Function: finds your chosen sensor value from the sensor array
    Output: writes float value for the desired sensor or NA if there is a problem"""
 def sensor_Value(sensor,unit):
-    try:
-        values = read_sensor()
-        x = 0
-	    #print(values)
-        while x < len(values):
-            if str(values[x][0]) == str(sensor):
-                sens_val = values[x][1].replace(str(unit), "")
-                sens_val = float(sens_val)
-                x = len(values)
-            else:
-                sens_val = "NA"
-            x = x + 1
-        return sens_val
-    except Exception as e:
-        #print(e)
+    if sensor not None:
+        if unit not None:
+            try:
+                values = read_Sensor()
+                x = 0
+        	    #print(values)
+                while x < len(values):
+                    if str(values[x][0]) == str(sensor):
+                        sens_val = values[x][1].replace(str(unit), "")
+                        sens_val = float(sens_val)
+                        x = len(values)
+                    else:
+                        sens_val = "NA"
+                    x = x + 1
+                return sens_val
+            except Exception as e:
+                #print("ERROR FINDING SENSOR")
+                sens_val = "ERROR"
+                return sens_val
+        else:
+            #print("NO UNIT GIVEN")
+            sens_val = "ERROR"
+            return sens_val
+    else:
+        #print("NO SENSOR GIVEN")
         sens_val = "ERROR"
         return sens_val
 
