@@ -87,7 +87,7 @@ def PID(SP,PV,Kp,Ki,Kd,I,E):
 def initalizeOut(pin):
     GPIO.setmode(GPIO.BCM)
     GPIO.setup(pin, GPIO.OUT)
-    GPIO.output(pin, GPIO.HIGH) #Initalize as off
+    GPIO.output(pin, False) #Initalize as off
     time.sleep(0.5)
     return True
 
@@ -108,12 +108,12 @@ def Light(pin, light):
     initalizeOut(pin)
 
     #Handling of day Ligh
-    light_SP = int((float(light)/(100.00))*(24.00))
+    light_sp = int((float(light)/(100.00))*(24.00))
     hour = strftime("%H", gmtime())
-    if hour <= light_SP:
+    if hour <= light_sp:
         GPIO.output(pin, True)
         return True
-    elif hour > light_SP:
+    elif hour > light_sp:
         GPIO.output(pin, False)
         return False
 
@@ -167,7 +167,7 @@ def Fan(pin, output):
    Function: controls output state of a hotplate
    Output: returns a boolean to inform user of hotplates current state"""
 def hotPlate(pin, output):
-    initalizeOut(Pin)
+    initalizeOut(pin)
 
     #Handling of hot plate
     if output == True:
@@ -197,6 +197,7 @@ if __name__ == "__main__":
     H1 = sensor_Value("H1","%")
     WL1 = sensor_Value("WL1","")
     F1 = sensor_Value("F1","")
+    Light = 85
 
     #Processing of inputs
     Temp = T1
