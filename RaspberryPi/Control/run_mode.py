@@ -16,8 +16,8 @@ from time import gmtime,strftime
    Function: reads sensor values over serial communication
    Output: writes out array of values for all sensors or NA if there is a problem"""
 def read_Sensor():
-    try:
-        if serial.Serial('/dev/ttyACM0', 9600):
+    if serial.Serial('/dev/ttyACM0', 9600):
+        try:
             ser = serial.Serial('/dev/ttyACM0', 9600) #/dev/ttyACM0 location of serial device
             hold1 = ser.readline().replace("\r", "")
             hold1 = hold1.replace("\n", "")
@@ -29,12 +29,12 @@ def read_Sensor():
                 bank.insert(len(bank), hold)
                 x = x + 1
             return bank
-        else:
-            #print("ERROR READING SERIAL")
+        except Exception as e:
+            print("ERROR READING SERIAL")
             bank = ["NA"]
             return bank
-    except Exception as e:
-        #Print("NO SERIAL CONNECTION")
+    else:
+        print("NO SERIAL CONNECTION")
         bank = ["NA"]
         return bank
 
@@ -43,8 +43,8 @@ def read_Sensor():
    Function: finds your chosen sensor value from the sensor array
    Output: writes float value for the desired sensor or NA if there is a problem"""
 def sensor_Value(sensor,unit):
-    if sensor not None:
-        if unit not None:
+    if sensor is not None:
+        if unit is not None:
             try:
                 values = read_Sensor()
                 x = 0
@@ -71,61 +71,70 @@ def sensor_Value(sensor,unit):
         sens_val = "ERROR"
         return sens_val
 
-"""Input: SP - integer containing the setpoint value
-          PV - integer containing the present value
-          Kp - integer containing the propotional weight value
-          Ki - integer containing the integral weight value
-          Kd - integer containing the derivetive weight value
-          I - integer containing the integral value
-          E - integer containing the error value
-   Function: this is a PID control loop useful for fine tuning controls
-   Output: writes out integer value between 0-100"""
-def PID(SP,PV,Kp,Ki,Kd,I,E):
-    E2 = E
-    E = SP - PV
-    I = I + E
-    D = E - E2
-    CV = (Kp*E)+(Ki*I)+(Kd*D)
-    time.sleep(0.5)
-    Output = (CV/SP)*100
-    if Output > 100:
-        Output = 100
-    return Output,E
-
 """Input: pin - integer value containing the desired pin
    Function: set a desired pin to an output
    Output: returns a boolean to inform user when done"""
 def initalizeOut(pin):
-    GPIO.setmode(GPIO.BCM)
-    GPIO.setup(pin, GPIO.OUT)
-    GPIO.output(pin, False) #Initalize as off
-    time.sleep(0.5)
-    return True
+    if pin is not None:
+        try:
+            GPIO.setmode(GPIO.BCM)
+            GPIO.setup(pin, GPIO.OUT)
+            GPIO.output(pin, False) #Initalize as off
+            time.sleep(0.5)
+            return True
+        except Exception as e:
+            #print("ERROR INITALIZING OUTPUT")
+            return False
+    else:
+        #print("NO PIN GIVEN")
+        return False
 
 """Input: pin - integer value containing the desired pin
    Function: set a desired pin to an input
    Output: returns a boolean to inform user when done"""
 def initalizeIn(pin):
-    GPIO.setmode(GPIO.BCM)
-    GPIO.setup(pin, GPIO.IN)
-    time.sleep(0.5)
-    return True
+    if pin is not None:
+        try:
+            GPIO.setmode(GPIO.BCM)
+            GPIO.setup(pin, GPIO.IN)
+            time.sleep(0.5)
+            return True
+        except Exception as e:
+            #print("ERROR INITALIZING INPUT")
+            return False
+    else:
+        #print("NO PIN GIVEN")
+        return False
 
 """Input: pin - integer value containing the light pin location
           light - float value containing the desired output time of light
    Function: controls output state of a light
    Output: returns a boolean to inform user of lights current state"""
 def Light(pin, light):
-    initalizeOut(pin)
-
-    #Handling of day Ligh
-    light_sp = int((float(light)/(100.00))*(24.00))
-    hour = strftime("%H", gmtime())
-    if hour <= light_sp:
-        GPIO.output(pin, True)
-        return True
-    elif hour > light_sp:
-        GPIO.output(pin, False)
+    if pin is not None:
+        if light is not None:
+            init = initalizeOut(pin)
+            if init == True:
+                try:
+                    #Handling of day Ligh
+                    light_sp = int((float(light)/(100.00))*(24.00))
+                    hour = strftime("%H", gmtime())
+                    if hour <= light_sp:
+                        GPIO.output(pin, True)
+                        return True
+                    elif hour > light_sp:
+                        GPIO.output(pin, False)
+                        return False
+                except Exception as e:
+                    #print("ERROR CONTROLING LIGHT")
+                    return False
+            else:
+                return False
+        else:
+            #print("NO LIGHT VALUE GIVEN")
+            return False
+    else:
+        #print("NO PIN GIVEN")
         return False
 
 """Input: pin - integer value containing the pump pin location
@@ -133,15 +142,29 @@ def Light(pin, light):
    Function: controls output state of a pump
    Output: returns a boolean to inform user of pumps current state"""
 def Pump(pin, ws):
-    initalizeOut(pin)
-
-    #Handaling of water pumps
-    if int(ws) >= 200:
-        GPIO.output(pin, False)
-        return False
+    if pin is not None:
+        if ws is not None:
+            init = initalizeOut(pin)
+            if init == True:
+                try:
+                    #Handaling of water pumps
+                    if int(ws) >= 200:
+                        GPIO.output(pin, False)
+                        return False
+                    else:
+                        GPIO.output(pin, True)
+                        return True
+                except Exception as e:
+                    #print("ERROR CONTROLING PUMP")
+                    return False
+            else:
+                return False
+        else:
+            #print("NO WATER SENSOR GIVEN")
+            return False
     else:
-        GPIO.output(pin, True)
-        return True
+        #print("NO PIN GIVEN")
+        return False
 
 """Input: pin - integer value containing the mister pin location
           humidity - integer value containing the current humidity value
@@ -149,13 +172,31 @@ def Pump(pin, ws):
    Function: controls output state of a mister
    Output: returns a boolean to inform user of mister current state"""
 def Mister(pin, humidity, humidity_sp):
-    initalizeOut(pin)
-
-    if int(humidity) < int(humidity_sp):
-        GPIO.output(pin, True)
-        return True
+    if pin is not None:
+        if humidity is not None:
+            if humidity_sp is not None:
+                init = initalizeOut(pin)
+                if init == True:
+                    try:
+                        if int(humidity) < int(humidity_sp):
+                            GPIO.output(pin, True)
+                            return True
+                        else:
+                            GPIO.output(pin, False)
+                            return False
+                    except Exception as e:
+                        #print("ERROR CONTROLING MISTER")
+                        return False
+                else:
+                    return False
+            else:
+                #print("NO HUMIDITY SETPOINT GIVEN")
+                return False
+        else:
+            #print("NO HUMIDITY GIVEN")
+            return False
     else:
-        GPIO.output(pin, False)
+        #print("NO PIN GIVEN")
         return False
 
 """Input: pin - integer value containing the desired pin
@@ -163,14 +204,28 @@ def Mister(pin, humidity, humidity_sp):
    Function: controls output state of a fan
    Output: returns a boolean to inform user of fans current state"""
 def Fan(pin, output):
-    initalizeOut(pin)
-
-    #Handling of fan
-    if output == True:
-        GPIO.output(pin, True)
-        return True
-    elif output == False:
-        GPIO.output(pin, False)
+    if pin is not None:
+        if output is not None:
+            init = initalizeOut(pin)
+            if init == True:
+                try:
+                    #Handling of fan
+                    if output == True:
+                        GPIO.output(pin, True)
+                        return True
+                    elif output == False:
+                        GPIO.output(pin, False)
+                        return False
+                except Exception as e:
+                    #print("ERROR CONTROLING FAN")
+                    return False
+            else:
+                return False
+        else:
+            #print("NO OUTPUT STATE GIVEN")
+            return False
+    else:
+        #print("NO PIN GIVEN")
         return False
 
 """Input: pin - integer value containing the desired pin
@@ -178,14 +233,28 @@ def Fan(pin, output):
    Function: controls output state of a hotplate
    Output: returns a boolean to inform user of hotplates current state"""
 def hotPlate(pin, output):
-    initalizeOut(pin)
-
-    #Handling of hot plate
-    if output == True:
-        GPIO.output(pin, GPIO.LOW)
-        return True
-    elif output == False:
-        GPIO.output(pin, GPIO.HIGH)
+    if pin is not None:
+        if output is not None:
+            init = initalizeOut(pin)
+            if init == True:
+                try:
+                    #Handling of hot plate
+                    if output == True:
+                        GPIO.output(pin, GPIO.LOW)
+                        return True
+                    elif output == False:
+                        GPIO.output(pin, GPIO.HIGH)
+                        return False
+                except Exception as e:
+                    #print("ERROR CONTROLING HOTPLATE")
+                    return False
+            else:
+                return False
+        else:
+            #print("NO OUTPUT STATE GIVEN")
+            return False
+    else:
+        #print("NO PIN GIVEN")
         return False
 
 if __name__ == "__main__":

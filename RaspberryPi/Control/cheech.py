@@ -1,6 +1,6 @@
 """
  * @file cheech.py
- * @authors Ben Bellerose
+ * @authors Steven Kalapos & Ben Bellerose
  * @date May 2018
  * @modified May 21 2018
  * @modifiedby Ben Bellerose
@@ -57,11 +57,11 @@ def read_sensor():
                 x = x + 1
             return bank
         except Exception as e:
-            #print("ERROR READING SERIAL")
+            print("ERROR READING SERIAL")
             bank = ["NA"]
             return bank
     else:
-        #Print("NO SERIAL CONNECTION")
+        print("NO SERIAL CONNECTION")
         bank = ["NA"]
         return bank
 
@@ -70,12 +70,12 @@ def read_sensor():
    Function: finds your chosen sensor value from the sensor array
    Output: writes float value for the desired sensor or NA if there is a problem"""
 def sensor_value(sensor,unit):
-    if sensor not None:
-        if unit not None:
+    if sensor is not None:
+        if unit is not None:
             try:
                 values = read_sensor()
                 x = 0
-        	    #print(values)
+                #print(values)
                 while x < len(values):
                     if str(values[x][0]) == str(sensor):
                         sens_val = values[x][1].replace(str(unit), "")
@@ -86,15 +86,15 @@ def sensor_value(sensor,unit):
                     x = x + 1
                 return sens_val
             except Exception as e:
-                #print("ERROR FINDING SENSOR")
+                print("ERROR FINDING SENSOR")
                 sens_val = "ERROR"
                 return sens_val
         else:
-            #print("NO UNIT GIVEN")
+            print("NO UNIT GIVEN")
             sens_val = "ERROR"
             return sens_val
     else:
-        #print("NO SENSOR GIVEN")
+        print("NO SENSOR GIVEN")
         sens_val = "ERROR"
         return sens_val
 
@@ -102,7 +102,7 @@ def sensor_value(sensor,unit):
    Function: read full contents of a csv file
    Output: writes list containing the content in the csv"""
 def read_csv(csv_file):
-    if csv_file not None:
+    if csv_file is not None:
         full_file = os.getcwd() + "/" + csv_file
         try:
             external_txt = open(full_file, "r")
@@ -110,11 +110,11 @@ def read_csv(csv_file):
             external_txt = list(external_txt)
             return external_txt
         except Exception as e:
-            #Print("ERROR READING CSV")
+            print("ERROR READING CSV")
             external_txt = ["Error"]
             return external_txt
     else:
-        #Print("NO FILE GIVEN")
+        print("NO FILE GIVEN")
         external_txt = ["Error"]
         return external_txt
 
@@ -123,8 +123,8 @@ def read_csv(csv_file):
    Function: overwrite all data inside of the csv with chosen data
    Output: writes boolean value to show user success of csv write"""
 def input_csv(content, csv_file):
-    if content not None:
-        if csv_file not None:
+    if content is not None:
+        if csv_file is not None:
             try:
                 with open(csv_file, 'wb') as csvfile:
                     spamwriter = csv.writer(csvfile, delimiter=',',quotechar=',', quoting=csv.QUOTE_MINIMAL)
@@ -139,13 +139,13 @@ def input_csv(content, csv_file):
                         x = x + 1
                 return True
             except Exception as e:
-                #Print("ERROR WRITING CSV")
+                print("ERROR WRITING CSV")
                 return False
         else:
-            #Print("NO FILE GIVEN")
+            print("NO FILE GIVEN")
             return False
     else:
-        #Print("NO CONTENT GIVEN")
+        print("NO CONTENT GIVEN")
         return False
 
 if __name__ == "__main__":
@@ -330,7 +330,8 @@ if __name__ == "__main__":
                 print("Humidity Setpoint = " + str(Humidity_SP) + "%")
                 print("Sunlight = " + str(Light_SP) + "hrs")
                 time.sleep(delay)
-    except KeyboardInterrupt:
+    except KeyboardInterrupt or (raw_input().upper() == "END"):
+        print("ENDING PROGRAM")
         #Take Picture
         camera = PiCamera()
         rawCapture = PiRGBArray(camera)
@@ -341,4 +342,3 @@ if __name__ == "__main__":
         cv2.waitKey(0)
         #Clear Outputs
         GPIO.cleanup()
-        print("Unexpected Error")

@@ -1,8 +1,12 @@
-#*********************************************************************
-#Cheech V_01
-#Authors:Jake Smiley & Ben Bellerose & Steven Kalapos
-#Description: Main control for Ecozone
-#*********************************************************************
+"""
+ * @file cheech_upload.py
+ * @authors Steven Kalapos & Ben Bellerose
+ * @date May 2018
+ * @modified May 12 2018
+ * @modifiedby Ben Bellerose
+ * @brief uploads cheech to raspberrypi through SCP protocol
+ */
+ """
 import os
 
 if __name__ == "__main__":
