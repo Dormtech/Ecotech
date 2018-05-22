@@ -7,6 +7,7 @@
  * @brief main control file for device
  */
  """
-import kivy
+from mainGUI import ecozone
 
 if __name__ == "__main__":
+    ecozone().run()
