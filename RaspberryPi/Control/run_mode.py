@@ -272,6 +272,9 @@ if __name__ == "__main__":
     Drain_Pin =  19 #Drain solenoid GPIO 24
     Mister_Pin = 25 #Mister GPIO 6
 
+    #Setpoints
+    Humidity_SP = 60
+
     #Inputs
     T1 = sensor_Value("T1","C")
     H1 = sensor_Value("H1","%")
@@ -285,7 +288,6 @@ if __name__ == "__main__":
 
     #Output control
     Light(L1_Pin,Light)
-    Mister(M1_Pin, True)
     Fan(F1_Pin, True)
     Fan(F2_Pin, True)
     Mister(Mister_Pin, Humid, Humidity_SP)

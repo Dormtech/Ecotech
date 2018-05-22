@@ -261,8 +261,8 @@ if __name__ == "__main__":
 
                     #Find SP values from user
                     Schedule = read_csv("control_files/manual_sp.csv")
+                    Day = "NA"
                     Temp_SP = Schedule[1][1]
-                    Day = Schedule[1][0]
                     Humidity_SP = Schedule[1][2]
                     Light = Schedule[1][3]
 
@@ -272,8 +272,8 @@ if __name__ == "__main__":
 
                     #Find index SP values from schedule
                     Schedule = read_csv("control_files/schedule.csv")
-                    Temp_SP = Schedule[Index][1]
                     Day = Schedule[Index][0]
+                    Temp_SP = Schedule[Index][1]
                     Humidity_SP = Schedule[Index][2]
                     Light = Schedule[Index][3]
 
@@ -296,6 +296,13 @@ if __name__ == "__main__":
                 else:
                     #print("OFF")
                     GPIO.output(L_Pin, False)
+                    Index = int(Index) + 1
+                    if Power[1] == "1":
+                        #Find index SP values from schedule
+                        Schedule = read_csv("control_files/schedule.csv")
+                        Day = Schedule[Index][0]
+                        Temp_SP = Schedule[Index][1]
+                        Humidity_SP = Schedule[Index][2]
 
 		        #Handaling of mister
                 if Humid is None:
@@ -305,13 +312,10 @@ if __name__ == "__main__":
                 else:
                     GPIO.output(Mister_Pin, False)
 
-	            #Processing of Water Levels
-                WL = WL1
-
                 #Handaling of water pumps
-                if WL is None:
+                if WL1 is None:
                     GPIO.output(P_Pin, False)
-                elif WL > 330:
+                elif WL1 > 330:
                     print("Full")
                     GPIO.output(P_Pin, False)
                 else:
@@ -323,7 +327,7 @@ if __name__ == "__main__":
 
                 #Printing of variables
                 print(Date)
-                print("Index = " + str(Index))
+                print("Index = " + str(Day))
                 print("Tempature = " + str(Temp) + "C")
                 print("Humidity = " + str(Humid) + "%")
                 print("Waterlevel = " + str(WL))
@@ -331,7 +335,8 @@ if __name__ == "__main__":
                 print("Humidity Setpoint = " + str(Humidity_SP) + "%")
                 print("Sunlight = " + str(Light_SP) + "hrs")
                 time.sleep(delay)
-    except KeyboardInterrupt:
+                
+    except KeyboardInterrupt or (raw_input().upper() == "END")
         print("ENDING PROGRAM")
         #Take Picture
         camera = PiCamera()
@@ -339,6 +344,8 @@ if __name__ == "__main__":
         time.sleep(0.1)
         camera.capture(rawCapture, format="bgr")
         image = rawCapture.array
+        cv2.imwrite('/home/pi/Desktop/plant.png',image)
+        #cv2.imread('/home/pi/Desktop/plant.png', 1)
         cv2.imshow("Image", image)
         cv2.waitKey(0)
         #Clear Outputs
