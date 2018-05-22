@@ -241,7 +241,6 @@ if __name__ == "__main__":
                         a = 1
                         while a < len(Control):
                             Write_Control.write(str(Control[a]))
-                            Write_Control.write("\n")
                             a = a + 1
                         Write_Control.close()
                     #If difference is greater than 5 start the schedule over in the log
@@ -292,8 +291,10 @@ if __name__ == "__main__":
                 Light_SP = int((float(Light)/(100.00))*(24.00))
                 Hour = strftime("%H", gmtime())
                 if int(Hour) <= int(Light_SP):
+                    #print("ON")
                     GPIO.output(L_Pin, True)
                 else:
+                    #print("OFF")
                     GPIO.output(L_Pin, False)
 
 		        #Handaling of mister
@@ -330,7 +331,7 @@ if __name__ == "__main__":
                 print("Humidity Setpoint = " + str(Humidity_SP) + "%")
                 print("Sunlight = " + str(Light_SP) + "hrs")
                 time.sleep(delay)
-    except KeyboardInterrupt or (raw_input().upper() == "END"):
+    except KeyboardInterrupt:
         print("ENDING PROGRAM")
         #Take Picture
         camera = PiCamera()
