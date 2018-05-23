@@ -1,8 +1,12 @@
-#*********************************************************************
-#Cheech V_01
-#Authors:Jake Smiley & Ben Bellerose & Steven Kalapos
-#Description: Main control for Ecozone
-#*********************************************************************
+"""
+ * @file cheech.py
+ * @authors Steven Kalapos & Ben Bellerose
+ * @date May 2018
+ * @modified May 21 2018
+ * @modifiedby Ben Bellerose
+ * @brief proof of concept that device is possible
+ */
+ """
 import os
 import sys
 import time
@@ -14,7 +18,15 @@ import cv2
 from picamera.array import PiRGBArray
 from picamera import PiCamera
 
-#PID controler that returns value of 0%-100%
+"""Input: SP - integer containing the setpoint value
+          PV - integer containing the present value
+          Kp - integer containing the propotional weight value
+          Ki - integer containing the integral weight value
+          Kd - integer containing the derivetive weight value
+          I - integer containing the integral value
+          E - integer containing the error value
+   Function: this is a PID control loop useful for fine tuning controls
+   Output: writes out integer value between 0-100"""
 def PID(SP,PV,Kp,Ki,Kd,I,E):
     E2 = E
     E = SP - PV
@@ -27,83 +39,114 @@ def PID(SP,PV,Kp,Ki,Kd,I,E):
         Output = 100
     return Output,E
 
-#Controler for the fan
-def Fan(SP,I,E):
-    sensor = read_sensor()
-    PV = sensor[1][1].replace("C", "")
-    PV = PV.replace("%", "")
-    PV = float(PV)
-    #print(PV)
-    Kp = 1.00
-    Ki = 0.02
-    Kd = 0.01
-    Output = PID(SP,PV,Kp,Ki,Kd,I,E)
-    E = Output[1]
-    return(Output[0],I,Output[1])
-
-#Communication with arduino displaying our sensors
+"""Input: no input needed for function
+   Function: reads sensor values over serial communication
+   Output: writes out array of values for all sensors or NA if there is a problem"""
 def read_sensor():
-    try:
-        ser = serial.Serial('/dev/ttyACM0', 9600)
-        hold1 = ser.readline().replace("\r", "")
-        hold1 = hold1.replace("\n", "")
-        hold1 = hold1.split("-")
-        bank = []
-        x = 0
-        while x < len(hold1):
-            hold = hold1[x].split("=")
-            bank.insert(len(bank), hold)
-            x = x + 1
-    except Exception as e:
-        print(e)
-        bank = ["NA"]
-    #print(hold1)
-    return bank
-
-#Find the temp from reading
-def sensor_value(Sensor,Unit):
-    try:
-        x = 0
-        values = read_sensor()
-	#print(values)
-        while x < len(values):
-            if values[x][0] == Sensor:
-                sens_val = values[x][1].replace(Unit, "")
-                sens_val = float(sens_val)
-                x = len(values)
-            x = x + 1
-        return sens_val
-    except Exception as e:
-        sens_val = "ERROR"
-
-
-#Reads values from a csv file
-def read_csv(CSV_File):
-    External_txt = ''
-    File = os.getcwd() + "/" + CSV_File
-    External_txt = open(File, "r")
-    External_txt = csv.reader(External_txt)
-    External_txt = list(External_txt)
-    del External_txt[0]
-    return External_txt
-
-#Writes to csv file
-def input_csv(Content, CSV_File):
-    if len(Content) >= 1:
-        with open(CSV_File, 'wb') as csvfile:
-            spamwriter = csv.writer(csvfile, delimiter=',',quotechar=',', quoting=csv.QUOTE_MINIMAL)
+    if serial.Serial('/dev/ttyACM0', 9600):
+        try:
+            ser = serial.Serial('/dev/ttyACM0', 9600) #/dev/ttyACM0 location of serial device
+            hold1 = ser.readline().replace("\r", "")
+            hold1 = hold1.replace("\n", "")
+            hold1 = hold1.split("-")
+            bank = []
             x = 0
-            while x < len(Content):
-                a = 0
-                Hold = []
-                while a < len(Content[x]):
-                    Hold.insert(len(Hold),Content[x][a])
-                    a = a + 1
-                spamwriter.writerow(Hold)
+            while x < len(hold1):
+                hold = hold1[x].split("=")
+                bank.insert(len(bank), hold)
                 x = x + 1
-        return("Input Complete")
+            return bank
+        except Exception as e:
+            print("ERROR READING SERIAL")
+            bank = ["NA"]
+            return bank
     else:
-        return("Error With Input")
+        print("NO SERIAL CONNECTION")
+        bank = ["NA"]
+        return bank
+
+"""Input: sensor - string containing the sensor you are trying to find
+          unit - string containing the unit of the sensor you are looking for
+   Function: finds your chosen sensor value from the sensor array
+   Output: writes float value for the desired sensor or NA if there is a problem"""
+def sensor_value(sensor,unit):
+    if sensor is not None:
+        if unit is not None:
+            try:
+                values = read_sensor()
+                x = 0
+                #print(values)
+                while x < len(values):
+                    if str(values[x][0]) == str(sensor):
+                        sens_val = values[x][1].replace(str(unit), "")
+                        sens_val = float(sens_val)
+                        x = len(values)
+                    else:
+                        sens_val = "NA"
+                    x = x + 1
+                return sens_val
+            except Exception as e:
+                print("ERROR FINDING SENSOR")
+                sens_val = "ERROR"
+                return sens_val
+        else:
+            print("NO UNIT GIVEN")
+            sens_val = "ERROR"
+            return sens_val
+    else:
+        print("NO SENSOR GIVEN")
+        sens_val = "ERROR"
+        return sens_val
+
+"""Input: csv_file - string containing the name of the file
+   Function: read full contents of a csv file
+   Output: writes list containing the content in the csv"""
+def read_csv(csv_file):
+    if csv_file is not None:
+        full_file = os.getcwd() + "/" + csv_file
+        try:
+            external_txt = open(full_file, "r")
+            external_txt = csv.reader(external_txt)
+            external_txt = list(external_txt)
+            return external_txt
+        except Exception as e:
+            print("ERROR READING CSV")
+            external_txt = ["Error"]
+            return external_txt
+    else:
+        print("NO FILE GIVEN")
+        external_txt = ["Error"]
+        return external_txt
+
+"""Input: content - list containing data you want to input into csv
+          csv_file - string containing the name of the file
+   Function: overwrite all data inside of the csv with chosen data
+   Output: writes boolean value to show user success of csv write"""
+def input_csv(content, csv_file):
+    if content is not None:
+        if csv_file is not None:
+            try:
+                with open(csv_file, 'wb') as csvfile:
+                    spamwriter = csv.writer(csvfile, delimiter=',',quotechar=',', quoting=csv.QUOTE_MINIMAL)
+                    x = 0
+                    while x < len(content):
+                        a = 0
+                        Hold = []
+                        while a < len(content[x]):
+                            Hold.insert(len(Hold),content[x][a])
+                            a = a + 1
+                        spamwriter.writerow(Hold)
+                        x = x + 1
+                return True
+            except Exception as e:
+                print("ERROR WRITING CSV")
+                return False
+        else:
+            print("NO FILE GIVEN")
+            return False
+    else:
+        print("NO CONTENT GIVEN")
+        return False
 
 if __name__ == "__main__":
     #Pin variables
@@ -198,7 +241,6 @@ if __name__ == "__main__":
                         a = 1
                         while a < len(Control):
                             Write_Control.write(str(Control[a]))
-                            Write_Control.write("\n")
                             a = a + 1
                         Write_Control.close()
                     #If difference is greater than 5 start the schedule over in the log
@@ -249,8 +291,10 @@ if __name__ == "__main__":
                 Light_SP = int((float(Light)/(100.00))*(24.00))
                 Hour = strftime("%H", gmtime())
                 if int(Hour) <= int(Light_SP):
+                    #print("ON")
                     GPIO.output(L_Pin, True)
                 else:
+                    #print("OFF")
                     GPIO.output(L_Pin, False)
                     Index = int(Index) + 1
                     if Power[1] == "1":
@@ -291,8 +335,9 @@ if __name__ == "__main__":
                 print("Humidity Setpoint = " + str(Humidity_SP) + "%")
                 print("Sunlight = " + str(Light_SP) + "hrs")
                 time.sleep(delay)
-
-    except KeyboardInterrupt or (raw_input().upper() == "END"):
+                
+    except KeyboardInterrupt or (raw_input().upper() == "END")
+        print("ENDING PROGRAM")
         #Take Picture
         camera = PiCamera()
         rawCapture = PiRGBArray(camera)
@@ -305,4 +350,3 @@ if __name__ == "__main__":
         cv2.waitKey(0)
         #Clear Outputs
         GPIO.cleanup()
-        print("Unexpected Error")
