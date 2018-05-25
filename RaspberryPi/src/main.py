@@ -7,11 +7,11 @@
  * @brief main control file for device
  */
  """
-from mainGUI import ecozone
-from run_mode import deviceControl
+from mainGUI import ecozoneApp
+#from run_mode import deviceControl
 
 if __name__ == "__main__":
-    ecozone().run()
+    ecozoneApp().run()
 
     '''
     #Output Pin variables
