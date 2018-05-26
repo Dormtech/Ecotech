@@ -2,7 +2,7 @@
  * @file mainGUI.py
  * @authors Steven Kalapos & Ben Bellerose
  * @date May 22 2018
- * @modified May 22 2018
+ * @modified May 25 2018
  * @modifiedby SK
  * @brief GUI managment and creation
  */
@@ -22,17 +22,21 @@ from kivy.uix.screenmanager import ScreenManager, Screen
 
 import random
 
+
 ##https://github.com/kivy/kivy/wiki/Data-driven-variables-with-kivy-properties##
-class temperature(Label):
-    def update(self):
-        text = str(random.randint(0,100))
 
 #default "screen saver"
 class defaultScreenLayout(GridLayout):
+    
+    temperatureK = "8"
+
     def __init__(self, **kwargs):
         super(defaultScreenLayout, self).__init__(**kwargs)
+
+    def updateTemp(self):
+        self.temperatureK = str(random.randint(1,100))
     
-    Clock.schedule_interval(temperature.update,2)
+    Clock.schedule_interval(updateTemp,2)
 
 #main App GUI control
 class ecozoneApp(App):
