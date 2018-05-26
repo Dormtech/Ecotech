@@ -111,7 +111,7 @@ class deviceControl():
     """Input: pin - integer value containing the light pin location
               light - float value containing the desired output time of light
        Function: controls output state of a light
-       Output: returns a boolean to inform user of lights current state"""
+       Output: returns a integer to inform user of lights current state"""
     def Light(self, pin, light):
         if pin is not None:
             if light is not None:
@@ -123,26 +123,26 @@ class deviceControl():
                         hour = strftime("%H", gmtime())
                         if hour <= light_sp:
                             GPIO.output(pin, True)
-                            return True
+                            return 0 #ON
                         elif hour > light_sp:
                             GPIO.output(pin, False)
-                            return False
+                            return 1 #OFF
                     except Exception as e:
                         #print("ERROR CONTROLING LIGHT")
-                        return False
+                        return 2 #ERROR
                 else:
-                    return False
+                    return 2 #ERROR
             else:
                 #print("NO LIGHT VALUE GIVEN")
-                return False
+                return 2 #ERROR
         else:
             #print("NO PIN GIVEN")
-            return False
+            return 2 #ERROR
 
     """Input: pin - integer value containing the pump pin location
               ws - integer value containing the current value of the water sensor
        Function: controls output state of a pump
-       Output: returns a boolean to inform user of pumps current state"""
+       Output: returns a integer to inform user of pumps current state"""
     def Pump(self,pin, ws):
         if pin is not None:
             if ws is not None:
@@ -152,27 +152,28 @@ class deviceControl():
                         #Handaling of water pumps
                         if int(ws) >= 200:
                             GPIO.output(pin, False)
-                            return False
+                            return 1 #OFF
                         else:
                             GPIO.output(pin, True)
-                            return True
+                            return 0 #ON
                     except Exception as e:
                         #print("ERROR CONTROLING PUMP")
-                        return False
+                        return 2 #ERROR
                 else:
-                    return False
+                    #Could not initalize
+                    return 2 #ERROR
             else:
                 #print("NO WATER SENSOR GIVEN")
-                return False
+                return 2 #ERROR
         else:
             #print("NO PIN GIVEN")
-            return False
+            return 2 #ERROR
 
     """Input: pin - integer value containing the mister pin location
               humidity - integer value containing the current humidity value
               humidity_sp - integer value containing the wanted humidity value
        Function: controls output state of a mister
-       Output: returns a boolean to inform user of mister current state"""
+       Output: returns a integer to inform user of mister current state"""
     def Mister(self, pin, humidity, humidity_sp):
         if pin is not None:
             if humidity is not None:
@@ -182,29 +183,30 @@ class deviceControl():
                         try:
                             if int(humidity) < int(humidity_sp):
                                 GPIO.output(pin, True)
-                                return True
+                                return 0 #ON
                             else:
                                 GPIO.output(pin, False)
-                                return False
+                                return 1 #OFF
                         except Exception as e:
                             #print("ERROR CONTROLING MISTER")
-                            return False
+                            return 2 #ERROR
                     else:
-                        return False
+                        #Could not initalize
+                        return 2 #ERROR
                 else:
                     #print("NO HUMIDITY SETPOINT GIVEN")
-                    return False
+                    return 2 #ERROR
             else:
                 #print("NO HUMIDITY GIVEN")
-                return False
+                return 2 #ERROR
         else:
             #print("NO PIN GIVEN")
-            return False
+            return 2 #ERROR
 
     """Input: pin - integer value containing the desired pin
               output - boolean value containing the desired output of the fan
        Function: controls output state of a fan
-       Output: returns a boolean to inform user of fans current state"""
+       Output: returns a integer to inform user of fans current state"""
     def Fan(self, pin, output):
         if pin is not None:
             if output is not None:
@@ -214,26 +216,27 @@ class deviceControl():
                         #Handling of fan
                         if output == True:
                             GPIO.output(pin, True)
-                            return True
+                            return 0 #ON
                         elif output == False:
                             GPIO.output(pin, False)
-                            return False
+                            return 1 #OFF
                     except Exception as e:
                         #print("ERROR CONTROLING FAN")
-                        return False
+                        return 2 #ERROR
                 else:
-                    return False
+                    #Could not initalize
+                    return 2 #ERROR
             else:
                 #print("NO OUTPUT STATE GIVEN")
-                return False
+                return 2 #ERROR
         else:
             #print("NO PIN GIVEN")
-            return False
+            return 2 #ERROR
 
     """Input: pin - integer value containing the desired pin
               output - boolean value containing the desired output of the fan
        Function: controls output state of a hotplate
-       Output: returns a boolean to inform user of hotplates current state"""
+       Output: returns a integer to inform user of hotplates current state"""
     def hotPlate(self, pin, output):
         if pin is not None:
             if output is not None:
@@ -243,18 +246,19 @@ class deviceControl():
                         #Handling of hot plate
                         if output == True:
                             GPIO.output(pin, GPIO.LOW)
-                            return True
+                            return 0 #ON
                         elif output == False:
                             GPIO.output(pin, GPIO.HIGH)
-                            return False
+                            return 1 #OFF
                     except Exception as e:
                         #print("ERROR CONTROLING HOTPLATE")
-                        return False
+                        return 2 #ERROR
                 else:
-                    return False
+                    #Could not initalize
+                    return 2 #ERROR
             else:
                 #print("NO OUTPUT STATE GIVEN")
-                return False
+                return 2 #ERROR
         else:
             #print("NO PIN GIVEN")
-            return False
+            return 2 #ERROR
