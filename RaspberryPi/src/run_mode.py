@@ -2,7 +2,7 @@
  * @file run_mode.py
  * @authors Steven Kalapos & Ben Bellerose
  * @date May 2018
- * @modified May 21 2018
+ * @modified May 27 2018
  * @modifiedby BB
  * @brief contains various output controls for device
  */
