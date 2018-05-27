@@ -2,7 +2,7 @@
  * @file run_mode.py
  * @authors Steven Kalapos & Ben Bellerose
  * @date May 2018
- * @modified May 27 2018
+ * @modified May 21 2018
  * @modifiedby BB
  * @brief contains various output controls for device
  */
@@ -38,11 +38,7 @@ class deviceControl():
                 bank = ["NA"]
                 return bank
         else:
-<<<<<<< HEAD
             deviceLog().errorLog("NO SERIAL","Device unpluged.")
-=======
-            deviceLog().errorLog("NO SERIAL","No serial communication device unpluged.")
->>>>>>> testbranch
             print("NO SERIAL CONNECTION")
             bank = ["NA"]
             return bank
@@ -95,11 +91,7 @@ class deviceControl():
                 time.sleep(0.5)
                 return True
             except Exception as e:
-<<<<<<< HEAD
                 deviceLog().errorLog("ERROR INITALIZING OUTPUT","Unable to set GPIO pin as output.")
-=======
-                deviceLog().errorLog("ERROR INITALIZING OUTPUT","Unable to set GPIO pin " + str(pin) + " as output.")
->>>>>>> testbranch
                 print("ERROR INITALIZING OUTPUT")
                 return False
         else:
@@ -118,11 +110,7 @@ class deviceControl():
                 time.sleep(0.5)
                 return True
             except Exception as e:
-<<<<<<< HEAD
                 deviceLog().errorLog("ERROR INITALIZING INPUT","Unable to set GPIO pin as input.")
-=======
-                deviceLog().errorLog("ERROR INITALIZING INPUT","Unable to set GPIO pin " + str(pin) + " as input.")
->>>>>>> testbranch
                 print("ERROR INITALIZING INPUT")
                 return False
         else:
@@ -150,22 +138,14 @@ class deviceControl():
                             GPIO.output(pin, False)
                             return 1 #OFF
                     except Exception as e:
-<<<<<<< HEAD
                         deviceLog().errorLog("ERROR CONTROLING LIGHT","Error occured when trying to control light.")
-=======
-                        deviceLog().errorLog("ERROR CONTROLING LIGHT","Error occured when trying to control light on GPIO pin " + str(pin) + ".")
->>>>>>> testbranch
                         print("ERROR CONTROLING LIGHT")
                         return 2 #ERROR
                 else:
                     #Could not initalize
                     return 2 #ERROR
             else:
-<<<<<<< HEAD
                 deviceLog().errorLog("NO LIGHT VALUE GIVEN","No light value was provided.")
-=======
-                deviceLog().errorLog("NO LIGHT VALUE GIVEN","No light value was provided on GPIO pin " + str(pin) + ".")
->>>>>>> testbranch
                 print("NO LIGHT VALUE GIVEN")
                 return 2 #ERROR
         else:
@@ -191,22 +171,14 @@ class deviceControl():
                             GPIO.output(pin, True)
                             return 0 #ON
                     except Exception as e:
-<<<<<<< HEAD
                         deviceLog().errorLog("ERROR CONTROLING PUMP","Error occured when trying to control pump.")
-=======
-                        deviceLog().errorLog("ERROR CONTROLING PUMP","Error occured when trying to control pump on GPIO pin " + str(pin) + ".")
->>>>>>> testbranch
                         print("ERROR CONTROLING PUMP")
                         return 2 #ERROR
                 else:
                     #Could not initalize
                     return 2 #ERROR
             else:
-<<<<<<< HEAD
                 deviceLog().errorLog("NO WATER SENSOR GIVEN","No water sensor value was provided.")
-=======
-                deviceLog().errorLog("NO WATER SENSOR GIVEN","No water sensor value was provided for GPIO pin " + str(pin) + ".")
->>>>>>> testbranch
                 print("NO WATER SENSOR GIVEN")
                 return 2 #ERROR
         else:
@@ -233,30 +205,18 @@ class deviceControl():
                                 GPIO.output(pin, False)
                                 return 1 #OFF
                         except Exception as e:
-<<<<<<< HEAD
                             deviceLog().errorLog("ERROR CONTROLING MISTER","Error occured when trying to control the mister.")
-=======
-                            deviceLog().errorLog("ERROR CONTROLING MISTER","Error occured when trying to control the mister on GPIO pin " + str(pin) + ".")
->>>>>>> testbranch
                             print("ERROR CONTROLING MISTER")
                             return 2 #ERROR
                     else:
                         #Could not initalize
                         return 2 #ERROR
                 else:
-<<<<<<< HEAD
                     deviceLog().errorLog("NO HUMIDITY SETPOINT GIVEN","No humidity setpoint value was provided.")
                     print("NO HUMIDITY SETPOINT GIVEN")
                     return 2 #ERROR
             else:
                 deviceLog().errorLog("NO HUMIDITY GIVEN","No humidity value was provided.")
-=======
-                    deviceLog().errorLog("NO HUMIDITY SETPOINT GIVEN","No humidity setpoint value was provided for GPIO pin " + str(pin) + ".")
-                    print("NO HUMIDITY SETPOINT GIVEN")
-                    return 2 #ERROR
-            else:
-                deviceLog().errorLog("NO HUMIDITY GIVEN","No humidity value was provided " + str(pin) + ".")
->>>>>>> testbranch
                 print("NO HUMIDITY GIVEN")
                 return 2 #ERROR
         else:
@@ -282,22 +242,14 @@ class deviceControl():
                             GPIO.output(pin, False)
                             return 1 #OFF
                     except Exception as e:
-<<<<<<< HEAD
                         deviceLog().errorLog("ERROR CONTROLING FAN","Error occured when trying to control fan.")
-=======
-                        deviceLog().errorLog("ERROR CONTROLING FAN","Error occured when trying to control fan on GPIO pin " + str(pin) + ".")
->>>>>>> testbranch
                         print("ERROR CONTROLING FAN")
                         return 2 #ERROR
                 else:
                     #Could not initalize
                     return 2 #ERROR
             else:
-<<<<<<< HEAD
                 deviceLog().errorLog("NO OUTPUT STATE GIVEN","No output state was provided.")
-=======
-                deviceLog().errorLog("NO OUTPUT STATE GIVEN","No output state was provided for GPIO pin " + str(pin) + ".")
->>>>>>> testbranch
                 print("NO OUTPUT STATE GIVEN")
                 return 2 #ERROR
         else:
@@ -323,22 +275,14 @@ class deviceControl():
                             GPIO.output(pin, GPIO.HIGH)
                             return 1 #OFF
                     except Exception as e:
-<<<<<<< HEAD
                         deviceLog().errorLog("ERROR CONTROLING HOTPLATE","Error occured when trying to control hotplate.")
-=======
-                        deviceLog().errorLog("ERROR CONTROLING HOTPLATE","Error occured when trying to control hotplate on GPIO pin " + str(pin) + ".")
->>>>>>> testbranch
                         print("ERROR CONTROLING HOTPLATE")
                         return 2 #ERROR
                 else:
                     #Could not initalize
                     return 2 #ERROR
             else:
-<<<<<<< HEAD
                 deviceLog().errorLog("NO OUTPUT STATE GIVEN","No output state was provided.")
-=======
-                deviceLog().errorLog("NO OUTPUT STATE GIVEN","No output state was provided for GPIO pin " + str(pin) + ".")
->>>>>>> testbranch
                 print("NO OUTPUT STATE GIVEN")
                 return 2 #ERROR
         else:
