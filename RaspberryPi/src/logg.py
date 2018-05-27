@@ -21,13 +21,20 @@ class deviceLog():
             if description is not None:
                 date = strftime("%Y-%m-%d %H:%M:%S", gmtime())
                 content = str(date) + "-" + str(errorType) + ": " + str(description)
-                log_file = os.getcwd() + "/error_log.txt"
+                #set location of log file
+                log_file = os.getcwd().split("/")
+                del log_file[len(log_file) - 1]
+                log_file = "/".join(log_file)
+                log_file = log_file + "/logs/error_log.txt"
+                #attempt to read log file
                 try:
                     file_read = open(log_file,"r")
                 except Exception as e:
+                    #unable to find error log creating new error log
                     file_write = open(log_file,"w")
                     file_write.write(content)
                     return True
+                #write error log into existing error log
                 file_hold = file_read.readlines()
                 file_read.close()
                 file_hold.insert(len(file_hold),content)
