@@ -11,6 +11,7 @@ import serial
 import RPi.GPIO as GPIO
 import time
 from time import gmtime,strftime
+from logg import deviceLog
 
 class deviceControl():
 
@@ -32,10 +33,12 @@ class deviceControl():
                     x = x + 1
                 return bank
             except Exception as e:
+                deviceLog().errorLog("ERROR READING SERIAL",e)
                 print("ERROR READING SERIAL")
                 bank = ["NA"]
                 return bank
         else:
+            deviceLog().errorLog("NO SERIAL","Device unpluged.")
             print("NO SERIAL CONNECTION")
             bank = ["NA"]
             return bank
@@ -61,15 +64,18 @@ class deviceControl():
                         x = x + 1
                     return sens_val
                 except Exception as e:
-                    #print("ERROR FINDING SENSOR")
+                    deviceLog().errorLog("ERROR FINDING SENSOR",e)
+                    print("ERROR FINDING SENSOR")
                     sens_val = "ERROR"
                     return sens_val
             else:
-                #print("NO UNIT GIVEN")
+                deviceLog().errorLog("NO UNIT GIVEN","No unit provided.")
+                print("NO UNIT GIVEN")
                 sens_val = "ERROR"
                 return sens_val
         else:
-            #print("NO SENSOR GIVEN")
+            deviceLog().errorLog("NO SENSOR GIVEN","No sensor value provided.")
+            print("NO SENSOR GIVEN")
             sens_val = "ERROR"
             return sens_val
 
@@ -85,10 +91,12 @@ class deviceControl():
                 time.sleep(0.5)
                 return True
             except Exception as e:
-                #print("ERROR INITALIZING OUTPUT")
+                deviceLog().errorLog("ERROR INITALIZING OUTPUT","Unable to set GPIO pin as output.")
+                print("ERROR INITALIZING OUTPUT")
                 return False
         else:
-            #print("NO PIN GIVEN")
+            deviceLog().errorLog("NO PIN GIVEN","No pin value provided.")
+            print("NO PIN GIVEN")
             return False
 
     """Input: pin - integer value containing the desired pin
@@ -102,16 +110,18 @@ class deviceControl():
                 time.sleep(0.5)
                 return True
             except Exception as e:
-                #print("ERROR INITALIZING INPUT")
+                deviceLog().errorLog("ERROR INITALIZING INPUT","Unable to set GPIO pin as input.")
+                print("ERROR INITALIZING INPUT")
                 return False
         else:
-            #print("NO PIN GIVEN")
+            deviceLog().errorLog("NO PIN GIVEN","No pin value provided.")
+            print("NO PIN GIVEN")
             return False
 
     """Input: pin - integer value containing the light pin location
               light - float value containing the desired output time of light
        Function: controls output state of a light
-       Output: returns a boolean to inform user of lights current state"""
+       Output: returns a integer to inform user of lights current state"""
     def Light(self, pin, light):
         if pin is not None:
             if light is not None:
@@ -123,26 +133,30 @@ class deviceControl():
                         hour = strftime("%H", gmtime())
                         if hour <= light_sp:
                             GPIO.output(pin, True)
-                            return True
+                            return 0 #ON
                         elif hour > light_sp:
                             GPIO.output(pin, False)
-                            return False
+                            return 1 #OFF
                     except Exception as e:
-                        #print("ERROR CONTROLING LIGHT")
-                        return False
+                        deviceLog().errorLog("ERROR CONTROLING LIGHT","Error occured when trying to control light.")
+                        print("ERROR CONTROLING LIGHT")
+                        return 2 #ERROR
                 else:
-                    return False
+                    #Could not initalize
+                    return 2 #ERROR
             else:
-                #print("NO LIGHT VALUE GIVEN")
-                return False
+                deviceLog().errorLog("NO LIGHT VALUE GIVEN","No light value was provided.")
+                print("NO LIGHT VALUE GIVEN")
+                return 2 #ERROR
         else:
-            #print("NO PIN GIVEN")
-            return False
+            deviceLog().errorLog("NO PIN GIVEN","No pin value provided.")
+            print("NO PIN GIVEN")
+            return 2 #ERROR
 
     """Input: pin - integer value containing the pump pin location
               ws - integer value containing the current value of the water sensor
        Function: controls output state of a pump
-       Output: returns a boolean to inform user of pumps current state"""
+       Output: returns a integer to inform user of pumps current state"""
     def Pump(self,pin, ws):
         if pin is not None:
             if ws is not None:
@@ -152,27 +166,31 @@ class deviceControl():
                         #Handaling of water pumps
                         if int(ws) >= 200:
                             GPIO.output(pin, False)
-                            return False
+                            return 1 #OFF
                         else:
                             GPIO.output(pin, True)
-                            return True
+                            return 0 #ON
                     except Exception as e:
-                        #print("ERROR CONTROLING PUMP")
-                        return False
+                        deviceLog().errorLog("ERROR CONTROLING PUMP","Error occured when trying to control pump.")
+                        print("ERROR CONTROLING PUMP")
+                        return 2 #ERROR
                 else:
-                    return False
+                    #Could not initalize
+                    return 2 #ERROR
             else:
-                #print("NO WATER SENSOR GIVEN")
-                return False
+                deviceLog().errorLog("NO WATER SENSOR GIVEN","No water sensor value was provided.")
+                print("NO WATER SENSOR GIVEN")
+                return 2 #ERROR
         else:
-            #print("NO PIN GIVEN")
-            return False
+            deviceLog().errorLog("NO PIN GIVEN","No pin value provided.")
+            print("NO PIN GIVEN")
+            return 2 #ERROR
 
     """Input: pin - integer value containing the mister pin location
               humidity - integer value containing the current humidity value
               humidity_sp - integer value containing the wanted humidity value
        Function: controls output state of a mister
-       Output: returns a boolean to inform user of mister current state"""
+       Output: returns a integer to inform user of mister current state"""
     def Mister(self, pin, humidity, humidity_sp):
         if pin is not None:
             if humidity is not None:
@@ -182,29 +200,34 @@ class deviceControl():
                         try:
                             if int(humidity) < int(humidity_sp):
                                 GPIO.output(pin, True)
-                                return True
+                                return 0 #ON
                             else:
                                 GPIO.output(pin, False)
-                                return False
+                                return 1 #OFF
                         except Exception as e:
-                            #print("ERROR CONTROLING MISTER")
-                            return False
+                            deviceLog().errorLog("ERROR CONTROLING MISTER","Error occured when trying to control the mister.")
+                            print("ERROR CONTROLING MISTER")
+                            return 2 #ERROR
                     else:
-                        return False
+                        #Could not initalize
+                        return 2 #ERROR
                 else:
-                    #print("NO HUMIDITY SETPOINT GIVEN")
-                    return False
+                    deviceLog().errorLog("NO HUMIDITY SETPOINT GIVEN","No humidity setpoint value was provided.")
+                    print("NO HUMIDITY SETPOINT GIVEN")
+                    return 2 #ERROR
             else:
-                #print("NO HUMIDITY GIVEN")
-                return False
+                deviceLog().errorLog("NO HUMIDITY GIVEN","No humidity value was provided.")
+                print("NO HUMIDITY GIVEN")
+                return 2 #ERROR
         else:
-            #print("NO PIN GIVEN")
-            return False
+            deviceLog().errorLog("NO PIN GIVEN","No pin value provided.")
+            print("NO PIN GIVEN")
+            return 2 #ERROR
 
     """Input: pin - integer value containing the desired pin
               output - boolean value containing the desired output of the fan
        Function: controls output state of a fan
-       Output: returns a boolean to inform user of fans current state"""
+       Output: returns a integer to inform user of fans current state"""
     def Fan(self, pin, output):
         if pin is not None:
             if output is not None:
@@ -214,26 +237,30 @@ class deviceControl():
                         #Handling of fan
                         if output == True:
                             GPIO.output(pin, True)
-                            return True
+                            return 0 #ON
                         elif output == False:
                             GPIO.output(pin, False)
-                            return False
+                            return 1 #OFF
                     except Exception as e:
-                        #print("ERROR CONTROLING FAN")
-                        return False
+                        deviceLog().errorLog("ERROR CONTROLING FAN","Error occured when trying to control fan.")
+                        print("ERROR CONTROLING FAN")
+                        return 2 #ERROR
                 else:
-                    return False
+                    #Could not initalize
+                    return 2 #ERROR
             else:
-                #print("NO OUTPUT STATE GIVEN")
-                return False
+                deviceLog().errorLog("NO OUTPUT STATE GIVEN","No output state was provided.")
+                print("NO OUTPUT STATE GIVEN")
+                return 2 #ERROR
         else:
-            #print("NO PIN GIVEN")
-            return False
+            deviceLog().errorLog("NO PIN GIVEN","No pin value provided.")
+            print("NO PIN GIVEN")
+            return 2 #ERROR
 
     """Input: pin - integer value containing the desired pin
               output - boolean value containing the desired output of the fan
        Function: controls output state of a hotplate
-       Output: returns a boolean to inform user of hotplates current state"""
+       Output: returns a integer to inform user of hotplates current state"""
     def hotPlate(self, pin, output):
         if pin is not None:
             if output is not None:
@@ -243,18 +270,22 @@ class deviceControl():
                         #Handling of hot plate
                         if output == True:
                             GPIO.output(pin, GPIO.LOW)
-                            return True
+                            return 0 #ON
                         elif output == False:
                             GPIO.output(pin, GPIO.HIGH)
-                            return False
+                            return 1 #OFF
                     except Exception as e:
-                        #print("ERROR CONTROLING HOTPLATE")
-                        return False
+                        deviceLog().errorLog("ERROR CONTROLING HOTPLATE","Error occured when trying to control hotplate.")
+                        print("ERROR CONTROLING HOTPLATE")
+                        return 2 #ERROR
                 else:
-                    return False
+                    #Could not initalize
+                    return 2 #ERROR
             else:
-                #print("NO OUTPUT STATE GIVEN")
-                return False
+                deviceLog().errorLog("NO OUTPUT STATE GIVEN","No output state was provided.")
+                print("NO OUTPUT STATE GIVEN")
+                return 2 #ERROR
         else:
-            #print("NO PIN GIVEN")
-            return False
+            deviceLog().errorLog("NO PIN GIVEN","No pin value provided.")
+            print("NO PIN GIVEN")
+            return 2 #ERROR
