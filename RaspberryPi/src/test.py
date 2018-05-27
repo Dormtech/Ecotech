@@ -1,5 +1,5 @@
 """
- * @file main.py
+ * @file test.py
  * @authors Steven Kalapos & Ben Bellerose
  * @date May 26 2018
  * @modified May 26 2018
