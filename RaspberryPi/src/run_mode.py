@@ -69,7 +69,7 @@ class deviceControl():
                     sens_val = "ERROR"
                     return sens_val
             else:
-                deviceLog().errorLog("NO UNIT GIVEN","No unit provided.")
+                deviceLog().errorLog("NO UNIT GIVEN","No unit provided for sensor value " + sensor + ".")
                 print("NO UNIT GIVEN")
                 sens_val = "ERROR"
                 return sens_val
@@ -110,7 +110,7 @@ class deviceControl():
                 time.sleep(0.5)
                 return True
             except Exception as e:
-                deviceLog().errorLog("ERROR INITALIZING INPUT","Unable to set GPIO pin as input.")
+                deviceLog().errorLog("ERROR INITALIZING INPUT","Unable to set GPIO pin " + str(pin) + " as input. The following error code appeared; " + str(e))
                 print("ERROR INITALIZING INPUT")
                 return False
         else:
@@ -138,7 +138,7 @@ class deviceControl():
                             GPIO.output(pin, False)
                             return 1 #OFF
                     except Exception as e:
-                        deviceLog().errorLog("ERROR CONTROLING LIGHT","Error occured when trying to control light.")
+                        deviceLog().errorLog("ERROR CONTROLING LIGHT","Error occured when trying to control light on GPIO pin " + str(pin) + ". The following error code appeared; " + str(e))
                         print("ERROR CONTROLING LIGHT")
                         return 2 #ERROR
                 else:
@@ -171,7 +171,7 @@ class deviceControl():
                             GPIO.output(pin, True)
                             return 0 #ON
                     except Exception as e:
-                        deviceLog().errorLog("ERROR CONTROLING PUMP","Error occured when trying to control pump.")
+                        deviceLog().errorLog("ERROR CONTROLING PUMP","Error occured when trying to control pump on GPIO pin " + str(pin) + ". The following error code appeared; " + str(e))
                         print("ERROR CONTROLING PUMP")
                         return 2 #ERROR
                 else:
@@ -205,7 +205,7 @@ class deviceControl():
                                 GPIO.output(pin, False)
                                 return 1 #OFF
                         except Exception as e:
-                            deviceLog().errorLog("ERROR CONTROLING MISTER","Error occured when trying to control the mister.")
+                            deviceLog().errorLog("ERROR CONTROLING MISTER","Error occured when trying to control the mister on GPIO pin " + str(pin) + ". The following error code appeared; " + str(e))
                             print("ERROR CONTROLING MISTER")
                             return 2 #ERROR
                     else:
@@ -242,7 +242,7 @@ class deviceControl():
                             GPIO.output(pin, False)
                             return 1 #OFF
                     except Exception as e:
-                        deviceLog().errorLog("ERROR CONTROLING FAN","Error occured when trying to control fan.")
+                        deviceLog().errorLog("ERROR CONTROLING FAN","Error occured when trying to control fan on GPIO pin " + str(pin) + ". The following error code appeared; " + str(e))
                         print("ERROR CONTROLING FAN")
                         return 2 #ERROR
                 else:
@@ -275,7 +275,7 @@ class deviceControl():
                             GPIO.output(pin, GPIO.HIGH)
                             return 1 #OFF
                     except Exception as e:
-                        deviceLog().errorLog("ERROR CONTROLING HOTPLATE","Error occured when trying to control hotplate.")
+                        deviceLog().errorLog("ERROR CONTROLING HOTPLATE","Error occured when trying to control hotplate on GPIO pin " + str(pin) + ". The following error code appeared; " + str(e))
                         print("ERROR CONTROLING HOTPLATE")
                         return 2 #ERROR
                 else:
