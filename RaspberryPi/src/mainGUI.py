@@ -63,7 +63,7 @@ class defaultScreen(Screen):
 
         self.clockDisplay = Label()
         self.add_widget(self.clockDisplay)
-        self.clockDisplay.pos = (100,200)
+        self.clockDisplay.pos = (600,300)
         
 
 class mainScreen(Screen):
