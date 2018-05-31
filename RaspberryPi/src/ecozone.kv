@@ -1,13 +1,27 @@
 #: import main mainGUI
+#:import SlideTransition kivy.uix.screenmanager.SlideTransition
 
-defaultScreenLayout:
-<defaultScreenLayout>:
-    
-    id: defaultScreen
-    rows: 2
-    padding: 10
-    spacing: 10
-    
+<defaultScreen>:
+    FloatLayout:
+        id: defaultScreenLayout
+        size:(700,500)
         
+        Button:
+            text: 'Back to main'
+            on_release: 
+                root.manager.current = 'main'
+                root.manager.transition = SlideTransition(direction='right')
+            size_hint: (.1,.1)
+            pos:(10,10)
+        
+<mainScreen>:
+    FloatLayout:
+        id: mainScreenLayout
 
-
+        Button:
+            text: 'To Default'
+            on_release: 
+                root.manager.current = 'default'
+                root.manager.transition = SlideTransition(direction='left')
+            size_hint: (.1,.1)
+            pos:(100,100)

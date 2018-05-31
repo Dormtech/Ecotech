@@ -1,8 +1,8 @@
 """
- * @file logging.py
+ * @file logg.py
  * @authors Steven Kalapos & Ben Bellerose
  * @date May 2018
- * @modified May 21 2018
+ * @modified May 27 2018
  * @modifiedby BB
  * @brief logging systems for device
  */
@@ -30,9 +30,11 @@ class deviceLog():
                 try:
                     file_read = open(log_file,"r")
                 except Exception as e:
+                    #unable to find error log creating new error log
                     file_write = open(log_file,"w")
                     file_write.write(content)
                     return True
+                #write error log into existing error log
                 file_hold = file_read.readlines()
                 file_read.close()
                 file_hold.insert(len(file_hold),content)
