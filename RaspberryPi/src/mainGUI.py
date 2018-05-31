@@ -59,11 +59,12 @@ class defaultScreen(Screen):
     def addOptionsDefault(self, optionFile):
         self.temperatureVar = Label()
         self.add_widget(self.temperatureVar)
+        self.temperatureVar.pos = (20,20)
+
         self.clockDisplay = Label()
         self.add_widget(self.clockDisplay)
+        self.clockDisplay.pos = (100,200)
         
-#Screens
-
 
 class mainScreen(Screen):
     def __init__(self, **kwargs):
@@ -75,7 +76,7 @@ class ecozoneApp(App):
 
     def build(self):
         sm = ScreenManager()
-        sm.add_widget(defaultScreen(name="default"))
         sm.add_widget(mainScreen(name="main"))
-        
+        sm.add_widget(defaultScreen(name="default"))
+                
         return sm
