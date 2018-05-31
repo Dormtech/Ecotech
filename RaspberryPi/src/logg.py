@@ -1,5 +1,5 @@
 """
- * @file logging.py
+ * @file logg.py
  * @authors Steven Kalapos & Ben Bellerose
  * @date May 2018
  * @modified May 27 2018
@@ -20,7 +20,7 @@ class deviceLog():
         if errorType is not None:
             if description is not None:
                 date = strftime("%Y-%m-%d %H:%M:%S", gmtime())
-                content = str(date) + "-" + str(errorType) + ": " + str(description)
+                content = str(date) + ":" + str(errorType) + ": " + str(description)
                 #set location of log file
                 log_file = os.getcwd().split("/")
                 del log_file[len(log_file) - 1]

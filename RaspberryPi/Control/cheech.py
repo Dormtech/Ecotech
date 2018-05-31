@@ -295,7 +295,7 @@ if __name__ == "__main__":
                     GPIO.output(L_Pin, True)
                 else:
                     #print("OFF")
-                    GPIO.output(L_Pin, False)
+                    GPIO.output(L_Pin, True)
                     Index = int(Index) + 1
                     if Power[1] == "1":
                         #Find index SP values from schedule
@@ -308,9 +308,9 @@ if __name__ == "__main__":
                 if Humid is None:
                     GPIO.output(Mister_Pin, False)
                 elif int(Humid) < int(Humidity_SP):
-                    GPIO.output(Mister_Pin, True)
-                else:
                     GPIO.output(Mister_Pin, False)
+                else:
+                    GPIO.output(Mister_Pin, True)
 
                 #Handaling of water pumps
                 if WL1 is None:
@@ -330,13 +330,13 @@ if __name__ == "__main__":
                 print("Index = " + str(Day))
                 print("Tempature = " + str(Temp) + "C")
                 print("Humidity = " + str(Humid) + "%")
-                print("Waterlevel = " + str(WL))
+                print("Waterlevel = " + str(WL1))
                 print("Temp Setpoint = " + str(Temp_SP) + "C")
                 print("Humidity Setpoint = " + str(Humidity_SP) + "%")
                 print("Sunlight = " + str(Light_SP) + "hrs")
                 time.sleep(delay)
-                
-    except KeyboardInterrupt or (raw_input().upper() == "END")
+
+    except KeyboardInterrupt:
         print("ENDING PROGRAM")
         #Take Picture
         camera = PiCamera()
