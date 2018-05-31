@@ -1,5 +1,5 @@
 """
- * @file run_mode.py
+ * @file runMode.py
  * @authors Steven Kalapos & Ben Bellerose
  * @date May 2018
  * @modified May 27 2018
@@ -18,7 +18,7 @@ class deviceControl():
     """Input: no input needed for function
        Function: reads sensor values over serial communication
        Output: writes out array of values for all sensors or NA if there is a problem"""
-    def read_Sensor(self):
+    def readSensor(self):
         if serial.Serial('/dev/ttyACM0', 9600):
             try:
                 ser = serial.Serial('/dev/ttyACM0', 9600) #/dev/ttyACM0 location of serial device
@@ -51,7 +51,7 @@ class deviceControl():
               unit - string containing the unit of the sensor you are looking for
        Function: finds your chosen sensor value from the sensor array
        Output: writes float value for the desired sensor or NA if there is a problem"""
-    def sensor_Value(self, sensor, unit):
+    def sensorValue(self, sensor, unit):
         if sensor is not None:
             if unit is not None:
                 try:
