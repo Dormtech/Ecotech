@@ -22,6 +22,11 @@ from kivy.uix.screenmanager import ScreenManager, Screen
 
 import random, os, time
 
+from kivy.config import Config
+
+Config.set('graphics', 'width', '800')
+Config.set('graphics', 'height', '480')
+
 class GUIFunc():
     
     #creates the option file used to store user config
@@ -59,11 +64,11 @@ class defaultScreen(Screen):
     def addOptionsDefault(self, optionFile):
         self.temperatureVar = Label()
         self.add_widget(self.temperatureVar)
-        self.temperatureVar.pos = (20,20)
+        self.temperatureVar.pos = (-300,100)
 
         self.clockDisplay = Label()
         self.add_widget(self.clockDisplay)
-        self.clockDisplay.pos = (600,300)
+        self.clockDisplay.pos = (300,220)
         
 
 class mainScreen(Screen):
