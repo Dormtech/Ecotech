@@ -33,6 +33,7 @@ class atmosphere():
                             F6_Pin = 8 #Electrical intake fan GPIO 10
                             M1_Pin = 25 #Mister GPIO 6
 
+                            #Temp sensors
                             t1 = run_mode().sensor_Value("T1","C")
 
                             #Humidity sensors
