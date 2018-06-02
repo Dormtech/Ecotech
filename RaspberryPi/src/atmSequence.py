@@ -22,25 +22,66 @@ class atmosphere():
         L1_Pin = 26 #Light GPIO 25
         F1_Pin = 6 #Circulation fan GPIO 22
         F2_Pin = 8 #Exhaust fan GPIO 10
-        Mister_Pin = 25 #Mister GPIO 6
+        F3_Pin = 8 #Electrical exhaust fan GPIO 10
+        F4_Pin = 8 #Electrical intake fan GPIO 10
+        M1_Pin = 25 #Mister GPIO 6
 
         #Inputs
         t1 = run_mode().sensor_Value("T1","C")
         h1 = run_mode().sensor_Value("H1","%")
-        wl1 = run_mode().sensor_Value("WL1","")
-        f1 = run_mode().sensor_Value("F1","")
+        c1 = run_mode().sensor_Value("C1","%")
+
+        if run_mode().sensor_Value("F1","") == "ERROR":
+            f1 = 0
+        else:
+            f1 = int(run_mode().sensor_Value("F1",""))
+
+        if run_mode().sensor_Value("F2","") == "ERROR":
+            f2 = 0
+        else:
+            f2 = int(run_mode().sensor_Value("F2",""))
+
+        if run_mode().sensor_Value("F3","") == "ERROR":
+            f3 = 0
+        else:
+            f3 = int(run_mode().sensor_Value("F3",""))
+
+        if run_mode().sensor_Value("F4","") == "ERROR":
+            f4 = 0
+        else:
+            f4 = int(run_mode().sensor_Value("F4",""))
+
+        if run_mode().sensor_Value("F5","") == "ERROR":
+            f5 = 0
+        else:
+            f5 = int(run_mode().sensor_Value("F5",""))
 
         #Processing of inputs
         temp = t1
         humid = h1
+        carbon = c1
+        fire = f1 + f2 + f3 + f4 + f5
 
         #Output control
-        deviceControl().Light(L1_Pin,light)
-        deviceControl().Fan(F1_Pin, True)
+        fireLevel = 10
+        if fire <= fireLevel: #If fire is not detected
+            deviceControl().Light(L1_Pin,light) #Light
+            deviceControl().Fan(F1_Pin, True) #Circulation
 
-        if tempatureSP <= temp:
-            deviceControl().Fan(F2_Pin, True)
+            if tempatureSP <= temp:
+                deviceControl().Fan(F2_Pin, True) #Exhaust
+            else:
+                deviceControl().Fan(F2_Pin, False) #Exhaust
+
+            deviceControl().Mister(M1_Pin, humid, humiditySP) #Mister
         else:
-            deviceControl().Fan(F2_Pin, False)
-
-        deviceControl().Mister(Mister_Pin, humid, humiditySP)
+            if f1 > fireLevel:
+                deviceControl().Fire("F1")
+            elif f2 > fireLevel:
+                deviceControl().Fire("F2")
+            elif f3 > fireLevel:
+                deviceControl().Fire("F3")
+            elif f4 > fireLevel:
+                deviceControl().Fire("F4")
+            elif f5> fireLevel:
+                deviceControl().Fire("F5")

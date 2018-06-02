@@ -7,7 +7,10 @@
  * @brief testing playground to try out classes
  */
  """
-from logg import deviceLog
 
 if __name__ == "__main__":
-    deviceLog().errorLog("404","Device unavalible")
+    num = 4
+    if type(num) is int:
+        print("YEP")
+    else:
+        print("NOPE")
