@@ -33,31 +33,31 @@ class atmosphere():
                             F6_Pin = 8 #Electrical intake fan GPIO 10
                             M1_Pin = 25 #Mister GPIO 6
 
-                            #Inputs
                             t1 = run_mode().sensor_Value("T1","C")
+
+                            #Humidity sensors
                             h1 = run_mode().sensor_Value("H1","%")
+
+                            #Carbon sensors
                             c1 = run_mode().sensor_Value("C1","%")
 
+                            #Fire sensors
                             if run_mode().sensor_Value("F1","") == "ERROR":
                                 f1 = 0
                             else:
                                 f1 = run_mode().sensor_Value("F1","")
-
                             if run_mode().sensor_Value("F2","") == "ERROR":
                                 f2 = 0
                             else:
                                 f2 = run_mode().sensor_Value("F2","")
-
                             if run_mode().sensor_Value("F3","") == "ERROR":
                                 f3 = 0
                             else:
                                 f3 = run_mode().sensor_Value("F3","")
-
                             if run_mode().sensor_Value("F4","") == "ERROR":
                                 f4 = 0
                             else:
                                 f4 = run_mode().sensor_Value("F4","")
-
                             if run_mode().sensor_Value("F5","") == "ERROR":
                                 f5 = 0
                             else:
@@ -76,7 +76,7 @@ class atmosphere():
                                 deviceControl().Light(L1_Pin,light) #Light
                                 deviceControl().Fan(F1_Pin, True) #Circulation
 
-                                if 40 <= elecTemp: #Elctrical box to hot
+                                if 40 <= elecTemp: #Electrical box to hot
                                     if tempatureSP <= temp: #Too hot
                                         if carbonSP <= carbon: #Too much carbon dioxide
                                             deviceControl().Fan(F2_Pin, True) #Exhaust
@@ -133,7 +133,7 @@ class atmosphere():
 
                                 deviceControl().Mister(M1_Pin, humid, humiditySP) #Mister
                                 return True
-                                
+
                             else:
                                 if f1 > fireLevel:
                                     deviceControl().Fire("F1")
