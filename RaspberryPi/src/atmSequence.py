@@ -35,12 +35,57 @@ class atmosphere():
 
                             #Temp sensors
                             t1 = run_mode().sensor_Value("T1","C")
+                            t2 = run_mode().sensor_Value("T2","C")
+                            t3 = run_mode().sensor_Value("T3","C")
+                            t4 = run_mode().sensor_Value("T4","C")
+                            t5 = run_mode().sensor_Value("T5","C")
+                            #Weighted average
+                            tempBank = [t1,t2,t3,t4,t5]
+                            tempWeigth = [1,1,1,1,1]
+                            tempCount = 0
+                            x = 0
+                            while x < len(tempBank):
+                                if tempBank[x] == "ERROR":
+                                    x = x + 1
+                                else:
+                                    try:
+                                        temp = temp + (int(tempBank[x]) * tempWeigth[x])
+                                        tempCount = tempCount + 1
+                                        x = x + 1
+                                    except Exception as e:
+                                        x = x + 1
+                            temp = temp/tempCount
 
                             #Humidity sensors
                             h1 = run_mode().sensor_Value("H1","%")
+                            h2 = run_mode().sensor_Value("H2","%")
+                            h3 = run_mode().sensor_Value("H3","%")
+                            h4 = run_mode().sensor_Value("H4","%")
+                            h5 = run_mode().sensor_Value("H5","%")
+                            humidBank = [h1,h2,h3,h4,h5]
+                            humidWeigth = [1,1,1,1,1]
+                            humidCount = 0
+                            x = 0
+                            while x < len(humidBank):
+                                if humidBank[x] == "ERROR":
+                                    x = x + 1
+                                else:
+                                    try:
+                                        humid = humid + (int(humidBank[x]) * humidWeigth[x])
+                                        humidCount = humidCount + 1
+                                        x = x + 1
+                                    except Exception as e:
+                                        x = x + 1
+                            humid = humid/humidCount
+
+                            #Electrical box sensors
+                            t6 = run_mode().sensor_Value("T6","C") #Electrical box
+                            h6 = run_mode().sensor_Value("H6","%") #Electrical box
+                            elecTemp = int(t6)
 
                             #Carbon sensors
                             c1 = run_mode().sensor_Value("C1","%")
+                            carbon = int(c1)
 
                             #Fire sensors
                             if run_mode().sensor_Value("F1","") == "ERROR":
@@ -63,13 +108,7 @@ class atmosphere():
                                 f5 = 0
                             else:
                                 f5 = run_mode().sensor_Value("F5","")
-
-                            #Processing of inputs
-                            temp = int(t1)
-                            humid = int(h1)
-                            elecTemp = int(t1)
-                            carbon = int(c1)
-                            fire = int(f1) + int(f2) + int(f3) + int(f4) + int(f5)
+                            fire = int(f1) + int(f2) + int(f3) + int(f4) + int(f5) #Sum of fire sensors
 
                             #Output control
                             fireLevel = 10
@@ -148,10 +187,10 @@ class atmosphere():
                                     deviceControl().Fire("F5")
                                 return False
                         except Exception as e:
-                            errCode = "ERROR COUNTROLING ATMOSPHERE"
-                            errMsg = "Error controling atmosphere. The following error code appeared; " + e + "."
+                            errCode = "ERROR CONTROLLING ATMOSPHERE"
+                            errMsg = "Error CONTROLLING atmosphere. The following error code appeared; " + e + "."
                             deviceLog().errorLog(errCode,errMsg)
-                            print("ERROR COUNTROLING ATMOSPHERE")
+                            print("ERROR CONTROLLING ATMOSPHERE")
                             return False
                     else:
                         errCode = "NO LIGHT PROVIDED"
