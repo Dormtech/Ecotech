@@ -8,6 +8,7 @@
  */
  """
 from runMode import deviceControl
+from logg import deviceLog
 
 class atmosphere():
 

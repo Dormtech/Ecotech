@@ -28,3 +28,4 @@ class pumps():
         #Inputs
         w1 = run_mode().sensor_Value("WL1","")
         f1 = run_mode().sensor_Value("F1","")
+        return True
