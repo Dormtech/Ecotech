@@ -69,7 +69,7 @@ class deviceControl():
                     return sens_val
                 except Exception as e:
                     errCode = "ERROR FINDING SENSOR"
-                    errMsg = "Error finding sensor "+ str(sensor) + ". The following error code appeared; " + e
+                    errMsg = "Error finding sensor "+ str(sensor) + ". The following error code appeared; " + str(e)
                     deviceLog().errorLog(errCode,errMsg)
                     print("ERROR FINDING SENSOR")
                     sens_val = "ERROR"

@@ -58,11 +58,11 @@ class atmosphere():
                             temp = temp/tempCount
 
                             #Humidity sensors
-                            h1 = run_mode().sensor_Value("H1","%")
-                            h2 = run_mode().sensor_Value("H2","%")
-                            h3 = run_mode().sensor_Value("H3","%")
-                            h4 = run_mode().sensor_Value("H4","%")
-                            h5 = run_mode().sensor_Value("H5","%")
+                            h1 = deviceControl().sensor_Value("H1","%")
+                            h2 = deviceControl().sensor_Value("H2","%")
+                            h3 = deviceControl().sensor_Value("H3","%")
+                            h4 = deviceControl().sensor_Value("H4","%")
+                            h5 = deviceControl().sensor_Value("H5","%")
                             humidBank = [h1,h2,h3,h4,h5]
                             humidWeigth = [1,1,1,1,1]
                             humidCount = 0
@@ -80,35 +80,35 @@ class atmosphere():
                             humid = humid/humidCount
 
                             #Electrical box sensors
-                            t6 = run_mode().sensor_Value("T6","C") #Electrical box
-                            h6 = run_mode().sensor_Value("H6","%") #Electrical box
+                            t6 = deviceControl().sensor_Value("T6","C") #Electrical box
+                            h6 = deviceControl().sensor_Value("H6","%") #Electrical box
                             elecTemp = int(t6)
 
                             #Carbon sensors
-                            c1 = run_mode().sensor_Value("C1","%")
+                            c1 = deviceControl().sensor_Value("C1","%")
                             carbon = int(c1)
 
                             #Fire sensors
-                            if run_mode().sensor_Value("F1","") == "ERROR":
+                            if deviceControl().sensor_Value("F1","") == "ERROR":
                                 f1 = 0
                             else:
-                                f1 = run_mode().sensor_Value("F1","")
-                            if run_mode().sensor_Value("F2","") == "ERROR":
+                                f1 = deviceControl().sensor_Value("F1","")
+                            if deviceControl().sensor_Value("F2","") == "ERROR":
                                 f2 = 0
                             else:
-                                f2 = run_mode().sensor_Value("F2","")
-                            if run_mode().sensor_Value("F3","") == "ERROR":
+                                f2 = deviceControl().sensor_Value("F2","")
+                            if deviceControl().sensor_Value("F3","") == "ERROR":
                                 f3 = 0
                             else:
-                                f3 = run_mode().sensor_Value("F3","")
-                            if run_mode().sensor_Value("F4","") == "ERROR":
+                                f3 = deviceControl().sensor_Value("F3","")
+                            if deviceControl().sensor_Value("F4","") == "ERROR":
                                 f4 = 0
                             else:
-                                f4 = run_mode().sensor_Value("F4","")
-                            if run_mode().sensor_Value("F5","") == "ERROR":
+                                f4 = deviceControl().sensor_Value("F4","")
+                            if deviceControl().sensor_Value("F5","") == "ERROR":
                                 f5 = 0
                             else:
-                                f5 = run_mode().sensor_Value("F5","")
+                                f5 = deviceControl().sensor_Value("F5","")
                             fire = int(f1) + int(f2) + int(f3) + int(f4) + int(f5) #Sum of fire sensors
 
                             #Output control
@@ -189,7 +189,7 @@ class atmosphere():
                                 return False
                         except Exception as e:
                             errCode = "ERROR CONTROLLING ATMOSPHERE"
-                            errMsg = "Error CONTROLLING atmosphere. The following error code appeared; " + e + "."
+                            errMsg = "Error CONTROLLING atmosphere. The following error code appeared; " + str(e) + "."
                             deviceLog().errorLog(errCode,errMsg)
                             print("ERROR CONTROLLING ATMOSPHERE")
                             return False
