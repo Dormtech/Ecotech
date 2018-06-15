@@ -27,6 +27,7 @@ from kivy.config import Config
 Config.set('graphics', 'width', '800')
 Config.set('graphics', 'height', '480')
 
+
 class GUIFunc():
     
     #creates the option file used to store user config
@@ -56,25 +57,37 @@ class defaultScreen(Screen):
     def update(self, dt):
         #call funtion to get info from sensors
         self.temperatureVar.text = str(random.randint(0,200))
-
-
+        self.dayVar.text = '00'
         self.clockDisplay.text = time.asctime()
 
     #reads the user options and imports the nessacary widgets
     def addWidgetsDefault(self, optionFile):
         self.temperatureVar = Label()
         self.add_widget(self.temperatureVar)
-        self.temperatureVar.pos = (-300,100)
+        self.temperatureVar.pos = (-250,100)
 
         self.clockDisplay = Label()
         self.add_widget(self.clockDisplay)
         self.clockDisplay.pos = (300,220)
+
+        self.dayVar = Label()
+        self.add_widget(self.dayVar)
+        self.dayVar.pos = (0,120)
+        self.dayVar.font_size = 55
         
 
 class mainScreen(Screen):
     def __init__(self, **kwargs):
         super(mainScreen, self).__init__(**kwargs)
-        
+
+        self.clockDisplay = Label()
+        self.add_widget(self.clockDisplay)
+        self.clockDisplay.pos = (300,220)
+        Clock.schedule_interval(self.update, 1)
+
+    #will update all the variables on screen
+    def update(self, dt):
+        self.clockDisplay.text = time.asctime()
 
 #main App GUI control
 class ecozoneApp(App):

@@ -1,11 +1,13 @@
 #:import main mainGUI
 #:import SlideTransition kivy.uix.screenmanager.SlideTransition
 
+#:set default_font_size "24sp"
+#:set default_font_name "Arial"
+
 <defaultScreen>:
     size:(480,800)
     FloatLayout:
         id: defaultScreenLayout
-        
         
         Button:
             text: 'Back'
@@ -14,6 +16,31 @@
                 root.manager.transition = SlideTransition(direction='right')
             size_hint: (.1,.1)
             pos_hint:{'x':0,'y':0}
+
+        Label:
+            text: 'Temperature'
+            font_size: default_font_size
+            pos:(-250, 150)
+        Label:
+            text: 'Day'
+            font_size: default_font_size
+            pos:(0,175)
+        Label:
+            text: 'Label2'
+            font_size: default_font_size
+            pos:(250,150)
+        Label:
+            text: 'Label3'
+            font_size: default_font_size
+            pos:(-250,-50)  
+        Label:
+            text: 'Label4'
+            font_size: default_font_size
+            pos:(0,-25)  
+        Label:
+            text: 'Label5'
+            font_size: default_font_size
+            pos:(250,-50)    
         
 <mainScreen>:
     FloatLayout:
