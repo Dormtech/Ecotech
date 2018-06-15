@@ -58,6 +58,7 @@ class atmosphere():
                                         x = x + 1
                             if tempCount == 0:
                                 temp = "NA"
+                                print("SYSTEM FAILURE - TEMPATURE SENSORS OFFLINE")
                             else:
                                 temp = temp/tempCount
 
@@ -84,6 +85,7 @@ class atmosphere():
                                         x = x + 1
                             if humidCount == 0:
                                 humid = "NA"
+                                print("SYSTEM FAILURE - HUMIDITY SENSORS OFFLINE")
                             else:
                                 humid = humid/humidCount
 
@@ -94,39 +96,42 @@ class atmosphere():
                                 elecTemp = int(t6)
                             except:
                                 elecTemp = "NA"
+                                print("SYSTEM FAILURE - ELECTRICAL BOX SENSORS OFFLINE")
 
                             #Carbon sensors
                             c1 = deviceControl().sensorValue("C1","%")
                             try:
                                 carbon = int(c1)
                             except:
-                                carbon = 0
+                                carbon = "NA"
+                                print("SYSTEM FAILURE - CARBON SENSORS OFFLINE")
 
                             #Fire sensors
                             if deviceControl().sensorValue("F1","") == "ERROR":
-                                f1 = 0
+                                f1 = "NA"
                             else:
                                 f1 = deviceControl().sensorValue("F1","")
                             if deviceControl().sensorValue("F2","") == "ERROR":
-                                f2 = 0
+                                f2 = "NA"
                             else:
                                 f2 = deviceControl().sensorValue("F2","")
                             if deviceControl().sensorValue("F3","") == "ERROR":
-                                f3 = 0
+                                f3 = "NA"
                             else:
                                 f3 = deviceControl().sensorValue("F3","")
                             if deviceControl().sensorValue("F4","") == "ERROR":
-                                f4 = 0
+                                f4 = "NA"
                             else:
                                 f4 = deviceControl().sensorValue("F4","")
                             if deviceControl().sensorValue("F5","") == "ERROR":
-                                f5 = 0
+                                f5 = "NA"
                             else:
                                 f5 = deviceControl().sensorValue("F5","")
                             try:
                                 fire = int(f1) + int(f2) + int(f3) + int(f4) + int(f5) #Sum of fire sensors
                             except:
                                 fire = "NA"
+                                print("SYSTEM FAILURE - FIRE SENSORS OFFLINE")
 
                             #Output control
                             fireLevel = 10
@@ -142,12 +147,16 @@ class atmosphere():
                                             deviceControl().Fan(F4_Pin, False) #Transition
                                             deviceControl().Fan(F5_Pin, True) #Electrical exhaust
                                             deviceControl().Fan(F6_Pin, True) #Electrical intake
+                                        elif carbon == "NA":
+                                            return False
                                         else:
                                             deviceControl().Fan(F2_Pin, False) #Exhaust
                                             deviceControl().Fan(F3_Pin, True) #Intake
                                             deviceControl().Fan(F4_Pin, True) #Transition
                                             deviceControl().Fan(F5_Pin, False) #Electrical exhaust
                                             deviceControl().Fan(F6_Pin, True) #Electrical intake
+                                    elif temp == "NA":
+                                        return False
                                     else:
                                         if carbonSP <= carbon: #Too much carbon dioxide
                                             deviceControl().Fan(F2_Pin, False) #Exhaust
@@ -155,6 +164,8 @@ class atmosphere():
                                             deviceControl().Fan(F4_Pin, False) #Transition
                                             deviceControl().Fan(F5_Pin, True) #Electrical exhaust
                                             deviceControl().Fan(F6_Pin, True) #Electrical intake
+                                        elif carbon == "NA":
+                                            return False
                                         else:
                                             deviceControl().Fan(F2_Pin, False) #Exhaust
                                             deviceControl().Fan(F3_Pin, False) #Intake
@@ -169,12 +180,16 @@ class atmosphere():
                                             deviceControl().Fan(F4_Pin, False) #Transition
                                             deviceControl().Fan(F5_Pin, False) #Electrical exhaust
                                             deviceControl().Fan(F6_Pin, False) #Electrical intake
+                                        elif carbon == "NA":
+                                            return False
                                         else:
                                             deviceControl().Fan(F2_Pin, False) #Exhaust
                                             deviceControl().Fan(F3_Pin, False) #Intake
                                             deviceControl().Fan(F4_Pin, True) #Transition
                                             deviceControl().Fan(F5_Pin, False) #Electrical exhaust
                                             deviceControl().Fan(F6_Pin, True) #Electrical intake
+                                    elif temp == "NA":
+                                        return False
                                     else:
                                         if carbonSP <= carbon: #Too much carbon dioxide
                                             deviceControl().Fan(F2_Pin, False) #Exhaust
@@ -191,8 +206,9 @@ class atmosphere():
 
                                 deviceControl().Mister(M1_Pin, humid, humiditySP) #Mister
                                 return True
-
-                            else:
+                            elif fire == "NA":
+                                return False
+                            elif fire > fireLevel:
                                 if f1 > fireLevel:
                                     deviceControl().Fire("F1")
                                 elif f2 > fireLevel:
