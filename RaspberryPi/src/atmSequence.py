@@ -135,20 +135,20 @@ class atmosphere():
 
                             #Output control
                             fireLevel = 10
-                            if fire <= fireLevel: #If fire is not detected
+                            if fire <= fireLevel and fire != "NA": #If fire is not detected
                                 deviceControl().Light(L1_Pin,light) #Light
                                 deviceControl().Fan(F1_Pin, True) #Circulation
 
-                                if elecSP <= elecTemp: #Electrical box to hot
-                                    if tempatureSP <= temp: #Too hot
-                                        if carbonSP <= carbon: #Too much carbon dioxide
+                                if elecSP <= elecTemp and elecTemp != "NA": #Electrical box to hot
+                                    if tempatureSP <= temp and temp != "NA": #Too hot
+                                        if carbonSP <= carbon and carbon != "NA": #Too much carbon dioxide
                                             deviceControl().Fan(F2_Pin, True) #Exhaust
                                             deviceControl().Fan(F3_Pin, True) #Intake
                                             deviceControl().Fan(F4_Pin, False) #Transition
                                             deviceControl().Fan(F5_Pin, True) #Electrical exhaust
                                             deviceControl().Fan(F6_Pin, True) #Electrical intake
 
-                                        elif carbonSP > carbon: #Too little carbon dioxide
+                                        elif carbonSP > carbon and carbon != "NA": #Too little carbon dioxide
                                             deviceControl().Fan(F2_Pin, False) #Exhaust
                                             deviceControl().Fan(F3_Pin, True) #Intake
                                             deviceControl().Fan(F4_Pin, True) #Transition
@@ -158,15 +158,15 @@ class atmosphere():
                                         elif carbon == "NA": #Carbon sensors offline
                                             return False
 
-                                    elif tempatureSP > temp: #Too cold
-                                        if carbonSP <= carbon: #Too much carbon dioxide
+                                    elif tempatureSP > temp and temp != "NA": #Too cold
+                                        if carbonSP <= carbon and carbon != "NA": #Too much carbon dioxide
                                             deviceControl().Fan(F2_Pin, False) #Exhaust
                                             deviceControl().Fan(F3_Pin, False) #Intake
                                             deviceControl().Fan(F4_Pin, False) #Transition
                                             deviceControl().Fan(F5_Pin, True) #Electrical exhaust
                                             deviceControl().Fan(F6_Pin, True) #Electrical intake
 
-                                        elif carbonSP > carbon: #Too little carbon dioxide
+                                        elif carbonSP > carbon and carbon != "NA": #Too little carbon dioxide
                                             deviceControl().Fan(F2_Pin, False) #Exhaust
                                             deviceControl().Fan(F3_Pin, False) #Intake
                                             deviceControl().Fan(F4_Pin, True) #Transition
@@ -179,16 +179,16 @@ class atmosphere():
                                     elif temp == "NA": #Tempature sensors offline
                                         return False
 
-                                elif elecSP > elecTemp: #Electrical box to cold
-                                    if tempatureSP <= temp: #Too hot
-                                        if carbonSP <= carbon: #Too much carbon dioxide
+                                elif elecSP > elecTemp and elecTemp != "NA": #Electrical box to cold
+                                    if tempatureSP <= temp and temp != "NA": #Too hot
+                                        if carbonSP <= carbon and carbon != "NA": #Too much carbon dioxide
                                             deviceControl().Fan(F2_Pin, True) #Exhaust
                                             deviceControl().Fan(F3_Pin, True) #Intake
                                             deviceControl().Fan(F4_Pin, False) #Transition
                                             deviceControl().Fan(F5_Pin, False) #Electrical exhaust
                                             deviceControl().Fan(F6_Pin, False) #Electrical intake
 
-                                        elif carbonSP > carbon: #Too little carbon dioxide
+                                        elif carbonSP > carbon and carbon != "NA": #Too little carbon dioxide
                                             deviceControl().Fan(F2_Pin, False) #Exhaust
                                             deviceControl().Fan(F3_Pin, False) #Intake
                                             deviceControl().Fan(F4_Pin, True) #Transition
@@ -198,7 +198,7 @@ class atmosphere():
                                         elif carbon == "NA": #Carbon sensor offline
                                             return False
 
-                                    elif tempatureSP > temp: #Too cold
+                                    elif tempatureSP > temp and temp != "NA": #Too cold
                                         if carbonSP <= carbon: #Too much carbon dioxide
                                             deviceControl().Fan(F2_Pin, False) #Exhaust
                                             deviceControl().Fan(F3_Pin, False) #Intake
@@ -206,7 +206,7 @@ class atmosphere():
                                             deviceControl().Fan(F5_Pin, False) #Electrical exhaust
                                             deviceControl().Fan(F6_Pin, False) #Electrical intake
 
-                                        elif carbonSP > carbon: #Too little carbon dioxide
+                                        elif carbonSP > carbon and carbon != "NA": #Too little carbon dioxide
                                             deviceControl().Fan(F2_Pin, False) #Exhaust
                                             deviceControl().Fan(F3_Pin, True) #Intake
                                             deviceControl().Fan(F4_Pin, True) #Transition
@@ -225,7 +225,7 @@ class atmosphere():
                                 deviceControl().Mister(M1_Pin, humid, humiditySP) #Mister
                                 return True
 
-                            elif fire > fireLevel:
+                            elif fire > fireLevel and fire != "NA":
                                 if f1 > fireLevel:
                                     deviceControl().Fire("F1")
                                 elif f2 > fireLevel:
