@@ -20,7 +20,7 @@
         Label:
             text: 'Temperature'
             font_size: default_font_size
-            pos:(-250, 150)
+            pos:(-275, 150)
         Label:
             text: 'Day'
             font_size: default_font_size
@@ -28,20 +28,22 @@
         Label:
             text: 'Label2'
             font_size: default_font_size
-            pos:(250,150)
+            pos:(275,150)
         Label:
             text: 'Label3'
             font_size: default_font_size
-            pos:(-250,-50)  
-        Label:
-            text: 'Label4'
-            font_size: default_font_size
-            pos:(0,-25)  
+            pos:(-275,-50)      
         Label:
             text: 'Label5'
             font_size: default_font_size
-            pos:(250,-50)    
-        
+            pos:(275,-50)    
+        BoxLayout:
+            size_hint:(.5,.5)
+            pos:(200,75)
+            Graph:
+                id: graph
+                
+                
 <mainScreen>:
     FloatLayout:
         id: mainScreenLayout

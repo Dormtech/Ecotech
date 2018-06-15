@@ -19,6 +19,7 @@ from kivy.properties import StringProperty, NumericProperty, ObjectProperty
 from kivy.uix.widget import Widget
 from kivy.clock import Clock
 from kivy.uix.screenmanager import ScreenManager, Screen
+from kivy.garden.graph import MeshLinePlot
 
 import random, os, time
 
@@ -48,8 +49,10 @@ class defaultScreen(Screen):
         try:
             optionFile = open(pathway+"/options/GUIOptions.txt","r+")
         except IOError:
-            optionFile = createGUIOptions(pathway)    
+            optionFile = createGUIOptions(pathway)  
 
+        self.plot = MeshLinePlot(color=[1, 0, 0, 1])  
+        self.ids.graph.add_plot(self.plot)
         self.addWidgetsDefault(optionFile)
         Clock.schedule_interval(self.update, 1)
 
@@ -59,12 +62,13 @@ class defaultScreen(Screen):
         self.temperatureVar.text = str(random.randint(0,200))
         self.dayVar.text = '00'
         self.clockDisplay.text = time.asctime()
+        self.plot.points = [(4, 2)]
 
     #reads the user options and imports the nessacary widgets
     def addWidgetsDefault(self, optionFile):
         self.temperatureVar = Label()
         self.add_widget(self.temperatureVar)
-        self.temperatureVar.pos = (-250,100)
+        self.temperatureVar.pos = (-275,100)
 
         self.clockDisplay = Label()
         self.add_widget(self.clockDisplay)
