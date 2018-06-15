@@ -2,12 +2,13 @@
  * @file mainGUI.py
  * @authors Steven Kalapos & Ben Bellerose
  * @date May 22 2018
- * @modified May 31 2018
+ * @modified June 15 2018
  * @modifiedby SK
  * @brief GUI managment and creation
  */
  """
 import kivy
+
 
 from kivy.app import App
 from kivy.uix.label import Label
@@ -18,7 +19,6 @@ from kivy.properties import StringProperty, NumericProperty, ObjectProperty
 from kivy.uix.widget import Widget
 from kivy.clock import Clock
 from kivy.uix.screenmanager import ScreenManager, Screen
-
 
 import random, os, time
 
@@ -49,7 +49,7 @@ class defaultScreen(Screen):
         except IOError:
             optionFile = createGUIOptions(pathway)    
 
-        self.addOptionsDefault(optionFile)
+        self.addWidgetsDefault(optionFile)
         Clock.schedule_interval(self.update, 1)
 
     #will update all the variables on screen
@@ -61,7 +61,7 @@ class defaultScreen(Screen):
         self.clockDisplay.text = time.asctime()
 
     #reads the user options and imports the nessacary widgets
-    def addOptionsDefault(self, optionFile):
+    def addWidgetsDefault(self, optionFile):
         self.temperatureVar = Label()
         self.add_widget(self.temperatureVar)
         self.temperatureVar.pos = (-300,100)
