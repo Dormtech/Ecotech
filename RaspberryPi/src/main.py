@@ -17,5 +17,6 @@ if __name__ == "__main__":
     carbonSP = 10
     tempatureSP = 30
     light = 80
-    #atmosphere().atmMain(humiditySP,carbonSP,tempatureSP,light)
+    elecSP = 40
+    #atmosphere().atmMain(humiditySP,carbonSP,tempatureSP,light,elecSP)
     #pumps().pumpMain()

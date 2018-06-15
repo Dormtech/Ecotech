@@ -37,14 +37,14 @@ class deviceControl():
                 errMsg = e
                 deviceLog().errorLog(errCode,errMsg)
                 print("ERROR READING SERIAL")
-                bank = ["NA"]
+                bank = ["ERROR"]
                 return bank
         else:
             errCode = "NO SERIAL"
             errMsg = "No serial communication device unpluged."
             deviceLog().errorLog(errCode,errMsg)
             print("NO SERIAL CONNECTION")
-            bank = ["NA"]
+            bank = ["ERROR"]
             return bank
 
     """Input: sensor - string containing the sensor you are trying to find
@@ -55,7 +55,7 @@ class deviceControl():
         if sensor is not None:
             if unit is not None:
                 try:
-                    values = read_Sensor()
+                    values = self.readSensor()
                     x = 0
             	    #print(values)
                     while x < len(values):
@@ -64,21 +64,21 @@ class deviceControl():
                             sens_val = float(sens_val)
                             x = len(values)
                         else:
-                            sens_val = "NA"
+                            sens_val = "ERROR"
                         x = x + 1
                     return sens_val
                 except Exception as e:
                     errCode = "ERROR FINDING SENSOR"
-                    errMsg = e
+                    errMsg = "Error finding sensor "+ str(sensor) + ". The following error code appeared; " + str(e)
                     deviceLog().errorLog(errCode,errMsg)
                     print("ERROR FINDING SENSOR")
                     sens_val = "ERROR"
                     return sens_val
             else:
                 errCode = "NO UNIT GIVEN"
-                errMsg = "No unit provided for sensor value " + sensor + "."
+                errMsg = "No unit provided for sensor " + str(sensor) + "."
                 deviceLog().errorLog(errCode,errMsg)
-                print("NO UNIT GIVEN")
+                print("NO UNIT GIVEN FOR SENSOR " + str(sensor))
                 sens_val = "ERROR"
                 return sens_val
         else:
@@ -107,10 +107,6 @@ class deviceControl():
                 print("ERROR INITALIZING OUTPUT")
                 return False
         else:
-            errCode = "NO PIN GIVEN"
-            errMsg = "No pin value provided."
-            deviceLog().errorLog(errCode,errMsg)
-            print("NO PIN GIVEN")
             return False
 
     """Input: pin - integer value containing the desired pin
@@ -130,10 +126,6 @@ class deviceControl():
                 print("ERROR INITALIZING INPUT")
                 return False
         else:
-            errCode = "NO PIN GIVEN"
-            errMsg = "No pin value provided."
-            deviceLog().errorLog(errCode,errMsg)
-            print("NO PIN GIVEN")
             return False
 
     """Input: pin - integer value containing the light pin location
@@ -143,7 +135,7 @@ class deviceControl():
     def Light(self, pin, light):
         if pin is not None:
             if light is not None:
-                init = initalizeOut(pin)
+                init = self.initalizeOut(pin)
                 if init == True:
                     try:
                         #Handling of day Ligh
@@ -172,9 +164,9 @@ class deviceControl():
                 return 2 #ERROR
         else:
             errCode = "NO PIN GIVEN"
-            errMsg = "No pin value provided."
+            errMsg = "No pin value provided for the light."
             deviceLog().errorLog(errCode,errMsg)
-            print("NO PIN GIVEN")
+            print("NO PIN GIVEN FOR THE LIGHT")
             return 2 #ERROR
 
     """Input: pin - integer value containing the pump pin location
@@ -184,7 +176,7 @@ class deviceControl():
     def Pump(self,pin, ws):
         if pin is not None:
             if ws is not None:
-                init = initalizeOut(pin)
+                init = self.initalizeOut(pin)
                 if init == True:
                     try:
                         #Handaling of water pumps
@@ -211,9 +203,9 @@ class deviceControl():
                 return 2 #ERROR
         else:
             errCode = "NO PIN GIVEN"
-            errMsg = "No pin value provided."
+            errMsg = "No pin value provided for the pump."
             deviceLog().errorLog(errCode,errMsg)
-            print("NO PIN GIVEN")
+            print("NO PIN GIVEN FOR THE PUMP")
             return 2 #ERROR
 
     """Input: pin - integer value containing the mister pin location
@@ -225,7 +217,7 @@ class deviceControl():
         if pin is not None:
             if humidity is not None:
                 if humidity_sp is not None:
-                    init = initalizeOut(pin)
+                    init = self.initalizeOut(pin)
                     if init == True:
                         try:
                             if int(humidity) < int(humidity_sp):
@@ -257,9 +249,9 @@ class deviceControl():
                 return 2 #ERROR
         else:
             errCode = "NO PIN GIVEN"
-            errMsg = "No pin value provided."
+            errMsg = "No pin value provided for the mister."
             deviceLog().errorLog(errCode,errMsg)
-            print("NO PIN GIVEN")
+            print("NO PIN GIVEN FOR THE MISTER")
             return 2 #ERROR
 
     """Input: pin - integer value containing the desired pin
@@ -269,7 +261,7 @@ class deviceControl():
     def Fan(self, pin, output):
         if pin is not None:
             if output is not None:
-                init = initalizeOut(pin)
+                init = self.initalizeOut(pin)
                 if init == True:
                     try:
                         #Handling of fan
@@ -296,9 +288,9 @@ class deviceControl():
                 return 2 #ERROR
         else:
             errCode = "NO PIN GIVEN"
-            errMsg = "No pin value provided."
+            errMsg = "No pin value provided for the fan."
             deviceLog().errorLog(errCode,errMsg)
-            print("NO PIN GIVEN")
+            print("NO PIN GIVEN FOR THE FAN")
             return 2 #ERROR
 
     """Input: pin - integer value containing the desired pin
@@ -308,7 +300,7 @@ class deviceControl():
     def hotPlate(self, pin, output):
         if pin is not None:
             if output is not None:
-                init = initalizeOut(pin)
+                init = self.initalizeOut(pin)
                 if init == True:
                     try:
                         #Handling of hot plate
@@ -335,7 +327,17 @@ class deviceControl():
                 return 2 #ERROR
         else:
             errCode = "NO PIN GIVEN"
-            errMsg = "No pin value provided."
+            errMsg = "No pin value provided for the hotplate."
             deviceLog().errorLog(errCode,errMsg)
-            print("NO PIN GIVEN")
+            print("NO PIN GIVEN FOR THE HOTPLATE")
             return 2 #ERROR
+
+    """Input: sensor - string containing
+       Function: shuts down all GPIO outputs in a case of a fire
+       Output: returns a boolean to inform user of function state"""
+    def Fire(self, sensor):
+        errCode = "FIRE"
+        errMsg = "Fire was detected with fire sensor " + str(sensor)
+        deviceLog().errorLog(errCode,errMsg)
+        GPIO.cleanup()
+        return True
