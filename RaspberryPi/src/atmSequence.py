@@ -35,15 +35,16 @@ class atmosphere():
                             M1_Pin = 25 #Mister GPIO 6
 
                             #Temp sensors
-                            t1 = run_mode().sensor_Value("T1","C")
-                            t2 = run_mode().sensor_Value("T2","C")
-                            t3 = run_mode().sensor_Value("T3","C")
-                            t4 = run_mode().sensor_Value("T4","C")
-                            t5 = run_mode().sensor_Value("T5","C")
+                            t1 = deviceControl().sensorValue("T1","C")
+                            t2 = deviceControl().sensorValue("T2","C")
+                            t3 = deviceControl().sensorValue("T3","C")
+                            t4 = deviceControl().sensorValue("T4","C")
+                            t5 = deviceControl().sensorValue("T5","C")
                             #Weighted average
                             tempBank = [t1,t2,t3,t4,t5]
                             tempWeigth = [1,1,1,1,1]
                             tempCount = 0
+                            temp = 0
                             x = 0
                             while x < len(tempBank):
                                 if tempBank[x] == "ERROR":
@@ -55,17 +56,21 @@ class atmosphere():
                                         x = x + 1
                                     except Exception as e:
                                         x = x + 1
-                            temp = temp/tempCount
+                            if tempCount == 0:
+                                temp = "NA"
+                            else:
+                                temp = temp/tempCount
 
                             #Humidity sensors
-                            h1 = deviceControl().sensor_Value("H1","%")
-                            h2 = deviceControl().sensor_Value("H2","%")
-                            h3 = deviceControl().sensor_Value("H3","%")
-                            h4 = deviceControl().sensor_Value("H4","%")
-                            h5 = deviceControl().sensor_Value("H5","%")
+                            h1 = deviceControl().sensorValue("H1","%")
+                            h2 = deviceControl().sensorValue("H2","%")
+                            h3 = deviceControl().sensorValue("H3","%")
+                            h4 = deviceControl().sensorValue("H4","%")
+                            h5 = deviceControl().sensorValue("H5","%")
                             humidBank = [h1,h2,h3,h4,h5]
                             humidWeigth = [1,1,1,1,1]
                             humidCount = 0
+                            humid = 0
                             x = 0
                             while x < len(humidBank):
                                 if humidBank[x] == "ERROR":
@@ -77,39 +82,51 @@ class atmosphere():
                                         x = x + 1
                                     except Exception as e:
                                         x = x + 1
-                            humid = humid/humidCount
+                            if humidCount == 0:
+                                humid = "NA"
+                            else:
+                                humid = humid/humidCount
 
                             #Electrical box sensors
-                            t6 = deviceControl().sensor_Value("T6","C") #Electrical box
-                            h6 = deviceControl().sensor_Value("H6","%") #Electrical box
-                            elecTemp = int(t6)
+                            t6 = deviceControl().sensorValue("T6","C") #Electrical box
+                            h6 = deviceControl().sensorValue("H6","%") #Electrical box
+                            try:
+                                elecTemp = int(t6)
+                            except:
+                                elecTemp = "NA"
 
                             #Carbon sensors
-                            c1 = deviceControl().sensor_Value("C1","%")
-                            carbon = int(c1)
+                            c1 = deviceControl().sensorValue("C1","%")
+                            try:
+                                carbon = int(c1)
+                            except:
+                                carbon = 0
 
                             #Fire sensors
-                            if deviceControl().sensor_Value("F1","") == "ERROR":
+                            if deviceControl().sensorValue("F1","") == "ERROR":
                                 f1 = 0
                             else:
-                                f1 = deviceControl().sensor_Value("F1","")
-                            if deviceControl().sensor_Value("F2","") == "ERROR":
+                                f1 = deviceControl().sensorValue("F1","")
+                            if deviceControl().sensorValue("F2","") == "ERROR":
                                 f2 = 0
                             else:
-                                f2 = deviceControl().sensor_Value("F2","")
-                            if deviceControl().sensor_Value("F3","") == "ERROR":
+                                f2 = deviceControl().sensorValue("F2","")
+                            if deviceControl().sensorValue("F3","") == "ERROR":
                                 f3 = 0
                             else:
-                                f3 = deviceControl().sensor_Value("F3","")
-                            if deviceControl().sensor_Value("F4","") == "ERROR":
+                                f3 = deviceControl().sensorValue("F3","")
+                            if deviceControl().sensorValue("F4","") == "ERROR":
                                 f4 = 0
                             else:
-                                f4 = deviceControl().sensor_Value("F4","")
-                            if deviceControl().sensor_Value("F5","") == "ERROR":
+                                f4 = deviceControl().sensorValue("F4","")
+                            if deviceControl().sensorValue("F5","") == "ERROR":
                                 f5 = 0
                             else:
-                                f5 = deviceControl().sensor_Value("F5","")
-                            fire = int(f1) + int(f2) + int(f3) + int(f4) + int(f5) #Sum of fire sensors
+                                f5 = deviceControl().sensorValue("F5","")
+                            try:
+                                fire = int(f1) + int(f2) + int(f3) + int(f4) + int(f5) #Sum of fire sensors
+                            except:
+                                fire = "NA"
 
                             #Output control
                             fireLevel = 10

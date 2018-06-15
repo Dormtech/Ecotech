@@ -55,7 +55,7 @@ class deviceControl():
         if sensor is not None:
             if unit is not None:
                 try:
-                    values = read_Sensor()
+                    values = self.readSensor()
                     x = 0
             	    #print(values)
                     while x < len(values):
@@ -135,7 +135,7 @@ class deviceControl():
     def Light(self, pin, light):
         if pin is not None:
             if light is not None:
-                init = initalizeOut(pin)
+                init = self.initalizeOut(pin)
                 if init == True:
                     try:
                         #Handling of day Ligh
@@ -176,7 +176,7 @@ class deviceControl():
     def Pump(self,pin, ws):
         if pin is not None:
             if ws is not None:
-                init = initalizeOut(pin)
+                init = self.initalizeOut(pin)
                 if init == True:
                     try:
                         #Handaling of water pumps
@@ -217,7 +217,7 @@ class deviceControl():
         if pin is not None:
             if humidity is not None:
                 if humidity_sp is not None:
-                    init = initalizeOut(pin)
+                    init = self.initalizeOut(pin)
                     if init == True:
                         try:
                             if int(humidity) < int(humidity_sp):
@@ -261,7 +261,7 @@ class deviceControl():
     def Fan(self, pin, output):
         if pin is not None:
             if output is not None:
-                init = initalizeOut(pin)
+                init = self.initalizeOut(pin)
                 if init == True:
                     try:
                         #Handling of fan
@@ -300,7 +300,7 @@ class deviceControl():
     def hotPlate(self, pin, output):
         if pin is not None:
             if output is not None:
-                init = initalizeOut(pin)
+                init = self.initalizeOut(pin)
                 if init == True:
                     try:
                         #Handling of hot plate
