@@ -2,7 +2,7 @@
  * @file mainGUI.py
  * @authors Steven Kalapos & Ben Bellerose
  * @date May 22 2018
- * @modified June 15 2018
+ * @modified June 18 2018
  * @modifiedby SK
  * @brief GUI managment and creation
  */
@@ -12,6 +12,7 @@ import kivy
 
 from kivy.app import App
 from kivy.uix.label import Label
+from kivy.uix.camera import Camera
 from kivy.graphics import Color, Rectangle
 from kivy.uix.boxlayout import BoxLayout
 from kivy.uix.button import Button
@@ -28,6 +29,7 @@ from kivy.config import Config
 Config.set('graphics', 'width', '800')
 Config.set('graphics', 'height', '480')
 
+global buttonPressed
 
 class GUIFunc():
     
@@ -39,7 +41,7 @@ class GUIFunc():
         return optionFile
 
 
-#default "screen saver"
+#default stats display
 class defaultScreen(Screen):
 
     def __init__(self, **kwargs):
@@ -51,8 +53,6 @@ class defaultScreen(Screen):
         except IOError:
             optionFile = createGUIOptions(pathway)  
 
-        self.plot = MeshLinePlot(color=[1, 0, 0, 1])  
-        self.ids.graph.add_plot(self.plot)
         self.addWidgetsDefault(optionFile)
         Clock.schedule_interval(self.update, 1)
 
@@ -62,7 +62,6 @@ class defaultScreen(Screen):
         self.temperatureVar.text = str(random.randint(0,200))
         self.dayVar.text = '00'
         self.clockDisplay.text = time.asctime()
-        self.plot.points = [(4, 2)]
 
     #reads the user options and imports the nessacary widgets
     def addWidgetsDefault(self, optionFile):
@@ -78,8 +77,28 @@ class defaultScreen(Screen):
         self.add_widget(self.dayVar)
         self.dayVar.pos = (0,120)
         self.dayVar.font_size = 55
-        
 
+#screen where user can pick different options
+class optionScreen(Screen):
+    def __init__(self, **kwargs):
+        super(optionScreen, self).__init__(**kwargs)
+
+        pathway = os.path.dirname(os.path.abspath( __file__ ))
+        try:
+            optionFile = open(pathway+"/options/GUIOptions.txt","r+")
+        except IOError:
+            optionFile = createGUIOptions(pathway)
+        
+        self.clockDisplay = Label()
+        self.add_widget(self.clockDisplay)
+        self.clockDisplay.pos = (300,220)
+        Clock.schedule_interval(self.update, 1)
+
+    #will update all the variables on screen
+    def update(self, dt):
+        self.clockDisplay.text = time.asctime()
+
+#main screen
 class mainScreen(Screen):
     def __init__(self, **kwargs):
         super(mainScreen, self).__init__(**kwargs)
@@ -100,5 +119,6 @@ class ecozoneApp(App):
         sm = ScreenManager()
         sm.add_widget(mainScreen(name="main"))
         sm.add_widget(defaultScreen(name="default"))
+        sm.add_widget(optionScreen(name='option'))
                 
         return sm

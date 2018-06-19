@@ -12,8 +12,8 @@
         Button:
             text: 'Back'
             on_release: 
+                root.manager.transition = SlideTransition(direction='up')
                 root.manager.current = 'main'
-                root.manager.transition = SlideTransition(direction='right')
             size_hint: (.1,.1)
             pos_hint:{'x':0,'y':0}
 
@@ -40,9 +40,19 @@
         BoxLayout:
             size_hint:(.5,.5)
             pos:(200,75)
-            Graph:
-                id: graph
-                
+
+<optionScreen>:
+    size:(480,800)
+    FloatLayout:
+        id: optionScreenLayout
+        
+        Button:
+            text: 'Back'
+            on_release: 
+                root.manager.transition = SlideTransition(direction='left')
+                root.manager.current = 'main'
+            size_hint: (.1,.1)
+            pos_hint:{'x':0,'y':0}          
                 
 <mainScreen>:
     FloatLayout:
@@ -51,7 +61,14 @@
         Button:
             text: 'To Default'
             on_release: 
+                root.manager.transition = SlideTransition(direction='down')
                 root.manager.current = 'default'
-                root.manager.transition = SlideTransition(direction='left')
-            size_hint: (.1,.1)
+            size_hint: (.25,.25)
+            pos:(100,300)
+        Button:
+            text: "Options"
+            on_release:
+                root.manager.transition = SlideTransition(direction='right')
+                root.manager.current = 'option'
+            size_hint: (.25,.25)
             pos:(100,100)
