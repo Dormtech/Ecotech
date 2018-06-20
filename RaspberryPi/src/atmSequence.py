@@ -2,7 +2,7 @@
  * @file atmSequence.py
  * @authors Steven Kalapos & Ben Bellerose
  * @date May 2018
- * @modified June 2 2018
+ * @modified June 18 2018
  * @modifiedby BB
  * @brief control sequence for the atmosphere of the machine
  */
