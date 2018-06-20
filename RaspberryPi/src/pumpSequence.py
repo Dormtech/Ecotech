@@ -2,7 +2,7 @@
  * @file pumpSequence.py
  * @authors Steven Kalapos & Ben Bellerose
  * @date May 2018
- * @modified May 30 2018
+ * @modified June 20 2018
  * @modifiedby BB
  * @brief control sequence for the pumps of the machine
  */
@@ -11,7 +11,7 @@ from runMode import deviceControl
 
 class pumps():
 
-    """Input: no input needed for function
+    """Input: phSP - integer value containing the PH setpoint
         Function: controls the atmosphere inside the machine
         Output: returns a boolean value to inform user of machine state"""
     def pumpMain(self,phSP):
