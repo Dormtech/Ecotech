@@ -17,13 +17,15 @@ class pumps():
     def pumpMain(self,phSP):
         if phSP is not None:
             #Output Pin variable
-            P0_Pin = 9 #Main resevoir pump GPIO 13
-            P1_Pin = 5 #Dosing pump GPIO 21
-            P2_Pin = 13 #Dosing pump GPIO 23
-            P3_Pin = 16 #Dosing pump GPIO 27
-            P4_Pin = 1 #Dosing pump GPIO
-            P5_Pin = 22 #Dosing pump GPIO 3
-            P6_Pin = 27 #Dosing pump GPIO 2
+            P1_Pin = 9 #Main resevoir pump GPIO 13
+            P2_Pin = 5 #Dosing pump GPIO 21
+            P3_Pin = 13 #Dosing pump GPIO 23
+            P4_Pin = 16 #Dosing pump GPIO 27
+            P5_Pin = 1 #Dosing pump GPIO
+            P6_Pin = 22 #Dosing pump GPIO 3
+            P7_Pin = 27 #Dosing pump GPIO 2
+            P8_Pin = 26 #Dosing pump GPIO 2
+            P9_Pin = 23 #Dosing pump GPIO 2
             Drain_Pin =  19 #Drain solenoid GPIO 24
 
             #Water level sensors
@@ -94,7 +96,68 @@ class pumps():
             #Output control
             fireLevel = 10
             if fire <= fireLevel and fire != "NA": #If fire is not detected
-                return True
+                if phSP > ph1 and ph1 != "NA": #PH level is low add nutrients
+                    if w1 != "NA": #If tank 1 does not have errors
+                        deviceControl().Pump(P1_Pin, w1) #Dispence pump
+                        print("PUMP 1 ON")
+                    elif w1 == "NA": #w1 sensor is not avalible
+                        print("ERROR WITH W1")
+
+                    if w2 != "NA": #If tank 2 does not have errors
+                        deviceControl().Pump(P2_Pin, w2) #Dispence pump
+                        print("PUMP 2 ON")
+                    elif w2 == "NA": #w2 sensor is not avalible
+                        print("ERROR WITH W2")
+
+                    if w3 != "NA": #If tank 3 does not have errors
+                        deviceControl().Pump(P3_Pin, w3) #Dispence pump
+                        print("PUMP 3 ON")
+                    elif w3 == "NA": #w3 sensor is not avalible
+                        print("ERROR WITH W3")
+
+                    if w4 != "NA": #If tank 4 does not have errors
+                        deviceControl().Pump(P4_Pin, w4) #Dispence pump
+                        print("PUMP 4 ON")
+                    elif w4 == "NA": #w4 sensor is not avalible
+                        print("ERROR WITH W4")
+
+                    if w5 != "NA": #If tank 5 does not have errors
+                        deviceControl().Pump(P5_Pin, w5) #Dispence pump
+                        print("PUMP 5 ON")
+                    elif w5 == "NA": #w5 sensor is not avalible
+                        print("ERROR WITH W5")
+
+                    if w6 != "NA": #If tank 6 does not have errors
+                        deviceControl().Pump(P6_Pin, w6) #Dispence pump
+                        print("PUMP 6 ON")
+                    elif w6 == "NA": #w6 sensor is not avalible
+                        print("ERROR WITH W6")
+
+                    if w7 != "NA": #If tank 7 does not have errors
+                        deviceControl().Pump(P7_Pin, w7) #Dispence pump
+                        print("PUMP 7 ON")
+                    elif w7 == "NA": #w7 sensor is not avalible
+                        print("ERROR WITH W7")
+                    return True
+
+                elif phSP < ph1 and ph1 != "NA": #PH is to high add diluter
+                    if w8 != "NA": #If tank 8 does not have errors
+                        deviceControl().Pump(P8_Pin, w8) #Dispence pump
+                        print("PUMP 8 ON")
+                    elif w8 == "NA": #w8 sensor is not avalible
+                        print("ERROR WITH W8")
+                    return True
+
+                elif phSP == ph1 and ph1 != "NA": #PH is right pump main resevoir
+                    if w9 != "NA": #If tank 9 does not have errors
+                        deviceControl().Pump(P9_Pin, w9) #Dispence pump
+                        print("PUMP 9 ON")
+                    elif w9 == "NA": #w9 sensor is not avalible
+                        print("ERROR WITH W9")
+                    return True
+
+                elif ph1 == "NA":
+                    return False
 
             elif fire > fireLevel and fire != "NA": #If fire is detected
                 if f1 > fireLevel:
