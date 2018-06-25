@@ -2,7 +2,7 @@
  * @file atmSequence.py
  * @authors Steven Kalapos & Ben Bellerose
  * @date May 2018
- * @modified June 18 2018
+ * @modified June 26 2018
  * @modifiedby BB
  * @brief control sequence for the atmosphere of the machine
  */
@@ -11,6 +11,93 @@ from runMode import deviceControl
 from logg import deviceLog
 
 class atmosphere():
+    """Input: tempBank - list containing all tempature sensor values to include in tempature calculation
+              tempWeight - list containing all tempature sensore weights for the calculation
+        Function: determines the tempature of an area
+        Output: returns a integer value that reflects the current tempature of an area"""
+    def findTemp(self,tempBank,tempWeight):
+        if tempBank is not None:
+            if tempWeight is not None:
+                tempCount = 0
+                temp = 0
+                x = 0
+                while x < len(tempBank):
+                    if tempBank[x] == "ERROR":
+                        x = x + 1
+                    else:
+                        try:
+                            temp = temp + (int(tempBank[x]) * tempWeigth[x])
+                            tempCount = tempCount + 1
+                            x = x + 1
+                        except Exception as e:
+                            x = x + 1
+                if tempCount == 0:
+                    temp = "NA"
+                    errCode = "SYSTEM FAILURE"
+                    errMsg = "All tempature sensors offline."
+                    deviceLog().errorLog(errCode,errMsg)
+                    print("SYSTEM FAILURE - ALL TEMPATURE SENSORS OFFLINE")
+                else:
+                    temp = temp/tempCount
+                return temp
+            else:
+                temp = "NA"
+                errCode = "NO TEMPATURE WEIGHT PROVIDED"
+                errMsg = "No tempature weight list was provided for the machine."
+                deviceLog().errorLog(errCode,errMsg)
+                print("NO TEMPATURE WEIGHT PROVIDED")
+                return temp
+        else:
+            temp = "NA"
+            errCode = "NO TEMPATURE BANK PROVIDED"
+            errMsg = "No tempature bank list was provided for the machine."
+            deviceLog().errorLog(errCode,errMsg)
+            print("NO TEMPATURE BANK PROVIDED")
+            return temp
+
+    """Input: humidBank - list containing all humidity sensor values to include in humidity calculation
+              humidWeight - list containing all humidity sensore weights for the calculation
+        Function: determines the humidity of an area
+        Output: returns a integer value that reflects the current humidity of an area"""
+    def findHumid(self,humidBank,humidWeight):
+        if humidBank is not None:
+            if humidWeight is not None:
+                humidCount = 0
+                humid = 0
+                x = 0
+                while x < len(humidBank):
+                    if humidBank[x] == "ERROR":
+                        x = x + 1
+                    else:
+                        try:
+                            humid = humid + (int(humidBank[x]) * humidWeigth[x])
+                            humidCount = humidCount + 1
+                            x = x + 1
+                        except Exception as e:
+                            x = x + 1
+                if humidCount == 0:
+                    humid = "NA"
+                    errCode = "SYSTEM FAILURE"
+                    errMsg = "All humidity sensors are offline."
+                    deviceLog().errorLog(errCode,errMsg)
+                    print("SYSTEM FAILURE - ALL HUMIDITY SENSORS OFFLINE")
+                else:
+                    humid = humid/humidCount
+                return humid
+            else:
+                humid = "NA"
+                errCode = "NO HUMIDITY WEIGHT PROVIDED"
+                errMsg = "No humidity weight list was provided for the machine."
+                deviceLog().errorLog(errCode,errMsg)
+                print("NO HUMIDITY WEIGHT PROVIDED")
+                return humid
+        else:
+            humid = "NA"
+            errCode = "NO HUMIDITY BANK PROVIDED"
+            errMsg = "No humidity bank list was provided for the machine."
+            deviceLog().errorLog(errCode,errMsg)
+            print("NO HUMIDITY BANK PROVIDED")
+            return humid
 
     """Input: humiditySP - integer value containing the humidity setpoint
               carbonSP - integer value containing the carbon setpoint
@@ -43,24 +130,7 @@ class atmosphere():
                             #Weighted average
                             tempBank = [t1,t2,t3,t4,t5]
                             tempWeigth = [1,1,1,1,1]
-                            tempCount = 0
-                            temp = 0
-                            x = 0
-                            while x < len(tempBank):
-                                if tempBank[x] == "ERROR":
-                                    x = x + 1
-                                else:
-                                    try:
-                                        temp = temp + (int(tempBank[x]) * tempWeigth[x])
-                                        tempCount = tempCount + 1
-                                        x = x + 1
-                                    except Exception as e:
-                                        x = x + 1
-                            if tempCount == 0:
-                                temp = "NA"
-                                print("SYSTEM FAILURE - TEMPATURE SENSORS OFFLINE")
-                            else:
-                                temp = temp/tempCount
+                            temp = self.findTemp(tempBank,tempWeight)
 
                             #Humidity sensors
                             h1 = deviceControl().sensorValue("H1","%")
@@ -70,24 +140,7 @@ class atmosphere():
                             h5 = deviceControl().sensorValue("H5","%")
                             humidBank = [h1,h2,h3,h4,h5]
                             humidWeigth = [1,1,1,1,1]
-                            humidCount = 0
-                            humid = 0
-                            x = 0
-                            while x < len(humidBank):
-                                if humidBank[x] == "ERROR":
-                                    x = x + 1
-                                else:
-                                    try:
-                                        humid = humid + (int(humidBank[x]) * humidWeigth[x])
-                                        humidCount = humidCount + 1
-                                        x = x + 1
-                                    except Exception as e:
-                                        x = x + 1
-                            if humidCount == 0:
-                                humid = "NA"
-                                print("SYSTEM FAILURE - HUMIDITY SENSORS OFFLINE")
-                            else:
-                                humid = humid/humidCount
+                            humid = self.findHumid(humidBank,humidWeight)
 
                             #Electrical box sensors
                             t6 = deviceControl().sensorValue("T6","C") #Electrical box
