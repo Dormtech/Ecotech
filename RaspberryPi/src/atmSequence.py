@@ -112,14 +112,18 @@ class atmosphere():
                     if light is not None:
                         try:
                             #Output Pin variables
-                            L1_Pin = 26 #Light GPIO 25
-                            F1_Pin = 6 #Circulation fan GPIO 22
-                            F2_Pin = 8 #Exhaust fan GPIO 10
-                            F3_Pin = 8 #Intake fan GPIO 10
-                            F4_Pin = 8 #Transition fan GPIO 10
-                            F5_Pin = 8 #Electrical exhaust fan GPIO 10
-                            F6_Pin = 8 #Electrical intake fan GPIO 10
-                            M1_Pin = 25 #Mister GPIO 6
+                            L1_Pin = 2 #Light GPIO 8
+                            L2_Pin = 3 #Light GPIO 9
+                            L3_Pin = 4 #Light GPIO 7
+                            L4_Pin = 17 #Light GPIO 0
+                            L5_Pin = 27 #Light GPIO 2
+                            F1_Pin = 22 #Circulation fan GPIO 3
+                            F2_Pin = 10 #Exhaust fan GPIO 12
+                            F3_Pin = 9 #Intake fan GPIO 13
+                            F4_Pin = 11 #Transition fan GPIO 14
+                            F5_Pin = 5 #Electrical exhaust fan GPIO 21
+                            F6_Pin = 6 #Electrical intake fan GPIO 22
+                            M1_Pin = 26 #Mister GPIO 10
 
                             #Temp sensors
                             t1 = deviceControl().sensorValue("T1","C")

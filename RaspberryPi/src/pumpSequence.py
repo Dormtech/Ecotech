@@ -17,16 +17,16 @@ class pumps():
     def pumpMain(self,phSP):
         if phSP is not None:
             #Output Pin variable
-            P1_Pin = 9 #Main resevoir pump GPIO 13
-            P2_Pin = 5 #Dosing pump GPIO 21
-            P3_Pin = 13 #Dosing pump GPIO 23
-            P4_Pin = 16 #Dosing pump GPIO 27
-            P5_Pin = 1 #Dosing pump GPIO
-            P6_Pin = 22 #Dosing pump GPIO 3
-            P7_Pin = 27 #Dosing pump GPIO 2
-            P8_Pin = 26 #Dosing pump GPIO 2
-            P9_Pin = 23 #Dosing pump GPIO 2
-            Drain_Pin =  19 #Drain solenoid GPIO 24
+            P1_Pin = 13 #Main resevoir pump GPIO 23
+            P2_Pin = 19 #Dosing pump GPIO 24
+            P3_Pin = 26 #Dosing pump GPIO 25
+            P4_Pin = 14 #Dosing pump GPIO 15
+            P5_Pin = 15 #Dosing pump GPIO 16
+            P6_Pin = 18 #Dosing pump GPIO 1
+            P7_Pin = 23 #Dosing pump GPIO 4
+            P8_Pin = 24 #Dosing pump GPIO 5
+            P9_Pin = 25 #Dosing pump GPIO 6
+            Drain_Pin =  12 #Drain solenoid GPIO 26
 
             #Water level sensors
             if deviceControl().sensorValue("WL1","") == "ERROR":
