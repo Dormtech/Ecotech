@@ -27,25 +27,24 @@ class deviceLog():
                 log_file = "/".join(log_file)
                 log_file = log_file + "/logs/error_log.txt"
                 #attempt to read log file
-                try:
+                if os.path.isdir(log_file):
                     file_read = open(log_file,"r")
-                except Exception as e:
-                    #unable to find error log creating new error log
+                    #write error log into existing error log
+                    file_hold = file_read.readlines()
+                    file_read.close()
+                    file_hold.insert(len(file_hold),content)
+                    file_write = open(log_file,"w")
+                    x = 0
+                    while x < len(file_hold):
+                        file_write.write(file_hold[x].replace("\n",""))
+                        if x < len(file_hold) - 1:
+                            file_write.write("\n")
+                        x = x + 1
+                    return True
+                else:
                     file_write = open(log_file,"w")
                     file_write.write(content)
                     return True
-                #write error log into existing error log
-                file_hold = file_read.readlines()
-                file_read.close()
-                file_hold.insert(len(file_hold),content)
-                file_write = open(log_file,"w")
-                x = 0
-                while x < len(file_hold):
-                    file_write.write(file_hold[x].replace("\n",""))
-                    if x < len(file_hold) - 1:
-                        file_write.write("\n")
-                    x = x + 1
-                return True
             else:
                 return False
         else:
