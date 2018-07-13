@@ -42,7 +42,7 @@ class deviceLog():
                         x = x + 1
                     return True
                 else:
-                    file_write = open(log_file,"w")
+                    file_write = open(log_file,"w+")
                     file_write.write(content)
                     return True
             else:
