@@ -23,6 +23,7 @@ class deviceControl():
             #ser = serial.Serial('/dev/ttyACM0', 9600) #/dev/ttyACM0 location of serial device
             ser = serial.Serial('/dev/ttyUSB0', 9600) #/dev/ttyUSB0 location of serial device
             ser.flushInput()
+            ser.flushOutput()
             time.sleep(0.1)
             hold1 = ser.readline()
             hold1 = str(hold1).replace("\\r", "")
@@ -141,7 +142,7 @@ class deviceControl():
                         if int(hour) <= light_sp:
                             GPIO.output(pin, True)
                             return 0 #ON
-                        elif hour > light_sp:
+                        elif int(hour) > light_sp:
                             GPIO.output(pin, False)
                             return 1 #OFF
                     except Exception as e:
