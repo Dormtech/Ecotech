@@ -22,11 +22,13 @@ class network():
                 print("Updating device please wait.")
                 os.chdir("/home/pi/Desktop/Ecotech")
                 result = subprocess.run(['git','pull','origin','ben-testBranch'], stdout=subprocess.PIPE)
+                result.wait()
                 return True
             else:
                 print("Downloadign source code please wait.")
                 os.chdir("/home/pi/Desktop")
                 result = subprocess.run(['git', 'clone', 'https://github.com/Dormtech/Ecotech.git'], stdout=subprocess.PIPE)
+                result.wait()
                 return True
         except Exception as e:
             errCode = "ERROR UPDATING"
