@@ -40,10 +40,12 @@ class deviceLog():
                         if x < len(file_hold) - 1:
                             file_write.write("\n")
                         x = x + 1
+                    file_write.close()
                     return True
                 else:
-                    file_write = open(log_file,"w+")
+                    file_write = open(log_file,"w")
                     file_write.write(content)
+                    file_write.close()
                     return True
             else:
                 return False
