@@ -7,8 +7,9 @@
  * @brief testing playground to try out classes
  */
  """
- from atmSequence import atmosphere
- from pumpSequence import pumps
+from atmSequence import atmosphere
+from pumpSequence import pumps
+from networking import network
 
 if __name__ == "__main__":
     humiditySP = 60
@@ -17,5 +18,6 @@ if __name__ == "__main__":
     light = 80
     elecSP = 40
     phSP = 50
+    network().machineUpdate()
     atmosphere().atmMain(humiditySP,carbonSP,tempatureSP,light,elecSP)
     pumps().pumpMain(phSP)

@@ -34,7 +34,7 @@ class deviceControl():
                 return bank
             except Exception as e:
                 errCode = "ERROR READING SERIAL"
-                errMsg = e
+                errMsg = str(e)
                 deviceLog().errorLog(errCode,errMsg)
                 print("ERROR READING SERIAL")
                 bank = ["ERROR"]
