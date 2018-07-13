@@ -18,6 +18,6 @@ if __name__ == "__main__":
     light = 80
     elecSP = 40
     phSP = 50
-    network().machineUpdate()
+    #network().machineUpdate()
     atmosphere().atmMain(humiditySP,carbonSP,tempatureSP,light,elecSP)
     pumps().pumpMain(phSP)

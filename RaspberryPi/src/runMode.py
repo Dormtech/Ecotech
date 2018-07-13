@@ -20,26 +20,20 @@ class deviceControl():
        Output: writes out array of values for all sensors or NA if there is a problem"""
     def readSensor(self):
         if serial.Serial('/dev/ttyUSB0', 9600):
-            try:
-                #ser = serial.Serial('/dev/ttyACM0', 9600) #/dev/ttyACM0 location of serial device
-                ser = serial.Serial('/dev/ttyUSB0', 9600) #/dev/ttyACM0 location of serial device
-                hold1 = ser.readline().replace("\r", "")
-                hold1 = hold1.replace("\n", "")
-                hold1 = hold1.split("-")
-                bank = []
-                x = 0
-                while x < len(hold1):
-                    hold = hold1[x].split("=")
-                    bank.insert(len(bank), hold)
-                    x = x + 1
-                return bank
-            except Exception as e:
-                errCode = "ERROR READING SERIAL"
-                errMsg = str(e)
-                deviceLog().errorLog(errCode,errMsg)
-                print("ERROR READING SERIAL")
-                bank = ["ERROR"]
-                return bank
+            #ser = serial.Serial('/dev/ttyACM0', 9600) #/dev/ttyACM0 location of serial device
+            ser = serial.Serial('/dev/ttyUSB0', 9600) #/dev/ttyUSB0 location of serial device
+            hold1 = ser.readline()
+            hold1 = str(hold1).replace("\\r", "")
+            hold1 = hold1.replace("\\n", "")
+            hold1 = hold1.replace("b'", "")
+            hold1 = hold1.split(",")
+            bank = []
+            x = 0
+            while x < len(hold1):
+                hold = hold1[x].split("=")
+                bank.insert(len(bank), hold)
+                x = x + 1
+            return bank
         else:
             errCode = "NO SERIAL"
             errMsg = "No serial communication device unpluged."
