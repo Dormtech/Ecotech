@@ -26,7 +26,7 @@ class atmosphere():
                         x = x + 1
                     else:
                         try:
-                            temp = temp + (int(tempBank[x]) * tempWeigth[x])
+                            temp = temp + (int(tempBank[x]) * tempWeight[x])
                             tempCount = tempCount + 1
                             x = x + 1
                         except Exception as e:
