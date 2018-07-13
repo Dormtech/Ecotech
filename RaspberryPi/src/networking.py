@@ -17,22 +17,14 @@ class network():
         Function: downloads most current version of code avalible
         Output: returns a boolean value to inform user if function was compleated"""
     def machineUpdate(self):
-        try:
-            if os.path.isdir("/home/pi/Desktop"):
-                print("Updating device please wait.")
-                os.chdir("/home/pi/Desktop/Ecotech")
-                result = subprocess.run(['git','rest','--hard','origin/ben-testBranch'], stdout=subprocess.PIPE)
-                result.wait()
-                return True
-            else:
-                print("Downloadign source code please wait.")
-                os.chdir("/home/pi/Desktop")
-                result = subprocess.run(['git', 'clone', 'https://github.com/Dormtech/Ecotech.git'], stdout=subprocess.PIPE)
-                result.wait()
-                return True
-        except Exception as e:
-            errCode = "ERROR UPDATING"
-            errMsg = "The following error occured while trying to update: " + str(e)
-            deviceLog().errorLog(errCode,errMsg)
-            print("ERROR UPDATING")
-            return False
+        if os.path.isdir("/home/pi/Desktop"):
+            print("Updating device please wait.")
+            os.chdir("/home/pi/Desktop/Ecotech")
+            result1 = subprocess.run(['git','rest','--hard','origin/ben-testBranch'], stdout=subprocess.PIPE)
+            result2 = subprocess.run(['git','pull','origin','ben-testBranch'], stdout=subprocess.PIPE)
+            return True
+        else:
+            print("Downloadign source code please wait.")
+            os.chdir("/home/pi/Desktop")
+            result = subprocess.run(['git', 'clone', 'https://github.com/Dormtech/Ecotech.git'], stdout=subprocess.PIPE)
+            return True
