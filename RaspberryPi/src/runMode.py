@@ -136,7 +136,7 @@ class deviceControl():
                         #Handling of day Ligh
                         light_sp = int((float(light)/(100.00))*(24.00))
                         hour = strftime("%H", gmtime())
-                        if hour <= light_sp:
+                        if int(hour) <= light_sp:
                             GPIO.output(pin, True)
                             return 0 #ON
                         elif hour > light_sp:

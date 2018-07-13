@@ -195,7 +195,7 @@ class atmosphere():
                             print("SYSTEM FAILURE - FIRE SENSORS OFFLINE")
 
                         #Output control
-                        fireLevel = 10
+                        fireLevel = 1000
                         if fire == "NA":
                             return False
                         elif fire <= fireLevel and fire != "NA": #If fire is not detected
@@ -210,6 +210,8 @@ class atmosphere():
                                         deviceControl().Fan(F4_Pin, False) #Transition
                                         deviceControl().Fan(F5_Pin, True) #Electrical exhaust
                                         deviceControl().Fan(F6_Pin, True) #Electrical intake
+                                        print("[f2,f3,f4,f5,f6]")
+                                        print("[1,1,0,1,1]")
 
                                     elif carbonSP > carbon and carbon != "NA": #Too little carbon dioxide
                                         deviceControl().Fan(F2_Pin, False) #Exhaust
@@ -217,6 +219,8 @@ class atmosphere():
                                         deviceControl().Fan(F4_Pin, True) #Transition
                                         deviceControl().Fan(F5_Pin, False) #Electrical exhaust
                                         deviceControl().Fan(F6_Pin, True) #Electrical intake
+                                        print("[f2,f3,f4,f5,f6]")
+                                        print("[0,1,1,0,1]")
 
                                     elif carbon == "NA": #Carbon sensors offline
                                         return False
@@ -228,6 +232,8 @@ class atmosphere():
                                         deviceControl().Fan(F4_Pin, False) #Transition
                                         deviceControl().Fan(F5_Pin, True) #Electrical exhaust
                                         deviceControl().Fan(F6_Pin, True) #Electrical intake
+                                        print("[f2,f3,f4,f5,f6]")
+                                        print("[0,0,0,1,1]")
 
                                     elif carbonSP > carbon and carbon != "NA": #Too little carbon dioxide
                                         deviceControl().Fan(F2_Pin, False) #Exhaust
@@ -235,6 +241,8 @@ class atmosphere():
                                         deviceControl().Fan(F4_Pin, True) #Transition
                                         deviceControl().Fan(F5_Pin, False) #Electrical exhaust
                                         deviceControl().Fan(F6_Pin, True) #Electrical intake
+                                        print("[f2,f3,f4,f5,f6]")
+                                        print("[0,0,1,0,1]")
 
                                     elif carbon == "NA": #Carbon sensor offline
                                         return False
@@ -250,6 +258,8 @@ class atmosphere():
                                         deviceControl().Fan(F4_Pin, False) #Transition
                                         deviceControl().Fan(F5_Pin, False) #Electrical exhaust
                                         deviceControl().Fan(F6_Pin, False) #Electrical intake
+                                        print("[f2,f3,f4,f5,f6]")
+                                        print("[1,1,0,0,0]")
 
                                     elif carbonSP > carbon and carbon != "NA": #Too little carbon dioxide
                                         deviceControl().Fan(F2_Pin, False) #Exhaust
@@ -257,6 +267,8 @@ class atmosphere():
                                         deviceControl().Fan(F4_Pin, True) #Transition
                                         deviceControl().Fan(F5_Pin, False) #Electrical exhaust
                                         deviceControl().Fan(F6_Pin, True) #Electrical intake
+                                        print("[f2,f3,f4,f5,f6]")
+                                        print("[0,0,1,0,1]")
 
                                     elif carbon == "NA": #Carbon sensor offline
                                         return False
@@ -268,6 +280,8 @@ class atmosphere():
                                         deviceControl().Fan(F4_Pin, False) #Transition
                                         deviceControl().Fan(F5_Pin, False) #Electrical exhaust
                                         deviceControl().Fan(F6_Pin, False) #Electrical intake
+                                        print("[f2,f3,f4,f5,f6]")
+                                        print("[0,0,0,0,0]")
 
                                     elif carbonSP > carbon and carbon != "NA": #Too little carbon dioxide
                                         deviceControl().Fan(F2_Pin, False) #Exhaust
@@ -275,6 +289,8 @@ class atmosphere():
                                         deviceControl().Fan(F4_Pin, True) #Transition
                                         deviceControl().Fan(F5_Pin, False) #Electrical exhaust
                                         deviceControl().Fan(F6_Pin, True) #Electrical intake
+                                        print("[f2,f3,f4,f5,f6]")
+                                        print("[0,1,1,0,1]")
 
                                     elif carbon == "NA": #Carbon sensor offline
                                         return False

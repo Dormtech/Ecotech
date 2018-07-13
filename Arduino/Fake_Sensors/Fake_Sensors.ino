@@ -148,5 +148,5 @@ void loop() {
  int f6 = random(0,254);
  Serial.print("F6=");
  Serial.println(f6,DEC);
- delay(2000);
+ delay(10);
 }
