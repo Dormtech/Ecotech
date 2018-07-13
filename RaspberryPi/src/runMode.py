@@ -19,9 +19,10 @@ class deviceControl():
        Function: reads sensor values over serial communication
        Output: writes out array of values for all sensors or NA if there is a problem"""
     def readSensor(self):
-        if serial.Serial('/dev/ttyACM0', 9600):
+        if serial.Serial('/dev/ttyS0', 9600):
             try:
-                ser = serial.Serial('/dev/ttyACM0', 9600) #/dev/ttyACM0 location of serial device
+                #ser = serial.Serial('/dev/ttyACM0', 9600) #/dev/ttyACM0 location of serial device
+                ser = serial.Serial('/dev/ttyS0', 9600) #/dev/ttyACM0 location of serial device
                 hold1 = ser.readline().replace("\r", "")
                 hold1 = hold1.replace("\n", "")
                 hold1 = hold1.split("-")
