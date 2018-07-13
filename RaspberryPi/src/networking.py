@@ -20,7 +20,7 @@ class network():
         if os.path.isdir("/home/pi/Desktop"):
             print("Updating device please wait.")
             os.chdir("/home/pi/Desktop/Ecotech")
-            result1 = subprocess.run(['git','rest','--hard','origin/ben-testBranch'], stdout=subprocess.PIPE)
+            result1 = subprocess.run(['git','reset','--hard','origin/ben-testBranch'], stdout=subprocess.PIPE)
             result2 = subprocess.run(['git','pull','origin','ben-testBranch'], stdout=subprocess.PIPE)
             return True
         else:
