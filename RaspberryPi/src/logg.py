@@ -27,7 +27,7 @@ class deviceLog():
                 log_file = "/".join(log_file)
                 log_file = log_file + "/logs/error_log.txt"
                 #attempt to read log file
-                if os.path.isdir(log_file):
+                if os.path.isfile(log_file):
                     file_read = open(log_file,"r")
                     #write error log into existing error log
                     file_hold = file_read.readlines()
