@@ -23,6 +23,7 @@ class deviceControl():
             #ser = serial.Serial('/dev/ttyACM0', 9600) #/dev/ttyACM0 location of serial device
             ser = serial.Serial('/dev/ttyUSB0', 9600) #/dev/ttyUSB0 location of serial device
             ser.flushInput()
+            time.sleep(0.1)
             hold1 = ser.readline()
             hold1 = str(hold1).replace("\\r", "")
             hold1 = hold1.replace("\\n", "")
