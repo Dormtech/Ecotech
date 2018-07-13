@@ -9,6 +9,7 @@
  """
 import os
 import subprocess
+from logg import deviceLog
 
 class network():
 
