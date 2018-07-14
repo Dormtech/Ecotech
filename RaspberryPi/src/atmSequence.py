@@ -167,23 +167,23 @@ class atmosphere():
                             print("SYSTEM FAILURE - CARBON SENSORS OFFLINE")
 
                         #Fire sensors
-                        if deviceControl().sensorValue("F1","") == "ERROR":
+                        if deviceControl().sensorValue("F1","",3) == "ERROR":
                             f1 = "NA"
                         else:
                             f1 = deviceControl().sensorValue("F1","",3)
-                        if deviceControl().sensorValue("F2","") == "ERROR":
+                        if deviceControl().sensorValue("F2","",3) == "ERROR":
                             f2 = "NA"
                         else:
                             f2 = deviceControl().sensorValue("F2","",3)
-                        if deviceControl().sensorValue("F3","") == "ERROR":
+                        if deviceControl().sensorValue("F3","",3) == "ERROR":
                             f3 = "NA"
                         else:
                             f3 = deviceControl().sensorValue("F3","",3)
-                        if deviceControl().sensorValue("F4","") == "ERROR":
+                        if deviceControl().sensorValue("F4","",3) == "ERROR":
                             f4 = "NA"
                         else:
                             f4 = deviceControl().sensorValue("F4","",3)
-                        if deviceControl().sensorValue("F5","") == "ERROR":
+                        if deviceControl().sensorValue("F5","",3) == "ERROR":
                             f5 = "NA"
                         else:
                             f5 = deviceControl().sensorValue("F5","",3)
