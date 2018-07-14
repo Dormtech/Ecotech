@@ -123,13 +123,15 @@ class atmosphere():
                         F5_Pin = 5 #Electrical exhaust fan GPIO 21
                         F6_Pin = 6 #Electrical intake fan GPIO 22
                         M1_Pin = 26 #Mister GPIO 10
+                        code1Bank = deviceControl().readSensor(1)
+                        code3Bank = deviceControl().readSensor(3)
 
                         #Temp sensors
-                        t1 = deviceControl().sensorValue("T1","C",1)
-                        t2 = deviceControl().sensorValue("T2","C",1)
-                        t3 = deviceControl().sensorValue("T3","C",1)
-                        t4 = deviceControl().sensorValue("T4","C",1)
-                        t5 = deviceControl().sensorValue("T5","C",1)
+                        t1 = deviceControl().sensorValue("T1","C",code1Bank)
+                        t2 = deviceControl().sensorValue("T2","C",code1Bank)
+                        t3 = deviceControl().sensorValue("T3","C",code1Bank)
+                        t4 = deviceControl().sensorValue("T4","C",code1Bank)
+                        t5 = deviceControl().sensorValue("T5","C",code1Bank)
                         #Weighted average
                         tempBank = [t1,t2,t3,t4,t5]
                         tempWeight = [1,1,1,1,1]
@@ -137,19 +139,19 @@ class atmosphere():
                         print("temp = " + str(temp))
 
                         #Humidity sensors
-                        h1 = deviceControl().sensorValue("H1","%",1)
-                        h2 = deviceControl().sensorValue("H2","%",1)
-                        h3 = deviceControl().sensorValue("H3","%",1)
-                        h4 = deviceControl().sensorValue("H4","%",1)
-                        h5 = deviceControl().sensorValue("H5","%",1)
+                        h1 = deviceControl().sensorValue("H1","%",code1Bank)
+                        h2 = deviceControl().sensorValue("H2","%",code1Bank)
+                        h3 = deviceControl().sensorValue("H3","%",code1Bank)
+                        h4 = deviceControl().sensorValue("H4","%",code1Bank)
+                        h5 = deviceControl().sensorValue("H5","%",code1Bank)
                         humidBank = [h1,h2,h3,h4,h5]
                         humidWeight = [1,1,1,1,1]
                         humid = self.findHumid(humidBank,humidWeight)
                         print("humidity = " + str(humid))
 
                         #Electrical box sensors
-                        t6 = deviceControl().sensorValue("T6","C",1) #Electrical box
-                        h6 = deviceControl().sensorValue("H6","%",1) #Electrical box
+                        t6 = deviceControl().sensorValue("T6","C",code1Bank) #Electrical box
+                        h6 = deviceControl().sensorValue("H6","%",code1Bank) #Electrical box
                         try:
                             elecTemp = int(t6)
                             print("Electircal Box Tempature = " + str(elecTemp))
@@ -158,7 +160,7 @@ class atmosphere():
                             print("SYSTEM FAILURE - ELECTRICAL BOX SENSORS OFFLINE")
 
                         #Carbon sensors
-                        c1 = deviceControl().sensorValue("C1","%",1)
+                        c1 = deviceControl().sensorValue("C1","%",code1Bank)
                         try:
                             carbon = int(c1)
                             print("Carbon contentent = " + str(carbon))
@@ -167,26 +169,26 @@ class atmosphere():
                             print("SYSTEM FAILURE - CARBON SENSORS OFFLINE")
 
                         #Fire sensors
-                        if deviceControl().sensorValue("F1","",3) == "ERROR":
+                        if deviceControl().sensorValue("F1","",code3Bank) == "ERROR":
                             f1 = "NA"
                         else:
-                            f1 = deviceControl().sensorValue("F1","",3)
-                        if deviceControl().sensorValue("F2","",3) == "ERROR":
+                            f1 = deviceControl().sensorValue("F1","",code3Bank)
+                        if deviceControl().sensorValue("F2","",code3Bank) == "ERROR":
                             f2 = "NA"
                         else:
-                            f2 = deviceControl().sensorValue("F2","",3)
-                        if deviceControl().sensorValue("F3","",3) == "ERROR":
+                            f2 = deviceControl().sensorValue("F2","",code3Bank)
+                        if deviceControl().sensorValue("F3","",code3Bank) == "ERROR":
                             f3 = "NA"
                         else:
-                            f3 = deviceControl().sensorValue("F3","",3)
-                        if deviceControl().sensorValue("F4","",3) == "ERROR":
+                            f3 = deviceControl().sensorValue("F3","",code3Bank)
+                        if deviceControl().sensorValue("F4","",code3Bank) == "ERROR":
                             f4 = "NA"
                         else:
-                            f4 = deviceControl().sensorValue("F4","",3)
-                        if deviceControl().sensorValue("F5","",3) == "ERROR":
+                            f4 = deviceControl().sensorValue("F4","",code3Bank)
+                        if deviceControl().sensorValue("F5","",code3Bank) == "ERROR":
                             f5 = "NA"
                         else:
-                            f5 = deviceControl().sensorValue("F5","",3)
+                            f5 = deviceControl().sensorValue("F5","",code3Bank)
                         try:
                             fire = int(f1) + int(f2) + int(f3) + int(f4) + int(f5) #Sum of fire sensors
                             print("Fire levels are = " + str(fire))

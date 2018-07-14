@@ -19,59 +19,74 @@ class deviceControl():
        Function: reads sensor values over serial communication
        Output: writes out array of values for all sensors or NA if there is a problem"""
     def readSensor(self, code):
-        if serial.Serial('/dev/ttyUSB0', 9600):
-            #ser = serial.Serial('/dev/ttyACM0', 9600) #/dev/ttyACM0 location of serial device
-            ser = serial.Serial('/dev/ttyUSB0', 9600) #/dev/ttyUSB0 location of serial device
-            time.sleep(1.7) #Magic wait time
-            statusBit = str.encode(str(code) + "\r\n")
-            ser.write(statusBit)
-            time.sleep(0.1)
-            hold1 = ser.readline()
-            hold1 = str(hold1).replace("\\r", "")
-            hold1 = hold1.replace("\\n", "")
-            hold1 = hold1.replace("b'", "")
-            hold1 = hold1.split(",")
-            bank = []
-            x = 0
-            while x < len(hold1):
-                hold = hold1[x].split("=")
-                bank.insert(len(bank), hold)
-                x = x + 1
-            return bank
+        if code is not None:
+            if serial.Serial('/dev/ttyUSB0', 9600):
+                #ser = serial.Serial('/dev/ttyACM0', 9600) #/dev/ttyACM0 location of serial device
+                ser = serial.Serial('/dev/ttyUSB0', 9600) #/dev/ttyUSB0 location of serial device
+                time.sleep(1.7) #Magic wait time
+                statusBit = str.encode(str(code) + "\r\n")
+                ser.write(statusBit)
+                time.sleep(0.1)
+                hold1 = ser.readline()
+                hold1 = str(hold1).replace("\\r", "")
+                hold1 = hold1.replace("\\n", "")
+                hold1 = hold1.replace("b'", "")
+                hold1 = hold1.split(",")
+                bank = []
+                x = 0
+                while x < len(hold1):
+                    hold = hold1[x].split("=")
+                    bank.insert(len(bank), hold)
+                    x = x + 1
+                return bank
+            else:
+                errCode = "NO SERIAL"
+                errMsg = "No serial communication device unpluged."
+                deviceLog().errorLog(errCode,errMsg)
+                print("NO SERIAL CONNECTION")
+                bank = ["ERROR"]
+                return bank
         else:
-            errCode = "NO SERIAL"
-            errMsg = "No serial communication device unpluged."
+            errCode = "NO CODE PROVIDED"
+            errMsg = "No code was provided when checking serial port."
             deviceLog().errorLog(errCode,errMsg)
-            print("NO SERIAL CONNECTION")
+            print("NO CODE PROVIDED")
             bank = ["ERROR"]
             return bank
 
     """Input: sensor - string containing the sensor you are trying to find
               unit - string containing the unit of the sensor you are looking for
-              code - integer value regarding what sensors you want to read (1-3)
+              bank - list of sensors and their values
        Function: finds your chosen sensor value from the sensor array
        Output: writes float value for the desired sensor or NA if there is a problem"""
-    def sensorValue(self, sensor, unit, code):
+    def sensorValue(self, sensor, unit, bank):
         if sensor is not None:
             if unit is not None:
-                try:
-                    values = self.readSensor(code)
-                    x = 0
-            	    #print(values)
-                    while x < len(values):
-                        if str(values[x][0]) == str(sensor):
-                            sens_val = values[x][1].replace(str(unit), "")
-                            sens_val = float(sens_val)
-                            x = len(values)
-                        else:
-                            sens_val = "ERROR"
-                        x = x + 1
-                    return sens_val
-                except Exception as e:
-                    errCode = "ERROR FINDING SENSOR"
-                    errMsg = "Error finding sensor "+ str(sensor) + ". The following error code appeared; " + str(e)
+                if bank is not None:
+                    try:
+                        x = 0
+                	    #print(values)
+                        while x < len(bank):
+                            if str(bank[x][0]) == str(sensor):
+                                sens_val = bank[x][1].replace(str(unit), "")
+                                sens_val = float(sens_val)
+                                x = len(bank)
+                            else:
+                                sens_val = "ERROR"
+                            x = x + 1
+                        return sens_val
+                    except Exception as e:
+                        errCode = "ERROR FINDING SENSOR"
+                        errMsg = "Error finding sensor "+ str(sensor) + ". The following error code appeared; " + str(e)
+                        deviceLog().errorLog(errCode,errMsg)
+                        print("ERROR FINDING SENSOR")
+                        sens_val = "ERROR"
+                        return sens_val
+                else:
+                    errCode = "NO BANK GIVEN"
+                    errMsg = "No bank provided for finding sensor " + str(sensor) + "."
                     deviceLog().errorLog(errCode,errMsg)
-                    print("ERROR FINDING SENSOR")
+                    print("NO BANK GIVEN FOR SENSOR " + str(sensor))
                     sens_val = "ERROR"
                     return sens_val
             else:
