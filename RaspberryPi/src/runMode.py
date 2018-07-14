@@ -7,7 +7,6 @@
  * @brief contains various output controls for device
  */
  """
-import os
 import serial
 import RPi.GPIO as GPIO
 import time
