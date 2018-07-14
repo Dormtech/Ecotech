@@ -19,5 +19,9 @@ if __name__ == "__main__":
     elecSP = 40
     phSP = 50
     #network().machineUpdate()
-    atmosphere().atmMain(humiditySP,carbonSP,tempatureSP,light,elecSP)
-    pumps().pumpMain(phSP)
+    x = 0
+    while x < 100:
+        atmosphere().atmMain(humiditySP,carbonSP,tempatureSP,light,elecSP)
+        x = x + 1
+        print("Count = " + str(x))
+    #pumps().pumpMain(phSP)
