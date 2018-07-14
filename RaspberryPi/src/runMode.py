@@ -15,6 +15,10 @@ from logg import deviceLog
 
 class deviceControl():
 
+    def __init__(self):
+        self.hold1 = None
+        GPIO.setwarnings(False)
+
     """Input: code - integer value regarding what sensors you want to read (1-3)
        Function: reads sensor values over serial communication
        Output: writes out array of values for all sensors or NA if there is a problem"""
