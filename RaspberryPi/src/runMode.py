@@ -15,15 +15,15 @@ from logg import deviceLog
 
 class deviceControl():
 
-    """Input: no input needed for function
+    """Input: code - integer value regarding what sensors you want to read (1-3)
        Function: reads sensor values over serial communication
        Output: writes out array of values for all sensors or NA if there is a problem"""
-    def readSensor(self):
+    def readSensor(self, code):
         if serial.Serial('/dev/ttyUSB0', 9600):
             #ser = serial.Serial('/dev/ttyACM0', 9600) #/dev/ttyACM0 location of serial device
             ser = serial.Serial('/dev/ttyUSB0', 9600) #/dev/ttyUSB0 location of serial device
             time.sleep(1.7) #Magic wait time
-            statusBit = str.encode("1\r\n")
+            statusBit = str.encode(str(code) + "\r\n")
             ser.write(statusBit)
             time.sleep(0.1)
             hold1 = ser.readline()
@@ -48,13 +48,14 @@ class deviceControl():
 
     """Input: sensor - string containing the sensor you are trying to find
               unit - string containing the unit of the sensor you are looking for
+              code - integer value regarding what sensors you want to read (1-3)
        Function: finds your chosen sensor value from the sensor array
        Output: writes float value for the desired sensor or NA if there is a problem"""
-    def sensorValue(self, sensor, unit):
+    def sensorValue(self, sensor, unit, code):
         if sensor is not None:
             if unit is not None:
                 try:
-                    values = self.readSensor()
+                    values = self.readSensor(code)
                     x = 0
             	    #print(values)
                     while x < len(values):

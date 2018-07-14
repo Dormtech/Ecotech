@@ -8,53 +8,8 @@ void loop() {
   if (Serial.available()) 
   {
   ch = Serial.read();
-  hold = String(ch,HEX);
-  if (hold == "31"){ 
-    int w1 = random(0,254);
-    Serial.print("W1=");
-    Serial.print(w1,DEC);
-    Serial.print(",");
-    int w2 = random(0,254);
-    Serial.print("W2=");
-    Serial.print(w2,DEC);
-    Serial.print(",");
-    int w3 = random(0,254);
-    Serial.print("W3=");
-    Serial.print(w3,DEC);
-    Serial.print(",");
-    int w4 = random(0,254);
-    Serial.print("W4=");
-    Serial.print(w4,DEC);
-    Serial.print(",");
-    int w5 = random(0,254);
-    Serial.print("W5=");
-    Serial.print(w5,DEC);
-    Serial.print(",");
-    int w6 = random(0,254);
-    Serial.print("W6=");
-    Serial.print(w6,DEC);
-    Serial.print(",");
-    int w7 = random(0,254);
-    Serial.print("W7=");
-    Serial.print(w7,DEC);
-    Serial.print(",");
-    int w8 = random(0,254);
-    Serial.print("W8=");
-    Serial.print(w8,DEC);
-    Serial.print(",");
-    int w9 = random(0,254);
-    Serial.print("W9=");
-    Serial.print(w9,DEC);
-    Serial.print(",");
-    int w10 = random(0,254);
-    Serial.print("W10=");
-    Serial.print(w10,DEC);
-    Serial.print(",");
-    int w11 = random(0,254);
-    Serial.print("W11=");
-    Serial.print(w11,DEC);
-    Serial.print(",");
-  
+  hold = String(ch);
+  if (hold == "1"){ 
     int b1 = random(0,254);
     Serial.print("B1=");
     Serial.print(b1,DEC);
@@ -131,7 +86,54 @@ void loop() {
     Serial.print(h6,DEC);
     Serial.print ('%');
     Serial.print(",");
-    
+    delay(100);
+  } else if (hold == "2") {
+     int w1 = random(0,254);
+    Serial.print("W1=");
+    Serial.print(w1,DEC);
+    Serial.print(",");
+    int w2 = random(0,254);
+    Serial.print("W2=");
+    Serial.print(w2,DEC);
+    Serial.print(",");
+    int w3 = random(0,254);
+    Serial.print("W3=");
+    Serial.print(w3,DEC);
+    Serial.print(",");
+    int w4 = random(0,254);
+    Serial.print("W4=");
+    Serial.print(w4,DEC);
+    Serial.print(",");
+    int w5 = random(0,254);
+    Serial.print("W5=");
+    Serial.print(w5,DEC);
+    Serial.print(",");
+    int w6 = random(0,254);
+    Serial.print("W6=");
+    Serial.print(w6,DEC);
+    Serial.print(",");
+    int w7 = random(0,254);
+    Serial.print("W7=");
+    Serial.print(w7,DEC);
+    Serial.print(",");
+    int w8 = random(0,254);
+    Serial.print("W8=");
+    Serial.print(w8,DEC);
+    Serial.print(",");
+    int w9 = random(0,254);
+    Serial.print("W9=");
+    Serial.print(w9,DEC);
+    Serial.print(",");
+    int w10 = random(0,254);
+    Serial.print("W10=");
+    Serial.print(w10,DEC);
+    Serial.print(",");
+    int w11 = random(0,254);
+    Serial.print("W11=");
+    Serial.print(w11,DEC);
+    Serial.print(",");
+    delay(100);
+  }else if (hold == "3") {
     int f1 = random(0,10);
     Serial.print("F1=");
     Serial.print(f1,DEC);
@@ -155,9 +157,11 @@ void loop() {
     int f6 = random(0,10);
     Serial.print("F6=");
     Serial.println(f6,DEC);
-    delay(100);
-  } else {
-    delay(10);
+    int b1 = random(0,254);
+    Serial.print("B1=");
+    Serial.print(b1,DEC);
+    Serial.print(",");
+    delay(100);  
   }
 }
 }
