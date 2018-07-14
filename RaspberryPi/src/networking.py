@@ -17,7 +17,7 @@ class network():
         Function: downloads most current version of code avalible
         Output: returns a boolean value to inform user if function was compleated"""
     def machineUpdate(self):
-        if os.path.isdir("/home/pi/Desktop"):
+        if os.path.isdir("/home/pi/Desktop/Ecotech"):
             print("Updating device please wait.")
             os.chdir("/home/pi/Desktop/Ecotech")
             result1 = subprocess.run(['git','reset','--hard','origin/ben-testBranch'], stdout=subprocess.PIPE)
