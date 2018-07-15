@@ -33,7 +33,7 @@ class deviceControl():
                 time.sleep(0.1)
                 hold1 = ser.read(ser.inWaiting())
                 hold1 = hold1.decode("utf-8").replace("\\r", "")
-                hold1 = hold1.replace("\\n", "")
+                hold1 = hold1.replace("\\n'", "")
                 hold1 = hold1.replace("b'", "")
                 hold1 = hold1.split(",")
                 bank = []

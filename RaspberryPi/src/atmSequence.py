@@ -244,7 +244,7 @@ class atmosphere():
                                         deviceControl().Fan(F5_Pin, False) #Electrical exhaust
                                         deviceControl().Fan(F6_Pin, True) #Electrical intake
                                         print("[f2,f3,f4,f5,f6]")
-                                        print("[0,0,1,0,1]")
+                                        print("[1,0,1,0,1]")
 
                                     elif carbon == "NA": #Carbon sensor offline
                                         return False
@@ -270,7 +270,7 @@ class atmosphere():
                                         deviceControl().Fan(F5_Pin, False) #Electrical exhaust
                                         deviceControl().Fan(F6_Pin, True) #Electrical intake
                                         print("[f2,f3,f4,f5,f6]")
-                                        print("[0,0,1,0,1]")
+                                        print("[1,0,1,0,1]")
 
                                     elif carbon == "NA": #Carbon sensor offline
                                         return False
@@ -283,7 +283,7 @@ class atmosphere():
                                         deviceControl().Fan(F5_Pin, True) #Electrical exhaust
                                         deviceControl().Fan(F6_Pin, False) #Electrical intake
                                         print("[f2,f3,f4,f5,f6]")
-                                        print("[0,0,0,0,0]")
+                                        print("[0,0,1,1,0]")
 
                                     elif carbonSP > carbon and carbon != "NA": #Too little carbon dioxide
                                         deviceControl().Fan(F2_Pin, True) #Exhaust
@@ -292,7 +292,7 @@ class atmosphere():
                                         deviceControl().Fan(F5_Pin, False) #Electrical exhaust
                                         deviceControl().Fan(F6_Pin, True) #Electrical intake
                                         print("[f2,f3,f4,f5,f6]")
-                                        print("[0,1,1,0,1]")
+                                        print("[1,0,1,0,1]")
 
                                     elif carbon == "NA": #Carbon sensor offline
                                         return False
