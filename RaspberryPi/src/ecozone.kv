@@ -15,12 +15,7 @@
                 root.manager.transition = SlideTransition(direction='up')
                 root.manager.current = 'main'
             size_hint: (.1,.1)
-            pos_hint:{'x':0,'y':0}
-
-        Label:
-            text: 'Temperature'
-            font_size: default_font_size
-            pos:(-275, 150)
+            pos_hint:{'x':0,'y':0.9
         Label:
             text: 'Day'
             font_size: default_font_size
@@ -52,7 +47,7 @@
                 root.manager.transition = SlideTransition(direction='left')
                 root.manager.current = 'main'
             size_hint: (.1,.1)
-            pos_hint:{'x':0,'y':0}          
+            pos_hint:{'x':0,'y':0.9}          
                 
 <mainScreen>:
     FloatLayout:
