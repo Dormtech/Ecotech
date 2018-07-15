@@ -32,6 +32,7 @@ class deviceControl():
                 ser.write(statusBit)
                 time.sleep(0.1)
                 hold1 = ser.readline()
+                ser.reset_input_buffer()
                 hold1 = str(hold1).replace("\\r", "")
                 hold1 = hold1.replace("\\n", "")
                 hold1 = hold1.replace("b'", "")
