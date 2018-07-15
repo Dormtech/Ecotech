@@ -7,10 +7,11 @@
  * @brief control sequence for the camera of the machine
  */
  """
- import time
- import cv2
- from picamera.array import PiRGBArray
- from picamera import PiCamera
+
+import time
+import cv2
+from picamera.array import PiRGBArray
+from picamera import PiCamera
 
 class camera():
 

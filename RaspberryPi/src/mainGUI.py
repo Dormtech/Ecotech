@@ -8,7 +8,7 @@
  */
  """
 import kivy
-
+#from cameraSequence import camera
 
 from kivy.app import App
 from kivy.uix.label import Label
@@ -63,6 +63,10 @@ class defaultScreen(Screen):
         self.dayVar.text = '00'
         self.clockDisplay.text = time.asctime()
 
+    
+    def takePicture(self):
+        print('picture')
+
     #reads the user options and imports the nessacary widgets
     def addWidgetsDefault(self, optionFile):
         self.temperatureVar = Label()
@@ -77,6 +81,15 @@ class defaultScreen(Screen):
         self.add_widget(self.dayVar)
         self.dayVar.pos = (0,120)
         self.dayVar.font_size = 55
+
+        self.capture = Button(text="Capture", on_release=lambda a:self.takePicture, size_hint=(.25,.1), pos_hint={'x':0.4,'y':0.9})
+        self.add_widget(self.capture)
+
+
+        self.clockDisplay = Label()
+        self.add_widget(self.clockDisplay)
+        self.clockDisplay.pos = (300,220)
+        Clock.schedule_interval(self.update, 1)
 
 #screen where user can pick different options
 class optionScreen(Screen):
