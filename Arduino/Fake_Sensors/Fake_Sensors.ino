@@ -74,6 +74,7 @@ void loop() {
       Serial.write("H6=");
       Serial.write(h6);
       Serial.write('%');
+      Serial.write('\n');
       delay(100);
       
     } else if (hold == "32") {
@@ -124,6 +125,7 @@ void loop() {
       int w11 = random(0,254);
       Serial.write("W11=");
       Serial.write(w11);
+      Serial.write('\n');
       delay(100);
       
     }else if (hold == "33") {
@@ -153,6 +155,7 @@ void loop() {
       int b1 = random(0,254);
       Serial.write("B1=");
       Serial.write(b1);
+      Serial.write('\n');
       delay(100);  
     }
   }

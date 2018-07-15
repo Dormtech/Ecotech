@@ -31,7 +31,7 @@ class deviceControl():
                 statusBit = str.encode(str(code) + "\r\n")
                 ser.write(statusBit)
                 time.sleep(0.1)
-                hold1 = ser.readline()
+                hold1 = ser.read(ser.inWaiting())
                 hold1 = hold1.decode("utf-8").replace("\\r", "")
                 hold1 = hold1.replace("\\n", "")
                 hold1 = hold1.replace("b'", "")
