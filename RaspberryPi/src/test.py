@@ -31,7 +31,7 @@ if __name__ == "__main__":
     endTime = time.time()
     elapsedTime = endTime - startTime
     print("**********************************")
-    print("Start time: " + time.strftime("%H:%M:%S", time.gmtime(start)))
-    print("End time: " + time.strftime("%H:%M:%S", time.gmtime(end)))
-    print("Elapsed time: " + time.strftime("%H:%M:%S", time.gmtime(start)))
+    print("Start time: " + time.strftime("%H:%M:%S", time.gmtime(startTime)))
+    print("End time: " + time.strftime("%H:%M:%S", time.gmtime(endTime)))
+    print("Elapsed time: " + time.strftime("%H:%M:%S", time.gmtime(elapsedTime)))
     print("**********************************")
