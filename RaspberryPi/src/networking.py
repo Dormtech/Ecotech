@@ -97,10 +97,10 @@ class network():
             if ser.writable():
                 #Read/Write serial
                 ser.reset_output_buffer()
+                ser.reset_input_buffer()
                 statusBit = str.encode(str(code) + "\r\n")
                 ser.write(statusBit)
                 time.sleep(0.1)
-                ser.reset_input_buffer()
                 reading = ser.readline()
                 time.sleep(0.1)
                 return reading

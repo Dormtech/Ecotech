@@ -149,6 +149,7 @@ void loop() {
       int f6 = random(0,10);
       Serial.print("F6=");
       Serial.print(f6,DEC);
+      Serial.print(",");
       int b1 = random(0,254);
       Serial.print("B1=");
       Serial.println(b1,DEC);  

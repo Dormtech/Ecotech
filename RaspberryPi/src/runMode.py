@@ -35,7 +35,7 @@ class deviceControl():
                         bank = []
                         for x in range(len(reading)):
                             hold = reading[x].split("=")
-                            bank.insert(len(bank),reading)
+                            bank.insert(len(bank),hold)
 
                         #Parsing of data for sensor value
                         for x in range(len(bank)):
