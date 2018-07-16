@@ -20,7 +20,6 @@ class atmosphere():
         if valueBank is not None:
             if weightBank is not None:
                 if len(valueBank) == len(weightBank):
-                    print(valueBank)
                     count = 0
                     value = 0
                     for x in range(len(valueBank)):
