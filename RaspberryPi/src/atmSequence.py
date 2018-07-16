@@ -23,7 +23,7 @@ class atmosphere():
                     count = 0
                     value = 0
                     for x in valueBank:
-                        if valueBank[x] != "ERROR":
+                        if type(valueBank[x]) is not str:
                             try:
                                 value = value + (int(valueBank[x]) * weightBank[x])
                                 count = count + 1
