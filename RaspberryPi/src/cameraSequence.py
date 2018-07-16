@@ -18,16 +18,17 @@ class camera():
     """Input: fileName - string value containing the name you wish to save photo as
         Function: takes and saves picture of plant
         Output: returns a boolean value to inform user of machine state"""
-    def cameraMain(self, fileName):
+    def cameraMain(fileName):
         if fileName is not None:
-            camera = PiCamera()
-            rawCapture = PiRGBArray(camera)
+            cameraPi = PiCamera()
+            rawCapture = PiRGBArray(cameraPi)
             time.sleep(0.1)
-            camera.capture(rawCapture, format="bgr")
+            cameraPi.capture(rawCapture, format="bgr")
             image = rawCapture.array
             cv2.imwrite(fileName,image)
-            cv2.imshow("Image", image)
-            cv2.waitKey(0)
+            cameraPi.close()
+            #cv2.imshow("Image", image)
+            #cv2.waitKey(0)
             return True
         else:
             errCode = "NO FILE NAME PROVIDED"

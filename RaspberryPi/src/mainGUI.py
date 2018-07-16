@@ -8,15 +8,16 @@
  */
  """
 import kivy
-#from cameraSequence import camera
+from cameraSequence import camera
 
 from kivy.app import App
 from kivy.uix.label import Label
 from kivy.uix.camera import Camera
 from kivy.graphics import Color, Rectangle
+from kivy.uix.image import Image
 from kivy.uix.boxlayout import BoxLayout
 from kivy.uix.button import Button
-from kivy.properties import StringProperty, NumericProperty, ObjectProperty 
+from kivy.properties import StringProperty, NumericProperty, ObjectProperty
 from kivy.uix.widget import Widget
 from kivy.clock import Clock
 from kivy.uix.screenmanager import ScreenManager, Screen
@@ -32,7 +33,7 @@ Config.set('graphics', 'height', '480')
 global buttonPressed
 
 class GUIFunc():
-    
+
     #creates the option file used to store user config
     def createGUIOptions(pathway):
         optionFile = open(pathway+"/options/GUIOptions.txt","w+")
@@ -45,13 +46,13 @@ class GUIFunc():
 class defaultScreen(Screen):
 
     def __init__(self, **kwargs):
-        super(defaultScreen, self).__init__(**kwargs)   
+        super(defaultScreen, self).__init__(**kwargs)
 
         pathway = os.path.dirname(os.path.abspath( __file__ ))
         try:
             optionFile = open(pathway+"/options/GUIOptions.txt","r+")
         except IOError:
-            optionFile = createGUIOptions(pathway)  
+            optionFile = createGUIOptions(pathway)
 
         self.addWidgetsDefault(optionFile)
         Clock.schedule_interval(self.update, 1)
@@ -63,9 +64,20 @@ class defaultScreen(Screen):
         self.dayVar.text = '00'
         self.clockDisplay.text = time.asctime()
 
-    
+
     def takePicture(self):
-        print('picture')
+        fileName = "/home/pi/Desktop/pics/test" + time.strftime("%d-%y-%m_%H:%M:%S", time.gmtime()) + ".png"
+        if os.path.isfile(fileName):
+            os.remove(fileName)
+            time.sleep(0.5)
+            #self.remove_widget(self.imgVar)
+            camera.cameraMain(fileName)
+            self.imgVar = Image(source=fileName, pos=(200,75), size_hint=(.5,.5))
+            self.add_widget(self.imgVar)
+        else:
+            camera.cameraMain(fileName)
+            self.imgVar = Image(source=fileName, pos=(200,75), size_hint=(.5,.5))
+            self.add_widget(self.imgVar)
 
     #reads the user options and imports the nessacary widgets
     def addWidgetsDefault(self, optionFile):
@@ -82,7 +94,7 @@ class defaultScreen(Screen):
         self.dayVar.pos = (0,120)
         self.dayVar.font_size = 55
 
-        self.capture = Button(text="Capture", on_release=lambda a:self.takePicture, size_hint=(.25,.1), pos_hint={'x':0.4,'y':0.9})
+        self.capture = Button(text="Capture", on_release=lambda a:self.takePicture(), size_hint=(.25,.1), pos_hint={'x':0.4,'y':0.9})
         self.add_widget(self.capture)
 
 
@@ -101,7 +113,7 @@ class optionScreen(Screen):
             optionFile = open(pathway+"/options/GUIOptions.txt","r+")
         except IOError:
             optionFile = createGUIOptions(pathway)
-        
+
         self.clockDisplay = Label()
         self.add_widget(self.clockDisplay)
         self.clockDisplay.pos = (300,220)
@@ -133,5 +145,5 @@ class ecozoneApp(App):
         sm.add_widget(mainScreen(name="main"))
         sm.add_widget(defaultScreen(name="default"))
         sm.add_widget(optionScreen(name='option'))
-                
+
         return sm
