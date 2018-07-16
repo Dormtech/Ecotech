@@ -74,7 +74,7 @@ class network():
         Output: returns binary value indicating the outcome of the function"""
     def closeSerial(ser):
         if ser is not None:
-            if ser.is_open():
+            if ser.isOpen():
                 ser.close()
                 time.sleep(0.5)
             else:
