@@ -9,6 +9,8 @@
  """
 import kivy
 from cameraSequence import camera
+from atmSequence import atmosphere
+from runMode import deviceControl
 
 from kivy.app import App
 from kivy.uix.label import Label
@@ -60,20 +62,39 @@ class defaultScreen(Screen):
     #will update all the variables on screen
     def update(self, dt):
         #call funtion to get info from sensors
-        self.temperatureVar.text = str(random.randint(0,200))
+        code1Bank = deviceControl().readSensor(1)
+
+        #Temp sensors
+        t1 = deviceControl().sensorValue("T1","C",code1Bank)
+        t2 = deviceControl().sensorValue("T2","C",code1Bank)
+        t3 = deviceControl().sensorValue("T3","C",code1Bank)
+        t4 = deviceControl().sensorValue("T4","C",code1Bank)
+        t5 = deviceControl().sensorValue("T5","C",code1Bank)
+        #Weighted average
+        tempBank = [t1,t2,t3,t4,t5]
+        tempWeight = [1,1,1,1,1]
+        temp = atmosphere().findTemp(tempBank,tempWeight)
+        self.temperatureVar.text = str(temp)
         self.dayVar.text = '00'
         self.clockDisplay.text = time.asctime()
 
 
     def takePicture(self):
-        fileName = "/home/pi/Desktop/pics/test" + time.strftime("%d-%y-%m_%H:%M:%S", time.gmtime()) + ".png"
+        fileName = "/home/pi/Desktop/Ecotech-master/RaspberryPi/logs/pics/test" + time.strftime("%d-%y-%m_%H:%M:%S", time.gmtime()) + ".png"
         if os.path.isfile(fileName):
-            os.remove(fileName)
-            time.sleep(0.5)
-            #self.remove_widget(self.imgVar)
-            camera.cameraMain(fileName)
-            self.imgVar = Image(source=fileName, pos=(200,75), size_hint=(.5,.5))
-            self.add_widget(self.imgVar)
+            try:
+                os.remove(fileName)
+                time.sleep(0.5)
+                self.remove_widget(self.imgVar)
+                camera.cameraMain(fileName)
+                self.imgVar = Image(source=fileName, pos=(200,75), size_hint=(.5,.5))
+                self.add_widget(self.imgVar)
+            except:
+                os.remove(fileName)
+                time.sleep(0.5)
+                camera.cameraMain(fileName)
+                self.imgVar = Image(source=fileName, pos=(200,75), size_hint=(.5,.5))
+                self.add_widget(self.imgVar)
         else:
             camera.cameraMain(fileName)
             self.imgVar = Image(source=fileName, pos=(200,75), size_hint=(.5,.5))

@@ -24,26 +24,35 @@ class deviceControl():
        Output: writes out array of values for all sensors or NA if there is a problem"""
     def readSensor(self, code):
         if code is not None:
-            if serial.Serial('/dev/ttyUSB0', 9600):
-                #ser = serial.Serial('/dev/ttyACM0', 9600) #/dev/ttyACM0 location of serial device
-                ser = serial.Serial('/dev/ttyUSB0', 9600) #/dev/ttyUSB0 location of serial device
-                time.sleep(1.7) #Magic wait time
-                statusBit = str.encode(str(code) + "\r\n")
-                ser.write(statusBit)
-                time.sleep(0.1)
-                hold1 = ser.readline()
-                hold1 = hold1.decode("utf-8").replace("\\r", "")
-                hold1 = hold1.replace("\\n'", "")
-                hold1 = hold1.replace("b'", "")
-                hold1 = hold1.split(",")
-                bank = []
-                x = 0
-                while x < len(hold1):
-                    hold = hold1[x].split("=")
-                    bank.insert(len(bank), hold)
-                    x = x + 1
-                return bank
-            else:
+            try:
+                if serial.Serial('/dev/ttyACM0', 9600):
+                    ser = serial.Serial('/dev/ttyACM0', 9600) #/dev/ttyACM0 location of serial device
+                    #ser = serial.Serial('/dev/ttyUSB0', 9600) #/dev/ttyUSB0 location of serial device
+                    time.sleep(1.7) #Magic wait time
+                    statusBit = str.encode(str(code) + "\r\n")
+                    ser.write(statusBit)
+                    time.sleep(0.1)
+                    hold1 = ser.readline()
+                    hold1 = hold1.decode("utf-8").replace("\\r", "")
+                    hold1 = hold1.replace("\\n'", "")
+                    hold1 = hold1.replace("b'", "")
+                    hold1 = hold1.split(",")
+                    bank = []
+                    x = 0
+                    while x < len(hold1):
+                        hold = hold1[x].split("=")
+                        bank.insert(len(bank), hold)
+                        x = x + 1
+                    return bank
+                else:
+                    errCode = "NO SERIAL"
+                    errMsg = "No serial communication device unpluged."
+                    deviceLog().errorLog(errCode,errMsg)
+                    print("NO SERIAL CONNECTION")
+                    bank = ["ERROR"]
+                    return bank
+                    
+            except:
                 errCode = "NO SERIAL"
                 errMsg = "No serial communication device unpluged."
                 deviceLog().errorLog(errCode,errMsg)
