@@ -74,7 +74,7 @@ class atmosphere():
                 if tempatureSP is not None:
                     if light is not None:
                         if ser is not None:
-                            if ser.is_open() == True:
+                            if ser.isOpen() == True:
                                 #Output Pin variables
                                 L1_Pin = 2 #Light GPIO 8
                                 L2_Pin = 3 #Light GPIO 9
