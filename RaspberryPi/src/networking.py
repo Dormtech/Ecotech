@@ -40,7 +40,7 @@ class network():
         if os.path.exists(USB0):
             if serial.Serial(USB0):
                 ser = serial.Serial(USB0, 9600, timeout=0.5)
-                time.sleep(0.1)
+                time.sleep(1.7)
                 return ser
             else:
                 errCode = "CONNECTION FAILURE"
@@ -52,7 +52,7 @@ class network():
         elif os.path.exists(USB1):
             if serial.Serial(USB1):
                 ser = serial.Serial(USB1, 9600, timeout=0.5)
-                time.sleep(0.1)
+                time.sleep(1.7)
                 return ser
             else:
                 errCode = "CONNECTION FAILURE"
