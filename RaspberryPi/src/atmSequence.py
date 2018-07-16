@@ -231,7 +231,7 @@ class atmosphere():
 
                                             elif carbonSP > carbon and carbon != "NA": #Too little carbon dioxide
                                                 deviceControl().Fan(F2_Pin, True) #Exhaust
-                                                deviceControl()().Fan(F3_Pin, False) #Intake
+                                                deviceControl().Fan(F3_Pin, False) #Intake
                                                 deviceControl().Fan(F4_Pin, True) #Transition
                                                 deviceControl().Fan(F5_Pin, False) #Electrical exhaust
                                                 deviceControl().Fan(F6_Pin, True) #Electrical intake
