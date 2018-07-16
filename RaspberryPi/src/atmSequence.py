@@ -88,8 +88,8 @@ class atmosphere():
                                 F5_Pin = 5 #Electrical exhaust fan GPIO 21
                                 F6_Pin = 6 #Electrical intake fan GPIO 22
                                 M1_Pin = 26 #Mister GPIO 10
-                                sensorBank1 = network().readSerial(ser,1)
-                                sensorBank3 = network().readSerial(ser,3)
+                                sensorBank1 = network.readSerial(ser,1)
+                                sensorBank3 = network.readSerial(ser,3)
 
                                 #Temp sensors
                                 t1 = deviceControl().sensorValue("T1","C",sensorBank1)
