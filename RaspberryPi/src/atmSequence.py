@@ -167,26 +167,26 @@ class atmosphere():
                                 if fire == "NA":
                                     return False
                                 elif fire <= fireLevel and fire != "NA": #If fire is not detected
-                                    deviceControl.Light(L1_Pin,light) #Light
-                                    deviceControl.Fan(F1_Pin, True) #Circulation
+                                    deviceControl().Light(L1_Pin,light) #Light
+                                    deviceControl().Fan(F1_Pin, True) #Circulation
 
                                     if elecSP <= elecTemp and elecTemp != "NA": #Electrical box to hot
                                         if tempatureSP <= temp and temp != "NA": #Too hot
                                             if carbonSP <= carbon and carbon != "NA": #Too much carbon dioxide
-                                                deviceControl.Fan(F2_Pin, True) #Exhaust
-                                                deviceControl.Fan(F3_Pin, True) #Intake
-                                                deviceControl.Fan(F4_Pin, False) #Transition
-                                                deviceControl.Fan(F5_Pin, True) #Electrical exhaust
-                                                deviceControl.Fan(F6_Pin, True) #Electrical intake
+                                                deviceControl().Fan(F2_Pin, True) #Exhaust
+                                                deviceControl().Fan(F3_Pin, True) #Intake
+                                                deviceControl().Fan(F4_Pin, False) #Transition
+                                                deviceControl().Fan(F5_Pin, True) #Electrical exhaust
+                                                deviceControl().Fan(F6_Pin, True) #Electrical intake
                                                 print("[f2,f3,f4,f5,f6]")
                                                 print("[1,1,0,1,1]")
 
                                             elif carbonSP > carbon and carbon != "NA": #Too little carbon dioxide
-                                                deviceControl.Fan(F2_Pin, False) #Exhaust
-                                                deviceControl.Fan(F3_Pin, True) #Intake
-                                                deviceControl.Fan(F4_Pin, True) #Transition
-                                                deviceControl.Fan(F5_Pin, False) #Electrical exhaust
-                                                deviceControl.Fan(F6_Pin, True) #Electrical intake
+                                                deviceControl().Fan(F2_Pin, False) #Exhaust
+                                                deviceControl().Fan(F3_Pin, True) #Intake
+                                                deviceControl().Fan(F4_Pin, True) #Transition
+                                                deviceControl().Fan(F5_Pin, False) #Electrical exhaust
+                                                deviceControl().Fan(F6_Pin, True) #Electrical intake
                                                 print("[f2,f3,f4,f5,f6]")
                                                 print("[0,1,1,0,1]")
 
@@ -195,20 +195,20 @@ class atmosphere():
 
                                         elif tempatureSP > temp and temp != "NA": #Too cold
                                             if carbonSP <= carbon and carbon != "NA": #Too much carbon dioxide
-                                                deviceControl.Fan(F2_Pin, False) #Exhaust
-                                                deviceControl.Fan(F3_Pin, False) #Intake
-                                                deviceControl.Fan(F4_Pin, False) #Transition
-                                                deviceControl.Fan(F5_Pin, True) #Electrical exhaust
-                                                deviceControl.Fan(F6_Pin, True) #Electrical intake
+                                                deviceControl().Fan(F2_Pin, False) #Exhaust
+                                                deviceControl().Fan(F3_Pin, False) #Intake
+                                                deviceControl().Fan(F4_Pin, False) #Transition
+                                                deviceControl().Fan(F5_Pin, True) #Electrical exhaust
+                                                deviceControl().Fan(F6_Pin, True) #Electrical intake
                                                 print("[f2,f3,f4,f5,f6]")
                                                 print("[0,0,0,1,1]")
 
                                             elif carbonSP > carbon and carbon != "NA": #Too little carbon dioxide
-                                                deviceControl.Fan(F2_Pin, True) #Exhaust
-                                                deviceControl.Fan(F3_Pin, False) #Intake
-                                                deviceControl.Fan(F4_Pin, True) #Transition
-                                                deviceControl.Fan(F5_Pin, False) #Electrical exhaust
-                                                deviceControl.Fan(F6_Pin, True) #Electrical intake
+                                                deviceControl().Fan(F2_Pin, True) #Exhaust
+                                                deviceControl().Fan(F3_Pin, False) #Intake
+                                                deviceControl().Fan(F4_Pin, True) #Transition
+                                                deviceControl().Fan(F5_Pin, False) #Electrical exhaust
+                                                deviceControl().Fan(F6_Pin, True) #Electrical intake
                                                 print("[f2,f3,f4,f5,f6]")
                                                 print("[1,0,1,0,1]")
 
@@ -221,20 +221,20 @@ class atmosphere():
                                     elif elecSP > elecTemp and elecTemp != "NA": #Electrical box ok
                                         if tempatureSP <= temp and temp != "NA": #Too hot
                                             if carbonSP <= carbon and carbon != "NA": #Too much carbon dioxide
-                                                deviceControl.Fan(F2_Pin, True) #Exhaust
-                                                deviceControl.Fan(F3_Pin, True) #Intake
-                                                deviceControl.Fan(F4_Pin, False) #Transition
-                                                deviceControl.Fan(F5_Pin, False) #Electrical exhaust
-                                                deviceControl.Fan(F6_Pin, False) #Electrical intake
+                                                deviceControl().Fan(F2_Pin, True) #Exhaust
+                                                deviceControl().Fan(F3_Pin, True) #Intake
+                                                deviceControl().Fan(F4_Pin, False) #Transition
+                                                deviceControl().Fan(F5_Pin, False) #Electrical exhaust
+                                                deviceControl().Fan(F6_Pin, False) #Electrical intake
                                                 print("[f2,f3,f4,f5,f6]")
                                                 print("[1,1,0,0,0]")
 
                                             elif carbonSP > carbon and carbon != "NA": #Too little carbon dioxide
-                                                deviceControl.Fan(F2_Pin, True) #Exhaust
-                                                deviceControl.Fan(F3_Pin, False) #Intake
-                                                deviceControl.Fan(F4_Pin, True) #Transition
-                                                deviceControl.Fan(F5_Pin, False) #Electrical exhaust
-                                                deviceControl.Fan(F6_Pin, True) #Electrical intake
+                                                deviceControl().Fan(F2_Pin, True) #Exhaust
+                                                deviceControl()().Fan(F3_Pin, False) #Intake
+                                                deviceControl().Fan(F4_Pin, True) #Transition
+                                                deviceControl().Fan(F5_Pin, False) #Electrical exhaust
+                                                deviceControl().Fan(F6_Pin, True) #Electrical intake
                                                 print("[f2,f3,f4,f5,f6]")
                                                 print("[1,0,1,0,1]")
 
@@ -243,20 +243,20 @@ class atmosphere():
 
                                         elif tempatureSP > temp and temp != "NA": #Too cold
                                             if carbonSP <= carbon: #Too much carbon dioxide
-                                                deviceControl.Fan(F2_Pin, False) #Exhaust
-                                                deviceControl.Fan(F3_Pin, False) #Intake
-                                                deviceControl.Fan(F4_Pin, True) #Transition
-                                                deviceControl.Fan(F5_Pin, True) #Electrical exhaust
-                                                deviceControl.Fan(F6_Pin, False) #Electrical intake
+                                                deviceControl().Fan(F2_Pin, False) #Exhaust
+                                                deviceControl().Fan(F3_Pin, False) #Intake
+                                                deviceControl().Fan(F4_Pin, True) #Transition
+                                                deviceControl().Fan(F5_Pin, True) #Electrical exhaust
+                                                deviceControl().Fan(F6_Pin, False) #Electrical intake
                                                 print("[f2,f3,f4,f5,f6]")
                                                 print("[0,0,1,1,0]")
 
                                             elif carbonSP > carbon and carbon != "NA": #Too little carbon dioxide
-                                                deviceControl.Fan(F2_Pin, True) #Exhaust
-                                                deviceControl.Fan(F3_Pin, False) #Intake
-                                                deviceControl.Fan(F4_Pin, True) #Transition
-                                                deviceControl.Fan(F5_Pin, False) #Electrical exhaust
-                                                deviceControl.Fan(F6_Pin, True) #Electrical intake
+                                                deviceControl().Fan(F2_Pin, True) #Exhaust
+                                                deviceControl().Fan(F3_Pin, False) #Intake
+                                                deviceControl().Fan(F4_Pin, True) #Transition
+                                                deviceControl().Fan(F5_Pin, False) #Electrical exhaust
+                                                deviceControl().Fan(F6_Pin, True) #Electrical intake
                                                 print("[f2,f3,f4,f5,f6]")
                                                 print("[1,0,1,0,1]")
 

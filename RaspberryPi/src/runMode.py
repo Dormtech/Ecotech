@@ -14,7 +14,7 @@ from logg import deviceLog
 
 class deviceControl():
 
-    def __init__():
+    def __init__(self):
         GPIO.setwarnings(False)
 
     """Input: sensor - string containing the sensor you are trying to find
@@ -78,7 +78,7 @@ class deviceControl():
     """Input: pin - integer value containing the desired pin
        Function: set a desired pin to an output
        Output: returns a boolean to inform user when done"""
-    def initalizeOut(pin):
+    def initalizeOut(self,pin):
         if pin is not None:
             try:
                 GPIO.setmode(GPIO.BCM)
@@ -98,7 +98,7 @@ class deviceControl():
     """Input: pin - integer value containing the desired pin
        Function: set a desired pin to an input
        Output: returns a boolean to inform user when done"""
-    def initalizeIn(pin):
+    def initalizeIn(self,pin):
         if pin is not None:
             try:
                 GPIO.setmode(GPIO.BCM)
