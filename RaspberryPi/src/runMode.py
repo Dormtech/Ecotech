@@ -84,7 +84,7 @@ class deviceControl():
                 GPIO.setmode(GPIO.BCM)
                 GPIO.setup(pin, GPIO.OUT)
                 GPIO.output(pin, False) #Initalize as off
-                time.sleep(0.5)
+                time.sleep(0.1)
                 return True
             except Exception as e:
                 errCode = "ERROR INITALIZING OUTPUT"
@@ -103,7 +103,7 @@ class deviceControl():
             try:
                 GPIO.setmode(GPIO.BCM)
                 GPIO.setup(pin, GPIO.IN)
-                time.sleep(0.5)
+                time.sleep(0.1)
                 return True
             except Exception as e:
                 errCode = "ERROR INITALIZING INPUT"
