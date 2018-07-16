@@ -33,20 +33,18 @@ class deviceControl():
                         reading = reading.replace("b'", "")
                         reading = reading.split(",")
                         bank = []
-                        for x in reading:
+                        for x in range(len(reading)):
                             hold = reading[x].split("=")
                             bank.insert(len(bank),reading)
 
                         #Parsing of data for sensor value
-                        x = 0
-                        while x < len(bank):
+                        for x in range(len(bank)):
                             if str(bank[x][0]) == str(sensor):
                                 sens_val = bank[x][1].replace(str(unit), "")
                                 sens_val = float(sens_val)
-                                x = len(bank)
+                                break
                             else:
                                 sens_val = "ERROR"
-                            x = x + 1
                         return sens_val
                     except Exception as e:
                         errCode = "ERROR FINDING SENSOR"
