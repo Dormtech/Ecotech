@@ -16,7 +16,7 @@ class atmosphere():
               weightBank - list containing all weights for the calculation
         Function: determines the weighted average of given values
         Output: returns a real value containing the weighted average"""
-    def wAverage(valueBank,weightBank):
+    def wAverage(self,valueBank,weightBank):
         if valueBank is not None:
             if weightBank is not None:
                 if len(valueBank) == len(weightBank):
@@ -100,7 +100,7 @@ class atmosphere():
                                 #Weighted average
                                 tempBank = [t1,t2,t3,t4,t5]
                                 tempWeight = [1,1,1,1,1]
-                                temp = wAverage(tempBank,tempWeight)
+                                temp = self.wAverage(tempBank,tempWeight)
                                 print("temp = " + str(temp))
 
                                 #Humidity sensors
@@ -111,7 +111,7 @@ class atmosphere():
                                 h5 = deviceControl.sensorValue("H5","%",sensorBank1)
                                 humidBank = [h1,h2,h3,h4,h5]
                                 humidWeight = [1,1,1,1,1]
-                                humid = wAverage(humidBank,humidWeight)
+                                humid = self.wAverage(humidBank,humidWeight)
                                 print("humidity = " + str(humid))
 
                                 #Electrical box sensors
