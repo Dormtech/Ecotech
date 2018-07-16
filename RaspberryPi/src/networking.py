@@ -40,7 +40,7 @@ class network():
         if os.path.exists(USB0):
             if serial.Serial(USB0):
                 ser = serial.Serial(USB0, 9600, timeout=0.5)
-                time.sleep(1.7)
+                time.sleep(0.1)
                 return ser
             else:
                 errCode = "CONNECTION FAILURE"
@@ -100,9 +100,9 @@ class network():
                 ser.reset_input_buffer()
                 statusBit = str.encode(str(code) + "\r\n")
                 ser.write(statusBit)
-                time.sleep(0.1)
+                #time.sleep(0.1)
                 reading = ser.readline()
-                time.sleep(0.1)
+                #time.sleep(0.1)
                 return reading
 
             else:
