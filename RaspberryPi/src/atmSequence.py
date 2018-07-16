@@ -100,7 +100,7 @@ class atmosphere():
                                 #Weighted average
                                 tempBank = [t1,t2,t3,t4,t5]
                                 tempWeight = [1,1,1,1,1]
-                                temp = self.wAverage(tempBank,tempWeight)
+                                temp = wAverage(tempBank,tempWeight)
                                 print("temp = " + str(temp))
 
                                 #Humidity sensors
@@ -111,7 +111,7 @@ class atmosphere():
                                 h5 = deviceControl.sensorValue("H5","%",sensorBank1)
                                 humidBank = [h1,h2,h3,h4,h5]
                                 humidWeight = [1,1,1,1,1]
-                                humid = self.wAverage(humidBank,humidWeight)
+                                humid = wAverage(humidBank,humidWeight)
                                 print("humidity = " + str(humid))
 
                                 #Electrical box sensors
