@@ -11,6 +11,7 @@ import kivy
 from cameraSequence import camera
 from atmSequence import atmosphere
 from runMode import deviceControl
+from logg import deviceLog
 
 from kivy.app import App
 from kivy.uix.label import Label
@@ -62,7 +63,7 @@ class defaultScreen(Screen):
     #will update all the variables on screen
     def update(self, dt):
         #call funtion to get info from sensors
-        code1Bank = deviceControl().readSensor(1)
+        code1Bank = network().readSerial(ser,1)
 
         #Temp sensors
         t1 = deviceControl().sensorValue("T1","C",code1Bank)
@@ -73,32 +74,41 @@ class defaultScreen(Screen):
         #Weighted average
         tempBank = [t1,t2,t3,t4,t5]
         tempWeight = [1,1,1,1,1]
-        temp = atmosphere().findTemp(tempBank,tempWeight)
+        temp = atmosphere().wAverage(tempBank,tempWeight)
         self.temperatureVar.text = str(temp)
         self.dayVar.text = '00'
         self.clockDisplay.text = time.asctime()
 
 
     def takePicture(self):
-        fileName = "/home/pi/Desktop/Ecotech-master/RaspberryPi/logs/pics/test" + time.strftime("%d-%y-%m_%H:%M:%S", time.gmtime()) + ".png"
-        if os.path.isfile(fileName):
-            try:
-                os.remove(fileName)
-                time.sleep(0.5)
-                self.remove_widget(self.imgVar)
+        try:
+            if os.path.isdir("/home/pi/Desktop/Ecotech/RaspberryPi/logs/pics"):
+                fileName = "/home/pi/Desktop/Ecotech/RaspberryPi/logs/pics/test" + time.strftime("%d-%y-%m_%H:%M:%S", time.gmtime()) + ".png"
+            else:
+                os.mkdir("/home/pi/Desktop/Ecotech/RaspberryPi/logs/pics")
+                fileName = "/home/pi/Desktop/Ecotech/RaspberryPi/logs/pics/test" + time.strftime("%d-%y-%m_%H:%M:%S", time.gmtime()) + ".png"
+            if os.path.isfile(fileName):
+                try: #If widget is there
+                    os.remove(fileName)
+                    time.sleep(0.5)
+                    self.remove_widget(self.imgVar)
+                    camera.cameraMain(fileName)
+                    self.imgVar = Image(source=fileName, pos=(200,75), size_hint=(.5,.5))
+                    self.add_widget(self.imgVar)
+                except: #if there is no widget
+                    os.remove(fileName)
+                    time.sleep(0.5)
+                    camera.cameraMain(fileName)
+                    self.imgVar = Image(source=fileName, pos=(200,75), size_hint=(.5,.5))
+                    self.add_widget(self.imgVar)
+            else:
                 camera.cameraMain(fileName)
                 self.imgVar = Image(source=fileName, pos=(200,75), size_hint=(.5,.5))
                 self.add_widget(self.imgVar)
-            except:
-                os.remove(fileName)
-                time.sleep(0.5)
-                camera.cameraMain(fileName)
-                self.imgVar = Image(source=fileName, pos=(200,75), size_hint=(.5,.5))
-                self.add_widget(self.imgVar)
-        else:
-            camera.cameraMain(fileName)
-            self.imgVar = Image(source=fileName, pos=(200,75), size_hint=(.5,.5))
-            self.add_widget(self.imgVar)
+        except Exception as e:
+            errCode = "FAILED TO TAKE PICTURE"
+            errMsg = "Failed while attempting to take picture with the following error " + str(e)
+            deviceLog().errorLog(errCode,errMsg)
 
     #reads the user options and imports the nessacary widgets
     def addWidgetsDefault(self, optionFile):

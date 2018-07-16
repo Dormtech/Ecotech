@@ -75,7 +75,6 @@ void loop() {
       Serial.print("H6=");
       Serial.print(h6);
       Serial.println('%');
-      delay(100);
       
     } else if (hold == "32") {
       int ph1 = random(0,254);
@@ -125,7 +124,6 @@ void loop() {
       int w11 = random(0,254);
       Serial.print("W11=");
       Serial.println(w11);
-      delay(100);
       
     }else if (hold == "33") {
       int f1 = random(0,10);
@@ -153,8 +151,7 @@ void loop() {
       Serial.print(f6,DEC);
       int b1 = random(0,254);
       Serial.print("B1=");
-      Serial.println(b1,DEC);
-      delay(100);  
+      Serial.println(b1,DEC);  
     }
   }
 }

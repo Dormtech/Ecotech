@@ -335,8 +335,8 @@ if __name__ == "__main__":
                 print("Humidity Setpoint = " + str(Humidity_SP) + "%")
                 print("Sunlight = " + str(Light_SP) + "hrs")
                 time.sleep(delay)
-                
-    except KeyboardInterrupt or (raw_input().upper() == "END")
+
+    except KeyboardInterrupt or (raw_input().upper() == "END"):
         print("ENDING PROGRAM")
         #Take Picture
         camera = PiCamera()
