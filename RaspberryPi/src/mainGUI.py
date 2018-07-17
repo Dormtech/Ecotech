@@ -59,22 +59,23 @@ class defaultScreen(Screen):
 
         self.addWidgetsDefault(optionFile)
         Clock.schedule_interval(self.update, 1)
+        self.ser = network.openSerial()
 
     #will update all the variables on screen
     def update(self, dt):
         #call funtion to get info from sensors
-        code1Bank = network().readSerial(ser,1)
+        code1Bank = network.readSerial(self.ser,1)
 
         #Temp sensors
-        t1 = deviceControl().sensorValue("T1","C",code1Bank)
-        t2 = deviceControl().sensorValue("T2","C",code1Bank)
-        t3 = deviceControl().sensorValue("T3","C",code1Bank)
-        t4 = deviceControl().sensorValue("T4","C",code1Bank)
-        t5 = deviceControl().sensorValue("T5","C",code1Bank)
+        t1 = deviceControl.sensorValue("T1","C",code1Bank)
+        t2 = deviceControl.sensorValue("T2","C",code1Bank)
+        t3 = deviceControl.sensorValue("T3","C",code1Bank)
+        t4 = deviceControl.sensorValue("T4","C",code1Bank)
+        t5 = deviceControl.sensorValue("T5","C",code1Bank)
         #Weighted average
         tempBank = [t1,t2,t3,t4,t5]
         tempWeight = [1,1,1,1,1]
-        temp = atmosphere().wAverage(tempBank,tempWeight)
+        temp = atmosphere.wAverage(tempBank,tempWeight)
         self.temperatureVar.text = str(temp)
         self.dayVar.text = '00'
         self.clockDisplay.text = time.asctime()
