@@ -40,7 +40,7 @@ class GUIFunc():
     #creates the option file used to store user config
     def createGUIOptions(pathway):
         optionFile = open(pathway+"/options/GUIOptions.txt","w+")
-        #write some more stuff to file
+        
 
         return optionFile
 
