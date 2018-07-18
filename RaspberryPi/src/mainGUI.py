@@ -2,7 +2,7 @@
  * @file mainGUI.py
  * @authors Steven Kalapos & Ben Bellerose
  * @date May 22 2018
- * @modified June 18 2018
+ * @modified July 17 2018
  * @modifiedby SK
  * @brief GUI managment and creation
  */
@@ -63,6 +63,14 @@ class defaultScreen(Screen):
 
     #will update all the variables on screen
     def update(self, dt):
+
+        temp = self.updateTemp() 
+        self.temperatureVar.text = str(temp)
+        self.dayVar.text = '00'
+        self.clockDisplay.text = time.asctime()
+
+        #updates temperature
+    def updateTemp(self):
         #call funtion to get info from sensors
         code1Bank = network.readSerial(self.ser,1)
 
@@ -75,11 +83,8 @@ class defaultScreen(Screen):
         #Weighted average
         tempBank = [t1,t2,t3,t4,t5]
         tempWeight = [1,1,1,1,1]
-        temp = atmosphere.wAverage(tempBank,tempWeight)
-        self.temperatureVar.text = str(temp)
-        self.dayVar.text = '00'
-        self.clockDisplay.text = time.asctime()
 
+        return atmosphere.wAverage(tempBank,tempWeight)
 
     def takePicture(self):
         try:
