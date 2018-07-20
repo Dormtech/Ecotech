@@ -11,6 +11,7 @@ import kivy
 from cameraSequence import camera
 from atmSequence import atmosphere
 from runMode import deviceControl
+from networking import network
 from logg import deviceLog
 
 from kivy.app import App
@@ -84,7 +85,7 @@ class defaultScreen(Screen):
         tempBank = [t1,t2,t3,t4,t5]
         tempWeight = [1,1,1,1,1]
 
-        return atmosphere.wAverage(tempBank,tempWeight)
+        return atmosphere().wAverage(tempBank,tempWeight)
 
     def takePicture(self):
         try:
