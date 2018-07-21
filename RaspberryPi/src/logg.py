@@ -2,52 +2,134 @@
  * @file logg.py
  * @authors Steven Kalapos & Ben Bellerose
  * @date May 2018
- * @modified May 27 2018
+ * @modified July 20 2018
  * @modifiedby BB
  * @brief logging systems for device
  */
  """
 import os
+import csv
 from time import gmtime,strftime
 
 class deviceLog():
 
-    """Input: type - String containing error code relarted to error type
-              description - String containing description of what caused error
+    def __init__(self):
+        self.logDir = os.getcwd().split("/")
+        del self.logDir[len(logDir) - 1]
+        self.logDir = "/".join(logDir) + str("/logs/")
+
+    """Input: type - string containing error code relarted to error type
+              description - string containing description of what caused error
+              fileName - sring containing file adress to error log
         Function: logs what vaused the error in desired location
         Output: returns a boolean value to inform user of log state"""
-    def errorLog(self,errorType,description):
+    def errorLog(self,errorType,description,fileName):
         if errorType is not None:
             if description is not None:
-                date = strftime("%Y-%m-%d %H:%M:%S", gmtime())
-                content = str(date) + ":" + str(errorType) + ": " + str(description)
-                #set location of log file
-                log_file = os.getcwd().split("/")
-                del log_file[len(log_file) - 1]
-                log_file = "/".join(log_file)
-                log_file = log_file + "/logs/error_log.txt"
-                #attempt to read log file
-                if os.path.isfile(log_file):
-                    file_read = open(log_file,"r")
-                    #write error log into existing error log
-                    file_hold = file_read.readlines()
-                    file_read.close()
-                    file_hold.insert(len(file_hold),content)
-                    file_write = open(log_file,"w")
-                    x = 0
-                    while x < len(file_hold):
-                        file_write.write(file_hold[x].replace("\n",""))
-                        if x < len(file_hold) - 1:
-                            file_write.write("\n")
-                        x = x + 1
-                    file_write.close()
-                    return True
+                if fileName is not None:
+                    date = strftime("%Y-%m-%d %H:%M:%S", gmtime())
+                    content = str(date) + ":" + str(errorType) + ": " + str(description)
+                    #set location of log file
+                    logFile = str(self.logDir) + str(fileName)
+                    #attempt to read log file
+                    if os.path.isfile(logFile):
+                        fileRead = open(logFile,"r")
+                        #write error log into existing error log
+                        fileHold = fileRead.readlines()
+                        fileRead.close()
+                        fileHold.insert(len(fileHold),content)
+                        fileWrite = open(logFile,"w")
+                        x = 0
+                        while x < len(fileHold):
+                            fileWrite.write(fileHold[x].replace("\n",""))
+                            if x < len(fileHold) - 1:
+                                fileWrite.write("\n")
+                            x = x + 1
+                        fileWrite.close()
+                        return True
+                    else:
+                        fileWrite = open(logFile,"w")
+                        fileWrite.write(content)
+                        fileWrite.close()
+                        return True
                 else:
-                    file_write = open(log_file,"w")
-                    file_write.write(content)
-                    file_write.close()
-                    return True
+                    return False
             else:
                 return False
         else:
+            return False
+
+    """Input: fileName - string containing file adress to schedule
+        Function: reads schedule for device to determine setpoints
+        Output: returns a list containing the values for the setpoints and their values"""
+    def readCSV(self,fileName):
+        if fileName is not None:
+            fullFile = str(self.logDir) + str(fileName)
+            if os.path.isfile(fullFile):
+                try:
+                    fileOpen = open(fullFile, "r")
+                    content = csv.reader(fileOpen)
+                    content = list(content)
+                    return content
+                except Exception as e:
+                    errCode = "ERROR READING FILE"
+                    errMsg = "Error reading CSV file. The following error code appeared; " + str(e)
+                    self.errorLog(errCode,errMsg)
+                    print("ERROR READING FILE")
+                    content = None
+                    return content
+            else:
+                errCode = "FILE NOT FOUND"
+                errMsg = "The given file adress for the CSV file does not exist."
+                self.errorLog(errCode,errMsg)
+                print("FILE NOT FOUND")
+                content = None
+                return content
+        else:
+            errCode = "NO FILE NAME GIVEN"
+            errMsg = "No file name was given for the CSV file."
+            self.errorLog(errCode,errMsg)
+            print("NO FILE NAME GIVEN")
+            content = None
+            return content
+
+    """Input: content - list containing data you want to input into csv
+              fileName - string containing the name of the file
+       Function: overwrite all data inside of the csv with chosen data
+       Output: writes boolean value to show user success of csv write"""
+    def inputCSV(self,content,fileName):
+        if content is not None:
+            if fileName is not None:
+                fullFile = str(self.logDir) + str(fileName)
+                if os.path.isfile(fullFile):
+                    try:
+                        with open(fullFile, 'wb') as csvfile:
+                            spamWriter = csv.writer(csvfile, delimiter=',',quotechar=',', quoting=csv.QUOTE_MINIMAL)
+                            for x in range(len(content)):
+                                rowHold = []
+                                for a in range(len(content[x])):
+                                    rowHold.insert(len(rowHold),content[x][a])
+                                spamWriter.writerow(rowHold)
+                        return True
+                    except Exception as e:
+                        print("ERROR WRITING CSV")
+                        return False
+                else:
+                    errCode = "FILE NOT FOUND"
+                    errMsg = "The given file adress for the CSV file does not exist."
+                    self.errorLog(errCode,errMsg)
+                    print("FILE NOT FOUND")
+                    content = None
+                    return False
+            else:
+                errCode = "NO FILE GIVEN"
+                errMsg = "A file adress was not given as an input."
+                self.errorLog(errCode,errMsg)
+                print("NO FILE GIVEN")
+                return False
+        else:
+            errCode = "NO CONTENT GIVEN"
+            errMsg = "There was no content given as an input."
+            self.errorLog(errCode,errMsg)
+            print("NO CONTENT GIVEN")
             return False
