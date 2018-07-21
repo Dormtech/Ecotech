@@ -41,7 +41,7 @@ class GUIFunc():
     #creates the option file used to store user config
     def createGUIOptions(pathway):
         optionFile = open(pathway+"/options/GUIOptions.txt","w+")
-        
+
 
         return optionFile
 
@@ -65,7 +65,7 @@ class defaultScreen(Screen):
     #will update all the variables on screen
     def update(self, dt):
 
-        temp = self.updateTemp() 
+        temp = self.updateTemp()
         self.temperatureVar.text = str(temp)
         self.dayVar.text = '00'
         self.clockDisplay.text = time.asctime()
