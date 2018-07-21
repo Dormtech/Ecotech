@@ -60,7 +60,7 @@ class deviceLog():
             return False
 
     """Input: fileName - string containing file adress to schedule
-        Function: reads schedule for device to determine setpoints
+        Function: reads CSV file and return the contents
         Output: returns a list containing the values for the setpoints and their values"""
     def readCSV(self,fileName):
         if fileName is not None:
@@ -112,6 +112,9 @@ class deviceLog():
                                 spamWriter.writerow(rowHold)
                         return True
                     except Exception as e:
+                        errCode = "ERROR WRITING CSV"
+                        errMsg = "Unable to write the CSV file. The following error occured; " + str(e)
+                        self.errorLog(errCode,errMsg)
                         print("ERROR WRITING CSV")
                         return False
                 else:
@@ -119,7 +122,6 @@ class deviceLog():
                     errMsg = "The given file adress for the CSV file does not exist."
                     self.errorLog(errCode,errMsg)
                     print("FILE NOT FOUND")
-                    content = None
                     return False
             else:
                 errCode = "NO FILE GIVEN"
