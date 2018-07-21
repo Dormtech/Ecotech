@@ -11,6 +11,7 @@ import kivy
 from cameraSequence import camera
 from atmSequence import atmosphere
 from runMode import deviceControl
+from networking import network
 from logg import deviceLog
 
 from kivy.app import App
@@ -75,7 +76,7 @@ class defaultScreen(Screen):
         #Weighted average
         tempBank = [t1,t2,t3,t4,t5]
         tempWeight = [1,1,1,1,1]
-        temp = atmosphere.wAverage(tempBank,tempWeight)
+        temp = atmosphere().wAverage(tempBank,tempWeight)
         self.temperatureVar.text = str(temp)
         self.dayVar.text = '00'
         self.clockDisplay.text = time.asctime()
