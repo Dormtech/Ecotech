@@ -22,7 +22,7 @@ if __name__ == "__main__":
     phSP = 50
     ser = network.openSerial()
     try:
-        for x in range(50):
+        for x in range(10):
             print("Count = " + str(x + 1))
             atmosphere().atmMain(humiditySP,carbonSP,tempatureSP,light,elecSP,ser)
             #pumps().pumpMain(phSP)
