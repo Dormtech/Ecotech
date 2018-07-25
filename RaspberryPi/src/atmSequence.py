@@ -146,16 +146,16 @@ class atmosphere():
                                     f3 = "NA"
                                 else:
                                     f3 = deviceControl.sensorValue("F3","",sensorBank3)
-                                #if deviceControl.sensorValue("F4","",sensorBank3) == "ERROR":
-                                    #f4 = "NA"
-                                #else:
-                                    #f4 = deviceControl.sensorValue("F4","",sensorBank3)
+                                if deviceControl.sensorValue("F4","",sensorBank3) == "ERROR":
+                                    f4 = "NA"
+                                else:
+                                    f4 = deviceControl.sensorValue("F4","",sensorBank3)
                                 if deviceControl.sensorValue("F5","",sensorBank3) == "ERROR":
                                     f5 = "NA"
                                 else:
                                     f5 = deviceControl.sensorValue("F5","",sensorBank3)
                                 try:
-                                    fire = int(f1) + int(f2) + int(f3) + int(f5) #Sum of fire sensors
+                                    fire = int(f1) + int(f2) + int(f3) + int(f4) + int(f5) #Sum of fire sensors
                                     print("Fire levels are = " + str(fire))
                                 except:
                                     fire = "NA"
