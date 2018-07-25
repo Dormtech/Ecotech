@@ -20,40 +20,36 @@ class deviceLog():
 
     """Input: type - string containing error code relarted to error type
               description - string containing description of what caused error
-              fileName - sring containing file adress to error log
         Function: logs what vaused the error in desired location
         Output: returns a boolean value to inform user of log state"""
-    def errorLog(self,errorType,description,fileName):
+    def errorLog(self,errorType,description):
         if errorType is not None:
             if description is not None:
-                if fileName is not None:
-                    date = strftime("%Y-%m-%d %H:%M:%S", gmtime())
-                    content = str(date) + ":" + str(errorType) + ": " + str(description)
-                    #set location of log file
-                    logFile = str(self.logDir) + str(fileName)
-                    #attempt to read log file
-                    if os.path.isfile(logFile):
-                        fileRead = open(logFile,"r")
-                        #write error log into existing error log
-                        fileHold = fileRead.readlines()
-                        fileRead.close()
-                        fileHold.insert(len(fileHold),content)
-                        fileWrite = open(logFile,"w")
-                        x = 0
-                        while x < len(fileHold):
-                            fileWrite.write(fileHold[x].replace("\n",""))
-                            if x < len(fileHold) - 1:
-                                fileWrite.write("\n")
-                            x = x + 1
-                        fileWrite.close()
-                        return True
-                    else:
-                        fileWrite = open(logFile,"w")
-                        fileWrite.write(content)
-                        fileWrite.close()
-                        return True
+                date = strftime("%Y-%m-%d %H:%M:%S", gmtime())
+                content = str(date) + ":" + str(errorType) + ": " + str(description)
+                #set location of log file
+                logFile = str(self.logDir) + str(fileName)
+                #attempt to read log file
+                if os.path.isfile(logFile):
+                    fileRead = open(logFile,"r")
+                    #write error log into existing error log
+                    fileHold = fileRead.readlines()
+                    fileRead.close()
+                    fileHold.insert(len(fileHold),content)
+                    fileWrite = open(logFile,"w")
+                    x = 0
+                    while x < len(fileHold):
+                        fileWrite.write(fileHold[x].replace("\n",""))
+                        if x < len(fileHold) - 1:
+                            fileWrite.write("\n")
+                        x = x + 1
+                    fileWrite.close()
+                    return True
                 else:
-                    return False
+                    fileWrite = open(logFile,"w")
+                    fileWrite.write(content)
+                    fileWrite.close()
+                    return True
             else:
                 return False
         else:
