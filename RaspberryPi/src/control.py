@@ -157,9 +157,11 @@ class deviceControl():
 
     """Input: pin - integer value containing the pump pin location
               ws - integer value containing the current value of the water sensor
+              amount - real value (L) containing the wanted amount of liquid from the pump
+              flowRate - real value (L/min) containing the pumps flow rate
        Function: controls output state of a pump
        Output: returns a integer to inform user of pumps current state"""
-    def Pump(self,pin,ws):
+    def Pump(self,pin,ws,amount,flowRate):
         if pin is not None:
             if ws is not None:
                 init = self.initalizeOut(pin)
@@ -167,11 +169,13 @@ class deviceControl():
                     try:
                         #Handaling of water pumps
                         if int(ws) >= 200:
-                            GPIO.output(pin, False)
-                            return 1 #OFF
+                            runTime = time.time() + (60.00 * (float(amount)/float(flowRate)))
+                            while time.time() <= runTime:
+                                GPIO.output(pin, True)
+                            return 1 #ON
                         else:
-                            GPIO.output(pin, True)
-                            return 0 #ON
+                            GPIO.output(pin, False)
+                            return 0 #OFF
                     except Exception as e:
                         errCode = "ERROR CONTROLING PUMP"
                         errMsg = "Error occured when trying to control pump on GPIO pin " + str(pin) + ". The following error code appeared; " + str(e)
