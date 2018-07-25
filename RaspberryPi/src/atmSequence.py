@@ -7,7 +7,7 @@
  * @brief control sequence for the atmosphere of the machine
  */
  """
-from runMode import deviceControl
+from control import deviceControl
 from logg import deviceLog
 from networking import network
 

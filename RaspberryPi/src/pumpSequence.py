@@ -7,7 +7,7 @@
  * @brief control sequence for the pumps of the machine
  */
  """
-from runMode import deviceControl
+from control import deviceControl
 
 class pumps():
 

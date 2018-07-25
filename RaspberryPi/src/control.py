@@ -1,8 +1,8 @@
 """
- * @file runMode.py
+ * @file control.py
  * @authors Steven Kalapos & Ben Bellerose
  * @date May 21 2018
- * @modified July 16 2018
+ * @modified July 24 2018
  * @modifiedby BB
  * @brief contains various output controls for device
  */

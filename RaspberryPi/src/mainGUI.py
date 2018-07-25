@@ -10,7 +10,7 @@
 import kivy
 from cameraSequence import camera
 from atmSequence import atmosphere
-from runMode import deviceControl
+from control import deviceControl
 from networking import network
 from logg import deviceLog
 
