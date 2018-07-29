@@ -158,7 +158,7 @@ class defaultScreen(Screen):
 
         self.CO2Var = Label()
         self.add_widget(self.CO2Var)
-        self.CO2Var.pos = (-275,0)
+        self.CO2Var.pos = (-275,-100)
 
         self.dayVar = Label()
         self.add_widget(self.dayVar)
