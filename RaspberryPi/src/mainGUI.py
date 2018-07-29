@@ -144,7 +144,7 @@ class defaultScreen(Screen):
 
         self.humidityVar = Label()
         self.add_widget(self.humidityVar)
-        self.humidityVar.pos = (-275,220)
+        self.humidityVar.pos = (275,100)
 
         self.dayVar = Label()
         self.add_widget(self.dayVar)
