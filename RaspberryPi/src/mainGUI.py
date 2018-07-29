@@ -66,11 +66,13 @@ class defaultScreen(Screen):
     def update(self, dt):
 
         temp = self.updateTemp()
+        humid = self.updateHumid()
         self.temperatureVar.text = str(temp)
+        self.humidityVar.text = str(humid)
         self.dayVar.text = '00'
         self.clockDisplay.text = time.asctime()
 
-        #updates temperature
+    #updates temperature
     def updateTemp(self):
         #call funtion to get info from sensors
         code1Bank = network.readSerial(self.ser,1)
@@ -86,6 +88,23 @@ class defaultScreen(Screen):
         tempWeight = [1,1,1,1,1]
 
         return atmosphere().wAverage(tempBank,tempWeight)
+
+    #updates temperature
+    def updateHumid(self):
+        #call funtion to get info from sensors
+        code1Bank = network.readSerial(self.ser,1)
+
+        #Temp sensors
+        h1 = deviceControl.sensorValue("H1","%",code1Bank)
+        h2 = deviceControl.sensorValue("H2","%",code1Bank)
+        h3 = deviceControl.sensorValue("H3","%",code1Bank)
+        h4 = deviceControl.sensorValue("H4","%",code1Bank)
+        h5 = deviceControl.sensorValue("H5","%",code1Bank)
+        #Weighted average
+        humidBank = [h1,h2,h3,h4,h5]
+        humidWeight = [1,1,1,1,1]
+
+        return atmosphere().wAverage(humidBank,humidWeight)
 
     def takePicture(self):
         try:
@@ -123,9 +142,9 @@ class defaultScreen(Screen):
         self.add_widget(self.temperatureVar)
         self.temperatureVar.pos = (-275,100)
 
-        self.clockDisplay = Label()
-        self.add_widget(self.clockDisplay)
-        self.clockDisplay.pos = (300,220)
+        self.humidityVar = Label()
+        self.add_widget(self.humidityVar)
+        self.humidityVar.pos = (-275,220)
 
         self.dayVar = Label()
         self.add_widget(self.dayVar)
@@ -134,7 +153,6 @@ class defaultScreen(Screen):
 
         self.capture = Button(text="Capture", on_release=lambda a:self.takePicture(), size_hint=(.25,.1), pos_hint={'x':0.4,'y':0.9})
         self.add_widget(self.capture)
-
 
         self.clockDisplay = Label()
         self.add_widget(self.clockDisplay)
