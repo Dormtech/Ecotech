@@ -75,6 +75,34 @@ class deviceControl():
             sens_val = "ERROR"
             return sens_val
 
+    """Input: var - string value containing the varaible prefix of sensor (t)
+              unit - string value containing the unit of sensor (C)
+              size - integer containing size of sensor bank (3 = [t1,t2,t3])
+       Function: builds a bank of sensors and there respective values
+       Output: returns a list full of sensor values [var,val]"""
+    def sensBank(self,var,unit,size):
+        if var is not None:
+            if size is not None:
+                bank = []
+                for x in range(size):
+                    varHold = var + str(x)
+                    if self.sensorValue(varHold,unit) == "ERROR":
+                        valHold = "NA"
+                    else:
+                        valHold = self.sensorValue(varHold,unit)
+                    bank.insert(0,[varHold,valHold])
+                return bank
+            else:
+                errCode = "SIZE NOT SUPPLIED"
+                errMsg = "Size was not passed to the sensBank function."
+                deviceLog().errorLog(errCode,errMsg)
+                print("SIZE NOT SUPPLIED")
+        else:
+            errCode = "VAR NOT SUPPLIED"
+            errMsg = " Var was not passed to the sesBank function."
+            deviceLog().errorLog(errCode,errMsg)
+            print("VAR NOT SUPPLIED")
+
     """Input: pin - integer value containing the desired pin
        Function: set a desired pin to an output
        Output: returns a boolean to inform user when done"""

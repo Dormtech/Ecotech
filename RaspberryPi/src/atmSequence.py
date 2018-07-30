@@ -92,6 +92,8 @@ class atmosphere():
                                 sensorBank3 = network.readSerial(ser,3)
 
                                 #Temp sensors
+                                tBank = deviceControl.sensBank("T","C",5)
+                                print(tBank)
                                 t1 = deviceControl.sensorValue("T1","C",sensorBank1)
                                 t2 = deviceControl.sensorValue("T2","C",sensorBank1)
                                 t3 = deviceControl.sensorValue("T3","C",sensorBank1)
