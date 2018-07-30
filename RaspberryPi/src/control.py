@@ -97,11 +97,15 @@ class deviceControl():
                 errMsg = "Size was not passed to the sensBank function."
                 deviceLog().errorLog(errCode,errMsg)
                 print("SIZE NOT SUPPLIED")
+                bank = ["NA"]
+                return bank
         else:
             errCode = "VAR NOT SUPPLIED"
             errMsg = " Var was not passed to the sesBank function."
             deviceLog().errorLog(errCode,errMsg)
             print("VAR NOT SUPPLIED")
+            bank = ["NA"]
+            return bank
 
     """Input: pin - integer value containing the desired pin
        Function: set a desired pin to an output
