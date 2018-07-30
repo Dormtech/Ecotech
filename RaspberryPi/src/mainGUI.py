@@ -70,6 +70,7 @@ class defaultScreen(Screen):
         self.temperatureVar.text = str(temp)
         self.humidityVar.text = str(humid)
         self.CO2Var.text = str(CO2)
+        self.strainVar.text = 'NA'
         self.dayVar.text = '00'
         self.clockDisplay.text = time.asctime()
 
@@ -159,6 +160,10 @@ class defaultScreen(Screen):
         self.CO2Var = Label()
         self.add_widget(self.CO2Var)
         self.CO2Var.pos = (-275,-100)
+
+        self.strainVar = Label()
+        self.add_widget(self.strainVar)
+        self.strainVar.pos = (275,-100)
 
         self.dayVar = Label()
         self.add_widget(self.dayVar)
