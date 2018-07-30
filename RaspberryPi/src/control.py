@@ -90,7 +90,7 @@ class deviceControl():
                         valHold = "NA"
                     else:
                         valHold = self.sensorValue(varHold,unit)
-                    bank.insert(0,[varHold,valHold])
+                    bank.insert(0,valHold)
                 return bank
             else:
                 errCode = "SIZE NOT SUPPLIED"
