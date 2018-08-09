@@ -64,9 +64,10 @@ class defaultScreen(Screen):
 
     #will update all the variables on screen
     def update(self, dt):
-        temp = self.updateTemp()
-        humid = self.updateHumid()
-        CO2 = self.updateCO2()
+        sensorBank1 = network.readSerial(self.ser,1)
+        temp = self.updateTemp(sensorBank1)
+        humid = self.updateHumid(sensorBank1)
+        CO2 = self.updateCO2(sensorBank1)
         self.temperatureVar.text = str(temp)
         self.humidityVar.text = str(humid)
         self.CO2Var.text = str(CO2)
@@ -75,45 +76,25 @@ class defaultScreen(Screen):
         self.clockDisplay.text = time.asctime()
 
     #updates temperature
-    def updateTemp(self):
-        #call funtion to get info from sensors
-        sensorBank1 = network.readSerial(self.ser,1)
+    def updateTemp(self,sensorBank):
 
-        #Temp sensors
-        t1 = deviceControl.sensorValue("T1","C",sensorBank1)
-        t2 = deviceControl.sensorValue("T2","C",sensorBank1)
-        t3 = deviceControl.sensorValue("T3","C",sensorBank1)
-        t4 = deviceControl.sensorValue("T4","C",sensorBank1)
-        t5 = deviceControl.sensorValue("T5","C",sensorBank1)
-        #Weighted average
-        tempBank = [t1,t2,t3,t4,t5]
+        tBank = deviceControl().sensBank("T","C",5,sensorBank)
         tempWeight = [1,1,1,1,1]
 
-        return atmosphere().wAverage(tempBank,tempWeight)
+        return atmosphere().wAverage(tBank,tempWeight)
 
-    #updates temperature
-    def updateHumid(self):
-        #call funtion to get info from sensors
-        sensorBank1 = network.readSerial(self.ser,1)
+    #updates humidity
+    def updateHumid(self,sensorBank):
 
-        #Temp sensors
-        h1 = deviceControl.sensorValue("H1","%",sensorBank1)
-        h2 = deviceControl.sensorValue("H2","%",sensorBank1)
-        h3 = deviceControl.sensorValue("H3","%",sensorBank1)
-        h4 = deviceControl.sensorValue("H4","%",sensorBank1)
-        h5 = deviceControl.sensorValue("H5","%",sensorBank1)
-        #Weighted average
-        humidBank = [h1,h2,h3,h4,h5]
+        hBank = deviceControl().sensBank("H","%",5,sensorBank)
         humidWeight = [1,1,1,1,1]
 
-        return atmosphere().wAverage(humidBank,humidWeight)
+        return atmosphere().wAverage(hBank,humidWeight)
 
     #update CO2
-    def updateCO2(self):
-        #call funtion to get info from sensors
-        sensorBank1 = network.readSerial(self.ser,1)
+    def updateCO2(self,sensorBank):
 
-        c1 = deviceControl.sensorValue("C1","%",sensorBank1)
+        c1 = deviceControl().sensorValue("C1","%",sensorBank)
 
         return c1
 
