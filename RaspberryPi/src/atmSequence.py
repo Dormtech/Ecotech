@@ -2,7 +2,7 @@
  * @file atmSequence.py
  * @authors Steven Kalapos & Ben Bellerose
  * @date May 23 2018
- * @modified July 16 2018
+ * @modified July 30 2018
  * @modifiedby BB
  * @brief control sequence for the atmosphere of the machine
  */
@@ -92,31 +92,20 @@ class atmosphere():
                                 sensorBank3 = network.readSerial(ser,3)
 
                                 #Temp sensors
-                                t1 = deviceControl.sensorValue("T1","C",sensorBank1)
-                                t2 = deviceControl.sensorValue("T2","C",sensorBank1)
-                                t3 = deviceControl.sensorValue("T3","C",sensorBank1)
-                                t4 = deviceControl.sensorValue("T4","C",sensorBank1)
-                                t5 = deviceControl.sensorValue("T5","C",sensorBank1)
-                                #Weighted average
-                                tempBank = [t1,t2,t3,t4,t5]
+                                tBank = deviceControl().sensBank("T","C",5,sensorBank1)
                                 tempWeight = [1,1,1,1,1]
-                                temp = self.wAverage(tempBank,tempWeight)
+                                temp = self.wAverage(tBank,tempWeight)
                                 print("temp = " + str(temp))
 
                                 #Humidity sensors
-                                h1 = deviceControl.sensorValue("H1","%",sensorBank1)
-                                h2 = deviceControl.sensorValue("H2","%",sensorBank1)
-                                h3 = deviceControl.sensorValue("H3","%",sensorBank1)
-                                h4 = deviceControl.sensorValue("H4","%",sensorBank1)
-                                h5 = deviceControl.sensorValue("H5","%",sensorBank1)
-                                humidBank = [h1,h2,h3,h4,h5]
+                                hBank = deviceControl().sensBank("H","%",5,sensorBank1)
                                 humidWeight = [1,1,1,1,1]
-                                humid = self.wAverage(humidBank,humidWeight)
+                                humid = self.wAverage(hBank,humidWeight)
                                 print("humidity = " + str(humid))
 
                                 #Electrical box sensors
-                                t6 = deviceControl.sensorValue("T6","C",sensorBank1) #Electrical box
-                                h6 = deviceControl.sensorValue("H6","%",sensorBank1) #Electrical box
+                                t6 = deviceControl().sensorValue("T6","C",sensorBank1) #Electrical box
+                                h6 = deviceControl().sensorValue("H6","%",sensorBank1) #Electrical box
                                 try:
                                     elecTemp = int(t6)
                                     print("Electircal Box Tempature = " + str(elecTemp))
@@ -125,7 +114,7 @@ class atmosphere():
                                     print("SYSTEM FAILURE - ELECTRICAL BOX SENSORS OFFLINE")
 
                                 #Carbon sensors
-                                c1 = deviceControl.sensorValue("C1","%",sensorBank1)
+                                c1 = deviceControl().sensorValue("C1","%",sensorBank1)
                                 try:
                                     carbon = int(c1)
                                     print("Carbon contentent = " + str(carbon))
@@ -134,28 +123,11 @@ class atmosphere():
                                     print("SYSTEM FAILURE - CARBON SENSORS OFFLINE")
 
                                 #Fire sensors
-                                if deviceControl.sensorValue("F1","",sensorBank3) == "ERROR":
-                                    f1 = "NA"
-                                else:
-                                    f1 = deviceControl.sensorValue("F1","",sensorBank3)
-                                if deviceControl.sensorValue("F2","",sensorBank3) == "ERROR":
-                                    f2 = "NA"
-                                else:
-                                    f2 = deviceControl.sensorValue("F2","",sensorBank3)
-                                if deviceControl.sensorValue("F3","",sensorBank3) == "ERROR":
-                                    f3 = "NA"
-                                else:
-                                    f3 = deviceControl.sensorValue("F3","",sensorBank3)
-                                if deviceControl.sensorValue("F4","",sensorBank3) == "ERROR":
-                                    f4 = "NA"
-                                else:
-                                    f4 = deviceControl.sensorValue("F4","",sensorBank3)
-                                if deviceControl.sensorValue("F5","",sensorBank3) == "ERROR":
-                                    f5 = "NA"
-                                else:
-                                    f5 = deviceControl.sensorValue("F5","",sensorBank3)
+                                fBank = deviceControl().sensBank("F","",5,sensorBank3)
                                 try:
-                                    fire = int(f1) + int(f2) + int(f3) + int(f4) + int(f5) #Sum of fire sensors
+                                    fire = 0
+                                    for x in range(fBank):
+                                        fire = fire + fBank[x]
                                     print("Fire levels are = " + str(fire))
                                 except:
                                     fire = "NA"
@@ -174,7 +146,7 @@ class atmosphere():
                                             if carbonSP <= carbon and carbon != "NA": #Too much carbon dioxide
                                                 deviceControl().Fan(F2_Pin, True) #Exhaust
                                                 deviceControl().Fan(F3_Pin, True) #Intake
-                                                #deviceControl().Fan(F4_Pin, False) #Transition
+                                                deviceControl().Fan(F4_Pin, False) #Transition
                                                 deviceControl().Fan(F5_Pin, True) #Electrical exhaust
                                                 deviceControl().Fan(F6_Pin, True) #Electrical intake
                                                 print("[f2,f3,f5,f6]")
@@ -183,7 +155,7 @@ class atmosphere():
                                             elif carbonSP > carbon and carbon != "NA": #Too little carbon dioxide
                                                 deviceControl().Fan(F2_Pin, False) #Exhaust
                                                 deviceControl().Fan(F3_Pin, True) #Intake
-                                                #deviceControl().Fan(F4_Pin, True) #Transition
+                                                deviceControl().Fan(F4_Pin, True) #Transition
                                                 deviceControl().Fan(F5_Pin, False) #Electrical exhaust
                                                 deviceControl().Fan(F6_Pin, True) #Electrical intake
                                                 print("[f2,f3,f5,f6]")
@@ -196,7 +168,7 @@ class atmosphere():
                                             if carbonSP <= carbon and carbon != "NA": #Too much carbon dioxide
                                                 deviceControl().Fan(F2_Pin, False) #Exhaust
                                                 deviceControl().Fan(F3_Pin, False) #Intake
-                                                #deviceControl().Fan(F4_Pin, False) #Transition
+                                                deviceControl().Fan(F4_Pin, False) #Transition
                                                 deviceControl().Fan(F5_Pin, True) #Electrical exhaust
                                                 deviceControl().Fan(F6_Pin, True) #Electrical intake
                                                 print("[f2,f3,f5,f6]")
@@ -205,7 +177,7 @@ class atmosphere():
                                             elif carbonSP > carbon and carbon != "NA": #Too little carbon dioxide
                                                 deviceControl().Fan(F2_Pin, True) #Exhaust
                                                 deviceControl().Fan(F3_Pin, False) #Intake
-                                                #deviceControl().Fan(F4_Pin, True) #Transition
+                                                deviceControl().Fan(F4_Pin, True) #Transition
                                                 deviceControl().Fan(F5_Pin, False) #Electrical exhaust
                                                 deviceControl().Fan(F6_Pin, True) #Electrical intake
                                                 print("[f2,f3,f5,f6]")
@@ -222,7 +194,7 @@ class atmosphere():
                                             if carbonSP <= carbon and carbon != "NA": #Too much carbon dioxide
                                                 deviceControl().Fan(F2_Pin, True) #Exhaust
                                                 deviceControl().Fan(F3_Pin, True) #Intake
-                                                #deviceControl().Fan(F4_Pin, False) #Transition
+                                                deviceControl().Fan(F4_Pin, False) #Transition
                                                 deviceControl().Fan(F5_Pin, False) #Electrical exhaust
                                                 deviceControl().Fan(F6_Pin, False) #Electrical intake
                                                 print("[f2,f3,f5,f6]")
@@ -231,7 +203,7 @@ class atmosphere():
                                             elif carbonSP > carbon and carbon != "NA": #Too little carbon dioxide
                                                 deviceControl().Fan(F2_Pin, True) #Exhaust
                                                 deviceControl().Fan(F3_Pin, False) #Intake
-                                                #deviceControl().Fan(F4_Pin, True) #Transition
+                                                deviceControl().Fan(F4_Pin, True) #Transition
                                                 deviceControl().Fan(F5_Pin, False) #Electrical exhaust
                                                 deviceControl().Fan(F6_Pin, True) #Electrical intake
                                                 print("[f2,f3,f5,f6]")
@@ -244,7 +216,7 @@ class atmosphere():
                                             if carbonSP <= carbon: #Too much carbon dioxide
                                                 deviceControl().Fan(F2_Pin, False) #Exhaust
                                                 deviceControl().Fan(F3_Pin, False) #Intake
-                                                #deviceControl().Fan(F4_Pin, True) #Transition
+                                                deviceControl().Fan(F4_Pin, True) #Transition
                                                 deviceControl().Fan(F5_Pin, True) #Electrical exhaust
                                                 deviceControl().Fan(F6_Pin, False) #Electrical intake
                                                 print("[f2,f3,f5,f6]")
@@ -253,7 +225,7 @@ class atmosphere():
                                             elif carbonSP > carbon and carbon != "NA": #Too little carbon dioxide
                                                 deviceControl().Fan(F2_Pin, True) #Exhaust
                                                 deviceControl().Fan(F3_Pin, False) #Intake
-                                                #deviceControl().Fan(F4_Pin, True) #Transition
+                                                deviceControl().Fan(F4_Pin, True) #Transition
                                                 deviceControl().Fan(F5_Pin, False) #Electrical exhaust
                                                 deviceControl().Fan(F6_Pin, True) #Electrical intake
                                                 print("[f2,f3,f5,f6]")
@@ -272,15 +244,15 @@ class atmosphere():
                                     return True
 
                                 elif fire > fireLevel and fire != "NA":
-                                    if f1 > fireLevel:
+                                    if int(fBank[0]) > fireLevel:
                                         deviceControl().Fire("F1")
-                                    elif f2 > fireLevel:
+                                    elif int(fBank[1]) > fireLevel:
                                         deviceControl().Fire("F2")
-                                    elif f3 > fireLevel:
+                                    elif int(fBank[2]) > fireLevel:
                                         deviceControl().Fire("F3")
-                                    elif f4 > fireLevel:
+                                    elif int(fBank[3]) > fireLevel:
                                         deviceControl().Fire("F4")
-                                    elif f5> fireLevel:
+                                    elif int(fBank[4]) > fireLevel:
                                         deviceControl().Fire("F5")
                                     return False
                             else:

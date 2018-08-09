@@ -33,7 +33,7 @@ if __name__ == "__main__":
         print("**********************************")
         print("Start time: " + time.strftime("%H:%M:%S", time.gmtime(startTime)))
         print("End time: " + time.strftime("%H:%M:%S", time.gmtime(endTime)))
-        print("Elapsed time: " + time.strftime("%H:%M:%S", time.gmtime(elapsedTime)))
+        print("Elapsed time: " + str(elapsedTime))
         print("**********************************")
     except KeyboardInterrupt or (raw_input().upper() == "END"):
         network.closeSerial(ser)
@@ -42,5 +42,5 @@ if __name__ == "__main__":
         print("**********************************")
         print("Start time: " + time.strftime("%H:%M:%S", time.gmtime(startTime)))
         print("End time: " + time.strftime("%H:%M:%S", time.gmtime(endTime)))
-        print("Elapsed time: " + time.strftime("%H:%M:%S", time.gmtime(elapsedTime)))
+        print("Elapsed time: " + str(elapsedTime))
         print("**********************************")
