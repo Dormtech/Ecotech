@@ -11,6 +11,9 @@ import RPi.GPIO as GPIO
 import time
 from time import gmtime,strftime
 from logg import deviceLog
+import cv2
+from picamera.array import PiRGBArray
+from picamera import PiCamera
 
 class deviceControl():
 
@@ -363,3 +366,26 @@ class deviceControl():
         deviceLog().errorLog(errCode,errMsg)
         GPIO.cleanup()
         return True
+
+    """Input: fileName - string value containing the name you wish to save photo as
+        Function: takes and saves picture of plant
+        Output: returns a boolean value to inform user of machine state"""
+    def takePicture(fileName):
+        if fileName is not None:
+            if os.path.isfile(fileName):
+                os.remove(fileName)
+                time.sleep(0.1)
+            cameraPi = PiCamera()
+            rawCapture = PiRGBArray(cameraPi)
+            time.sleep(0.1)
+            cameraPi.capture(rawCapture, format="bgr")
+            image = rawCapture.array
+            cv2.imwrite(fileName,image)
+            cameraPi.close()
+            return True
+        else:
+            errCode = "NO FILE NAME PROVIDED"
+            errMsg = "No file name was provided for the photo to be saved as."
+            deviceLog().errorLog(errCode,errMsg)
+            print("NO FILE NAME PROVIDED")
+            return False

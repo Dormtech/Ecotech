@@ -9,14 +9,16 @@
  """
 import os
 import csv
+import shutil
 from time import gmtime,strftime
 
 class deviceLog():
 
     def __init__(self):
-        self.logDir = os.getcwd().split("/")
-        del self.logDir[len(logDir) - 1]
-        self.logDir = "/".join(logDir) + str("/logs/")
+        dirHold = os.getcwd().split("/")
+        del dirHold[:1]
+        print(dirHold)
+        self.logDir = "/".join(dirHold) + str("/logs/")
 
     """Input: type - string containing error code relarted to error type
               description - string containing description of what caused error
@@ -28,7 +30,7 @@ class deviceLog():
                 date = strftime("%Y-%m-%d %H:%M:%S", gmtime())
                 content = str(date) + ":" + str(errorType) + ": " + str(description)
                 #set location of log file
-                logFile = str(self.logDir) + str(fileName)
+                logFile = str(self.logDir) + str("errorLog.txt")
                 #attempt to read log file
                 if os.path.isfile(logFile):
                     fileRead = open(logFile,"r")
@@ -46,7 +48,7 @@ class deviceLog():
                     fileWrite.close()
                     return True
                 else:
-                    fileWrite = open(logFile,"w")
+                    fileWrite = open(logFile,"w+")
                     fileWrite.write(content)
                     fileWrite.close()
                     return True
@@ -55,7 +57,7 @@ class deviceLog():
         else:
             return False
 
-    """Input: fileName - string containing file adress to schedule
+    """Input: fileName - string containing file adress to csv file
         Function: reads CSV file and return the contents
         Output: returns a list containing the values for the setpoints and their values"""
     def readCSV(self,fileName):
@@ -64,8 +66,7 @@ class deviceLog():
             if os.path.isfile(fullFile):
                 try:
                     fileOpen = open(fullFile, "r")
-                    content = csv.reader(fileOpen)
-                    content = list(content)
+                    content = list(csv.reader(fileOpen))
                     return content
                 except Exception as e:
                     errCode = "ERROR READING FILE"
@@ -130,4 +131,36 @@ class deviceLog():
             errMsg = "There was no content given as an input."
             self.errorLog(errCode,errMsg)
             print("NO CONTENT GIVEN")
+            return False
+
+    """Input: fileName - string containing the name of the file you wish to duplicate
+              newName - string containing the name of the resultant file
+       Function: duplicates a file and renames it to a name of your choice.
+       Output: writes boolean value to show user success of csv write"""
+    def duplicateFile(fileName,newName):
+        if fileName is not None:
+            if newName is not None:
+                if os.path.isfile(newName):
+                    os.remove(newName)
+                    time.sleep(0.1)
+                if os.path.isfile(fileName):
+                    shutil.copyfile(fileName,newName)
+                    return True
+                else:
+                    errCode = "FILE NOT FOUND"
+                    errMsg = "The given file could not be found."
+                    self.errorLog(errCode,errMsg)
+                    print("FILE NOT FOUND")
+                    return False
+            else:
+                errCode = "NO NEW NAME GIVEN"
+                errMsg = "There was no new file name given as an input."
+                self.errorLog(errCode,errMsg)
+                print("NO NEW NAME GIVEN")
+                return False
+        else:
+            errCode = "NO FILE NAME GIVEN"
+            errMsg = "There was no file name as an input."
+            self.errorLog(errCode,errMsg)
+            print("NO FILE NAME GIVEN")
             return False

@@ -41,10 +41,7 @@ class GUIFunc():
     #creates the option file used to store user config
     def createGUIOptions(pathway):
         optionFile = open(pathway+"/options/GUIOptions.txt","w+")
-
-
         return optionFile
-
 
 #default stats display
 class defaultScreen(Screen):
@@ -77,25 +74,19 @@ class defaultScreen(Screen):
 
     #updates temperature
     def updateTemp(self,sensorBank):
-
         tBank = deviceControl().sensBank("T","C",5,sensorBank)
         tempWeight = [1,1,1,1,1]
-
         return atmosphere().wAverage(tBank,tempWeight)
 
     #updates humidity
     def updateHumid(self,sensorBank):
-
         hBank = deviceControl().sensBank("H","%",5,sensorBank)
         humidWeight = [1,1,1,1,1]
-
         return atmosphere().wAverage(hBank,humidWeight)
 
     #update CO2
     def updateCO2(self,sensorBank):
-
         c1 = deviceControl().sensorValue("C1","%",sensorBank)
-
         return c1
 
     def takePicture(self):
@@ -106,21 +97,14 @@ class defaultScreen(Screen):
                 os.mkdir("/home/pi/Desktop/Ecotech/RaspberryPi/logs/pics")
                 fileName = "/home/pi/Desktop/Ecotech/RaspberryPi/logs/pics/test" + time.strftime("%d-%y-%m_%H:%M:%S", time.gmtime()) + ".png"
             if os.path.isfile(fileName):
-                try: #If widget is there
-                    os.remove(fileName)
-                    time.sleep(0.5)
-                    self.remove_widget(self.imgVar)
-                    camera.cameraMain(fileName)
-                    self.imgVar = Image(source=fileName, pos=(200,75), size_hint=(.5,.5))
-                    self.add_widget(self.imgVar)
-                except: #if there is no widget
-                    os.remove(fileName)
-                    time.sleep(0.5)
-                    camera.cameraMain(fileName)
-                    self.imgVar = Image(source=fileName, pos=(200,75), size_hint=(.5,.5))
-                    self.add_widget(self.imgVar)
+                os.remove(fileName)
+                time.sleep(0.1)
+                self.remove_widget(self.imgVar)
+                control.takePicture(fileName)
+                self.imgVar = Image(source=fileName, pos=(200,75), size_hint=(.5,.5))
+                self.add_widget(self.imgVar)
             else:
-                camera.cameraMain(fileName)
+                control.takePicture(fileName)
                 self.imgVar = Image(source=fileName, pos=(200,75), size_hint=(.5,.5))
                 self.add_widget(self.imgVar)
         except Exception as e:
