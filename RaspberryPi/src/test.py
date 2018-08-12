@@ -2,7 +2,7 @@
  * @file test.py
  * @authors Steven Kalapos & Ben Bellerose
  * @date May 26 2018
- * @modified July 16 2018
+ * @modified August 11 2018
  * @modifiedby BB
  * @brief testing playground to try out classes
  */
@@ -15,6 +15,8 @@ from logg import deviceLog
 
 if __name__ == "__main__":
     startTime = time.time()
+    elecSP = 40
+    phSP = 50
     fullSP = deviceLog().findSP("autoSP.csv",15)
     tempatureSP = fullSP[0]
     humiditySP = fullSP[1]
@@ -23,8 +25,6 @@ if __name__ == "__main__":
     potLight1 = fullSP[4]
     potLight2 = fullSP[5]
     potLight3 = fullSP[6]
-    elecSP = 40
-    phSP = 50
     #ser = network.openSerial()
 
     #Main Loop

@@ -2,7 +2,7 @@
  * @file logg.py
  * @authors Steven Kalapos & Ben Bellerose
  * @date May 2018
- * @modified July 20 2018
+ * @modified August 11 2018
  * @modifiedby BB
  * @brief logging systems for device
  */
@@ -182,6 +182,7 @@ class deviceLog():
                     CO2Bank = [fullSP[7],fullSP[8],fullSP[9]]
                     lightBank = [fullSP[10],fullSP[11],fullSP[12],fullSP[13]]
                     curTime = time.strftime("%H")
+
                     if int(curTime) <= 8:
                         setpoints = [tempBank[0],humidBank[0],CO2Bank[0]]
                     elif int(curTime) > 8 and int(curTime) <= 16:
