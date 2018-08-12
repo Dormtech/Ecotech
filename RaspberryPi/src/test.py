@@ -31,7 +31,7 @@ if __name__ == "__main__":
     try:
         for x in range(10):
             #print("Count = " + str(x + 1))
-            #atmosphere().atmMain(humiditySP,carbonSP,tempatureSP,mainLight,elecSP,ser)
+            #atmosphere().atmMain(humiditySP,carbonSP,tempatureSP,mainLight,potLight1,potLight2,potLight3,elecSP,ser)
             #pumps().pumpMain(phSP)
             print("")
         #network.closeSerial(ser)
@@ -42,6 +42,7 @@ if __name__ == "__main__":
         print("End time: " + time.strftime("%H:%M:%S", time.gmtime(endTime)))
         print("Elapsed time: " + str(elapsedTime))
         print("**********************************")
+        deviceLog().dayLog(1,"Kush")
     except KeyboardInterrupt or (raw_input().upper() == "END"):
         #network.closeSerial(ser)
         endTime = time.time()

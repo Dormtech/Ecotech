@@ -2,7 +2,7 @@
  * @file atmSequence.py
  * @authors Steven Kalapos & Ben Bellerose
  * @date May 23 2018
- * @modified July 30 2018
+ * @modified August 11 2018
  * @modifiedby BB
  * @brief control sequence for the atmosphere of the machine
  */
@@ -68,7 +68,7 @@ class atmosphere():
               ser - open serial instance
         Function: controls the atmosphere inside the machine
         Output: returns a boolean value to inform the user if the function was compleated or not"""
-    def atmMain(self,humiditySP,carbonSP,tempatureSP,light,elecSP,ser):
+    def atmMain(self,humiditySP,carbonSP,tempatureSP,mainLight,potLight1,potLight2,potLight3,elecSP,ser):
         if humiditySP is not None:
             if carbonSP is not None:
                 if tempatureSP is not None:
@@ -138,7 +138,10 @@ class atmosphere():
                                 if fire == "NA":
                                     return False
                                 elif fire <= fireLevel and fire != "NA": #If fire is not detected
-                                    deviceControl().Light(L1_Pin,light) #Light
+                                    deviceControl().Light(L1_Pin,mainLight) #Light
+                                    deviceControl().Light(L2_Pin,potLight1) #Light
+                                    deviceControl().Light(L3_Pin,potLight2) #Light
+                                    deviceControl().Light(L4_Pin,potLight3) #Light
                                     deviceControl().Fan(F1_Pin, True) #Circulation
 
                                     if elecSP <= elecTemp and elecTemp != "NA": #Electrical box to hot
