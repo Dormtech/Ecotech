@@ -15,7 +15,7 @@ from logg import deviceLog
 
 if __name__ == "__main__":
     startTime = time.time()
-    fullSP = deviceLog().findSP("autoSP.csv",5)
+    fullSP = deviceLog().findSP("autoSP.csv",15)
     tempatureSP = fullSP[0]
     humiditySP = fullSP[1]
     carbonSP = fullSP[2]
