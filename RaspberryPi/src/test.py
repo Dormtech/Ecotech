@@ -15,9 +15,11 @@ from logg import deviceLog
 
 if __name__ == "__main__":
     startTime = time.time()
+    index = deviceLog().findIndex("dayLog.txt","Plant1","Kush")
+    print(index)
     elecSP = 40
     phSP = 50
-    fullSP = deviceLog().findSP("autoSP.csv",15)
+    fullSP = deviceLog().findSP("autoSP.csv",int(index))
     tempatureSP = fullSP[0]
     humiditySP = fullSP[1]
     carbonSP = fullSP[2]
@@ -26,6 +28,7 @@ if __name__ == "__main__":
     potLight2 = fullSP[5]
     potLight3 = fullSP[6]
     #ser = network.openSerial()
+    deviceLog().dayLog(index,"Plant1","Kush")
 
     #Main Loop
     try:
@@ -42,7 +45,6 @@ if __name__ == "__main__":
         print("End time: " + time.strftime("%H:%M:%S", time.gmtime(endTime)))
         print("Elapsed time: " + str(elapsedTime))
         print("**********************************")
-        deviceLog().dayLog(1,"Kush")
     except KeyboardInterrupt or (raw_input().upper() == "END"):
         #network.closeSerial(ser)
         endTime = time.time()

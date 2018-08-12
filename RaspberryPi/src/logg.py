@@ -10,11 +10,11 @@
 import os
 import csv
 import shutil
-import time
+import datetime
 from time import gmtime,strftime
 
-from atmSequence import atmosphere
-from control import deviceControl
+#from atmSequence import atmosphere
+#from control import deviceControl
 
 class deviceLog():
 
@@ -45,39 +45,49 @@ class deviceLog():
             return False
 
     """Input: index = integer conatining current index of the plant cycle
+              name = string containing name specific for the current plant
               strain = string containing current strain of the plant
         Function: logs daily machine stats for further processing
         Output: writes boolean value to show user success of the process"""
-    def dayLog(self,index,strain):
+    def dayLog(self,index,name,strain):
         if index is not None:
-            if strain is not None:
-                #variables
-                date = strftime("%Y-%m-%d %H:%M:%S", gmtime())
-                logFile = str(self.logDir) + str("dayLog.txt")
-                tBank = deviceControl().sensBank("T","C",5,sensorBank)
-                tempWeight = [1,1,1,1,1]
-                temp = atmosphere().wAverage(tBank,tempWeight)
-                hBank = deviceControl().sensBank("H","%",5,sensorBank)
-                humidWeight = [1,1,1,1,1]
-                humid = atmosphere().wAverage(hBank,humidWeight)
-                CO2 = deviceControl().sensorValue("C1","%",sensorBank)
-                plantWeight = 0.5
-                content = [str(date),"Index = " + str(index),"Strain = " + str(strain),"Tempature = " + str(temp),"Humidity = " + str(humid),"CO2 = " + str(CO2),"Plant weight = " + str(plantWeight)]
-                content = "~".join(content)
-                if self.writeFile(logFile,content) == True:
-                    return True
+            if name is not None:
+                if strain is not None:
+                    #variables
+                    date = strftime("%Y-%m-%d %H:%M:%S", gmtime())
+                    logFile = str(self.logDir) + str("dayLog.txt")
+                    #tBank = deviceControl().sensBank("T","C",5,sensorBank)
+                    #tempWeight = [1,1,1,1,1]
+                    #temp = atmosphere().wAverage(tBank,tempWeight)
+                    #hBank = deviceControl().sensBank("H","%",5,sensorBank)
+                    #humidWeight = [1,1,1,1,1]
+                    #humid = atmosphere().wAverage(hBank,humidWeight)
+                    #CO2 = deviceControl().sensorValue("C1","%",sensorBank)
+                    #plantWeight = 0.5
+
+                    content = [str(date),"Index = " + str(index),"Plant Name = " + str(name),"Strain = " + str(strain)]
+                    content = "~".join(content)
+                    if self.writeFile(logFile,content) == True:
+                        return True
+                    else:
+                        errCode = "FAILED TO WRITE"
+                        errMsg = "Unable to write to desired file."
+                        self.errorLog(errCode,errMsg)
+                        print("FAILED TO WRITE")
+                        return False
                 else:
-                    errCode = "FAILED TO WRITE"
-                    errMsg = "Unable to write to desired file."
+                    errCode = "NO STRAIN GIVEN"
+                    errMsg = "No strain was given to the function."
                     self.errorLog(errCode,errMsg)
-                    print("FAILED TO WRITE")
+                    print("NO STRAIN GIVEN")
                     return False
             else:
-                errCode = "NO STRAIN GIVEN"
-                errMsg = "No strain was given to the function."
+                errCode = "NO NAME GIVEN"
+                errMsg = "No plant name was given to the function."
                 self.errorLog(errCode,errMsg)
-                print("NO STRAIN GIVEN")
+                print("NO NAME GIVEN")
                 return False
+
         else:
             errCode = "NO INDEX GIVEN"
             errMsg = "No index was given to the function."
@@ -86,8 +96,51 @@ class deviceLog():
             return False
 
     """Input: fileName - string containing file adress to csv file
+              name = string containing name specific for the current plant
+              strain = string containing current strain of the plant
+        Function: determines current index of plant cycle
+        Output: writes integer value containing current index"""
+    def findIndex(self,fileName,name,strain):
+        if fileName is not None:
+            fullFile = str(self.logDir) + str(fileName)
+            if os.path.isfile(fullFile):
+                #variables
+                fileRead = open(fullFile,"r")
+                fileHold = fileRead.readlines()
+                fileRead.close()
+                recentLog = fileHold[len(fileHold)-1].split("~")
+                logDate = recentLog[0].split(" ")[0]
+                logName = recentLog[2].split("=")[1].strip()
+
+                if str(name) == str(logName):
+                    if logDate == strftime("%Y-%m-%d", gmtime()):
+                        index = int(recentLog[1].split("=")[1])
+                        return index
+                    else:
+                        logDate = datetime.date(int(logDate.split("-")[0]),int(logDate.split("-")[1]),int(logDate.split("-")[2]))
+                        diff = datetime.date.today() - logDate
+                        if int(recentLog[1].split("=")[1]) + int(diff.days) < len(self.readCSV("autoSP.csv")):
+                            index = int(recentLog[1].split("=")[1]) + int(diff.days)
+                        else:
+                            index = 0
+                        return index
+                else:
+                    index = 0
+                    return index
+            else:
+                index = 0
+                return index
+        else:
+            errCode = "NO FILE NAME GIVEN"
+            errMsg = "No file name was given for the file."
+            self.errorLog(errCode,errMsg)
+            print("NO FILE NAME GIVEN")
+            return "NA"
+
+
+    """Input: fileName - string containing file adress to csv file
               content - string you wish to write in file
-        Function: stores contents in file
+        Function: stores contents in text file for later retreval.
         Output: writes boolean value to show user success of the process"""
     def writeFile(self,fileName,content):
         if fileName is not None:
@@ -95,7 +148,6 @@ class deviceLog():
                 #check if path is already there
                 if os.path.isfile(fileName):
                     fileRead = open(fileName,"r")
-                    #write error log into existing error log
                     fileHold = fileRead.readlines()
                     fileRead.close()
                     fileHold.insert(len(fileHold),content)
@@ -118,15 +170,13 @@ class deviceLog():
                 errMsg = "No content was given for the file to write."
                 self.errorLog(errCode,errMsg)
                 print("NO CONTENT GIVEN")
-                content = None
-                return content
+                return False
         else:
             errCode = "NO FILE NAME GIVEN"
             errMsg = "No file name was given for the file."
             self.errorLog(errCode,errMsg)
             print("NO FILE NAME GIVEN")
-            content = None
-            return content
+            return False
 
     """Input: fileName - string containing file adress to csv file
         Function: reads CSV file and return the contents
@@ -253,7 +303,7 @@ class deviceLog():
                     humidBank = [fullSP[4],fullSP[5],fullSP[6]]
                     CO2Bank = [fullSP[7],fullSP[8],fullSP[9]]
                     lightBank = [fullSP[10],fullSP[11],fullSP[12],fullSP[13]]
-                    curTime = time.strftime("%H", gmtime())
+                    curTime = strftime("%H", gmtime())
 
                     #Determine setpoints based on day time
                     if int(curTime) <= 8:
