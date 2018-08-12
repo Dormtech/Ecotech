@@ -10,14 +10,14 @@
 import os
 import csv
 import shutil
+import time
 from time import gmtime,strftime
 
 class deviceLog():
 
     def __init__(self):
         dirHold = os.getcwd().split("/")
-        del dirHold[:1]
-        print(dirHold)
+        dirHold = dirHold[:-1]
         self.logDir = "/".join(dirHold) + str("/logs/")
 
     """Input: type - string containing error code relarted to error type
@@ -137,14 +137,16 @@ class deviceLog():
               newName - string containing the name of the resultant file
        Function: duplicates a file and renames it to a name of your choice.
        Output: writes boolean value to show user success of csv write"""
-    def duplicateFile(fileName,newName):
+    def duplicateFile(self,fileName,newName):
         if fileName is not None:
             if newName is not None:
-                if os.path.isfile(newName):
+                fullFile = str(self.logDir) + str(fileName)
+                fullNew = str(self.logDir) + str(newName)
+                if os.path.isfile(fullNew):
                     os.remove(newName)
                     time.sleep(0.1)
-                if os.path.isfile(fileName):
-                    shutil.copyfile(fileName,newName)
+                if os.path.isfile(fullFile):
+                    shutil.copyfile(fullFile,fullNew)
                     return True
                 else:
                     errCode = "FILE NOT FOUND"
@@ -154,13 +156,56 @@ class deviceLog():
                     return False
             else:
                 errCode = "NO NEW NAME GIVEN"
-                errMsg = "There was no new file name given as an input."
+                errMsg = "There was no new file name provided as an input."
                 self.errorLog(errCode,errMsg)
                 print("NO NEW NAME GIVEN")
                 return False
         else:
             errCode = "NO FILE NAME GIVEN"
-            errMsg = "There was no file name as an input."
+            errMsg = "There was no file name provided as an input."
             self.errorLog(errCode,errMsg)
             print("NO FILE NAME GIVEN")
             return False
+
+    """Input: fileName - string containing the name of the file you wish to search
+              index - integer containing the current day of the schedule
+       Function: gathers all setpoints for a given index.
+       Output: writes list containing all setpoints for the given index"""
+    def findSP(self,fileName,index):
+        if fileName is not None:
+            if index is not None:
+                if type(index) == int:
+                    fullSchedule = self.readCSV(fileName)
+                    fullSP = fullSchedule[int(index)+1]
+                    tempBank = [fullSP[1],fullSP[2],fullSP[3]]
+                    humidBank = [fullSP[4],fullSP[5],fullSP[6]]
+                    CO2Bank = [fullSP[7],fullSP[8],fullSP[9]]
+                    lightBank = [fullSP[10],fullSP[11],fullSP[12],fullSP[13]]
+                    curTime = time.strftime("%H")
+                    if int(curTime) <= 8:
+                        setpoints = [tempBank[0],humidBank[0],CO2Bank[0]]
+                    elif int(curTime) > 8 and int(curTime) <= 16:
+                        setpoints = [tempBank[1],humidBank[1],CO2Bank[1]]
+                    elif int(curTime) > 16 and int(curTime) <= 24:
+                        setpoints = [tempBank[2],humidBank[2],CO2Bank[2]]
+                    for x in range(len(lightBank)):
+                        setpoints.insert(len(setpoints),lightBank[x])
+                    return setpoints
+                else:
+                    errCode = "INDEX NOT INTEGER"
+                    errMsg = "The given index was not the correct data type."
+                    self.errorLog(errCode,errMsg)
+                    print("INDEX NOT INTEGER")
+                    return ["ERROR"]
+            else:
+                errCode = "NO INDEX GIVEN"
+                errMsg = "There was no index provided as an input."
+                self.errorLog(errCode,errMsg)
+                print("NO INDEX GIVEN")
+                return ["ERROR"]
+        else:
+            errCode = "NO FILE NAME GIVEN"
+            errMsg = "There was no file name as an input."
+            self.errorLog(errCode,errMsg)
+            print("NO FILE NAME GIVEN")
+            return ["ERROR"]
