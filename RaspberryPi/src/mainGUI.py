@@ -2,8 +2,8 @@
  * @file mainGUI.py
  * @authors Steven Kalapos & Ben Bellerose
  * @date May 22 2018
- * @modified July 17 2018
- * @modifiedby SK
+ * @modified August 13 2018
+ * @modifiedby BB
  * @brief GUI managment and creation
  */
  """
@@ -59,7 +59,8 @@ class defaultScreen(Screen):
         Clock.schedule_interval(self.update, 1)
         self.ser = network.openSerial()
         self.plantName = "Plant1"
-        self.plantStran = "Kush"
+        self.plantStrain = "Kush"
+        deviceLog().dayLog(deviceLog().findIndex("dayLog.txt","Machine Start"),"Machine Start","NA")
 
     #will update all the variables on screen
     def update(self, dt):
@@ -67,13 +68,12 @@ class defaultScreen(Screen):
         temp = self.updateTemp(sensorBank1)
         humid = self.updateHumid(sensorBank1)
         CO2 = self.updateCO2(sensorBank1)
-        day = self.updateIndex()
-        self.dayVar.text = str(day)
+        day = self.updateIndex(self.plantName)
         self.temperatureVar.text = str(temp)
         self.humidityVar.text = str(humid)
         self.CO2Var.text = str(CO2)
         self.strainVar.text = 'NA'
-        self.dayVar.text = '00'
+        self.dayVar.text = str(day)
         self.clockDisplay.text = time.asctime()
 
     #updates temperature
@@ -89,8 +89,8 @@ class defaultScreen(Screen):
         return atmosphere().wAverage(hBank,humidWeight)
 
     #updates the index
-    def updateIndex(self):
-        index = deviceLog().findIndex("dayLog.txt",self.plantName,self.plantStran)
+    def updateIndex(self,plantName):
+        index = deviceLog().findIndex("dayLog.txt",plantName)
         return index
 
     #update CO2
@@ -98,24 +98,23 @@ class defaultScreen(Screen):
         c1 = deviceControl().sensorValue("C1","%",sensorBank)
         return c1
 
-    def takePicture(self):
+    def takePicture(self,plantName,plantStrain):
         try:
-            if os.path.isdir("/home/pi/Desktop/Ecotech/RaspberryPi/logs/pics"):
-                fileName = "/home/pi/Desktop/Ecotech/RaspberryPi/logs/pics/test" + time.strftime("%d-%y-%m_%H:%M:%S", time.gmtime()) + ".png"
-            else:
-                os.mkdir("/home/pi/Desktop/Ecotech/RaspberryPi/logs/pics")
-                fileName = "/home/pi/Desktop/Ecotech/RaspberryPi/logs/pics/test" + time.strftime("%d-%y-%m_%H:%M:%S", time.gmtime()) + ".png"
+            index = deviceLog().findIndex("dayLog.txt",plantName)
+            deviceLog().dayLog(index,plantName,plantStrain)
+            dirHold = os.getcwd().split("/")
+            dirHold = dirHold[:-1]
+            picDir = "/".join(dirHold) + str("logs/pics")
+            if os.path.isdir(picDir) == False:
+                os.mkdir(picDir)
+            fileName = picDir + "/" + plantName + "(" + time.strftime("%d-%y-%m_%H:%M:%S", time.gmtime()) + ").png"
             if os.path.isfile(fileName):
                 os.remove(fileName)
                 time.sleep(0.1)
                 self.remove_widget(self.imgVar)
-                control.takePicture(fileName)
-                self.imgVar = Image(source=fileName, pos=(200,75), size_hint=(.5,.5))
-                self.add_widget(self.imgVar)
-            else:
-                control.takePicture(fileName)
-                self.imgVar = Image(source=fileName, pos=(200,75), size_hint=(.5,.5))
-                self.add_widget(self.imgVar)
+            control.takePicture(fileName)
+            self.imgVar = Image(source=fileName, pos=(200,75), size_hint=(.5,.5))
+            self.add_widget(self.imgVar)
         except Exception as e:
             errCode = "FAILED TO TAKE PICTURE"
             errMsg = "Failed while attempting to take picture with the following error " + str(e)
@@ -144,7 +143,7 @@ class defaultScreen(Screen):
         self.dayVar.pos = (0,120)
         self.dayVar.font_size = 55
 
-        self.capture = Button(text="Capture", on_release=lambda a:self.takePicture(), size_hint=(.25,.1), pos_hint={'x':0.4,'y':0.9})
+        self.capture = Button(text="Capture", on_release=lambda a:self.takePicture(self.plantName,self.plantStrain), size_hint=(.25,.1), pos_hint={'x':0.4,'y':0.9})
         self.add_widget(self.capture)
 
         self.clockDisplay = Label()

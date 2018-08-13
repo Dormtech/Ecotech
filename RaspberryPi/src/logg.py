@@ -2,7 +2,7 @@
  * @file logg.py
  * @authors Steven Kalapos & Ben Bellerose
  * @date May 2018
- * @modified August 11 2018
+ * @modified August 13 2018
  * @modifiedby BB
  * @brief logging systems for device
  */
@@ -65,7 +65,8 @@ class deviceLog():
                     #CO2 = deviceControl().sensorValue("C1","%",sensorBank)
                     #plantWeight = 0.5
 
-                    content = [str(date),"Index = " + str(index),"Plant Name = " + str(name),"Strain = " + str(strain)]
+                    content = [str(date),"Index=" + str(index),"Name=" + str(name),"Strain=" + str(strain)]
+                    #content = [str(date),"Index=" + str(index),"Name=" + str(name),"Strain=" + str(strain),"Tempature=" + str(temp),"Humidity=" + str(humid),"CO2=" + str(CO2),"Weight=" + str(plantWeight)]
                     content = "~".join(content)
                     if self.writeFile(logFile,content) == True:
                         return True
@@ -94,49 +95,6 @@ class deviceLog():
             self.errorLog(errCode,errMsg)
             print("NO INDEX GIVEN")
             return False
-
-    """Input: fileName - string containing file adress to csv file
-              name = string containing name specific for the current plant
-              strain = string containing current strain of the plant
-        Function: determines current index of plant cycle
-        Output: writes integer value containing current index"""
-    def findIndex(self,fileName,name,strain):
-        if fileName is not None:
-            fullFile = str(self.logDir) + str(fileName)
-            if os.path.isfile(fullFile):
-                #variables
-                fileRead = open(fullFile,"r")
-                fileHold = fileRead.readlines()
-                fileRead.close()
-                recentLog = fileHold[len(fileHold)-1].split("~")
-                logDate = recentLog[0].split(" ")[0]
-                logName = recentLog[2].split("=")[1].strip()
-
-                if str(name) == str(logName):
-                    if logDate == strftime("%Y-%m-%d", gmtime()):
-                        index = int(recentLog[1].split("=")[1])
-                        return index
-                    else:
-                        logDate = datetime.date(int(logDate.split("-")[0]),int(logDate.split("-")[1]),int(logDate.split("-")[2]))
-                        diff = datetime.date.today() - logDate
-                        if int(recentLog[1].split("=")[1]) + int(diff.days) < len(self.readCSV("autoSP.csv")):
-                            index = int(recentLog[1].split("=")[1]) + int(diff.days)
-                        else:
-                            index = 0
-                        return index
-                else:
-                    index = 0
-                    return index
-            else:
-                index = 0
-                return index
-        else:
-            errCode = "NO FILE NAME GIVEN"
-            errMsg = "No file name was given for the file."
-            self.errorLog(errCode,errMsg)
-            print("NO FILE NAME GIVEN")
-            return "NA"
-
 
     """Input: fileName - string containing file adress to csv file
               content - string you wish to write in file
@@ -287,6 +245,47 @@ class deviceLog():
             self.errorLog(errCode,errMsg)
             print("NO FILE NAME GIVEN")
             return False
+
+    """Input: fileName - string containing file adress to csv file
+              name = string containing name specific for the current plant
+        Function: determines current index of plant cycle
+        Output: writes integer value containing current index"""
+    def findIndex(self,fileName,name):
+        if fileName is not None:
+            fullFile = str(self.logDir) + str(fileName)
+            if os.path.isfile(fullFile):
+                #variables
+                fileRead = open(fullFile,"r")
+                fileHold = fileRead.readlines()
+                fileRead.close()
+                recentLog = fileHold[len(fileHold)-1].split("~")
+                logDate = recentLog[0].split(" ")[0]
+                logName = recentLog[2].split("=")[1].strip()
+
+                if str(name) == str(logName):
+                    if logDate == strftime("%Y-%m-%d", gmtime()):
+                        index = int(recentLog[1].split("=")[1])
+                        return index
+                    else:
+                        logDate = datetime.date(int(logDate.split("-")[0]),int(logDate.split("-")[1]),int(logDate.split("-")[2]))
+                        diff = datetime.date.today() - logDate
+                        if int(recentLog[1].split("=")[1]) + int(diff.days) < len(self.readCSV("autoSP.csv")):
+                            index = int(recentLog[1].split("=")[1]) + int(diff.days)
+                        else:
+                            index = 0
+                        return index
+                else:
+                    index = 0
+                    return index
+            else:
+                index = 0
+                return index
+        else:
+            errCode = "NO FILE NAME GIVEN"
+            errMsg = "No file name was given for the file."
+            self.errorLog(errCode,errMsg)
+            print("NO FILE NAME GIVEN")
+            return "NA"
 
     """Input: fileName - string containing the name of the file you wish to search
               index - integer containing the current day of the schedule

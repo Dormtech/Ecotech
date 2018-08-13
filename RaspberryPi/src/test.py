@@ -2,7 +2,7 @@
  * @file test.py
  * @authors Steven Kalapos & Ben Bellerose
  * @date May 26 2018
- * @modified August 11 2018
+ * @modified August 13 2018
  * @modifiedby BB
  * @brief testing playground to try out classes
  */
@@ -14,10 +14,10 @@ import time
 from logg import deviceLog
 
 if __name__ == "__main__":
-    plantName = "Plant1"
-    plantStran = "Kush"
     startTime = time.time()
-    index = deviceLog().findIndex("dayLog.txt",plantName,plantStran)
+    plantName = "Plant1"
+    plantStrain = "Kush"
+    index = deviceLog().findIndex("dayLog.txt",plantName)
     print(index)
     elecSP = 40
     phSP = 50
@@ -30,12 +30,12 @@ if __name__ == "__main__":
     potLight2 = fullSP[5]
     potLight3 = fullSP[6]
     #ser = network.openSerial()
-    deviceLog().dayLog(index,plantName,plantStran)
+    deviceLog().dayLog(index,plantName,plantStrain)
 
     #Main Loop
     try:
         for x in range(10):
-            #print("Count = " + str(x + 1))
+            print("Count = " + str(x + 1))
             #atmosphere().atmMain(humiditySP,carbonSP,tempatureSP,mainLight,potLight1,potLight2,potLight3,elecSP,ser)
             #pumps().pumpMain(phSP)
             print("")
