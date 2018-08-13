@@ -58,6 +58,8 @@ class defaultScreen(Screen):
         self.addWidgetsDefault(optionFile)
         Clock.schedule_interval(self.update, 1)
         self.ser = network.openSerial()
+        self.plantName = "Plant1"
+        self.plantStran = "Kush"
 
     #will update all the variables on screen
     def update(self, dt):
@@ -65,6 +67,8 @@ class defaultScreen(Screen):
         temp = self.updateTemp(sensorBank1)
         humid = self.updateHumid(sensorBank1)
         CO2 = self.updateCO2(sensorBank1)
+        day = self.updateIndex()
+        self.dayVar.text = str(day)
         self.temperatureVar.text = str(temp)
         self.humidityVar.text = str(humid)
         self.CO2Var.text = str(CO2)
@@ -83,6 +87,11 @@ class defaultScreen(Screen):
         hBank = deviceControl().sensBank("H","%",5,sensorBank)
         humidWeight = [1,1,1,1,1]
         return atmosphere().wAverage(hBank,humidWeight)
+
+    #updates the index
+    def updateIndex(self):
+        index = deviceLog().findIndex("dayLog.txt",self.plantName,self.plantStran)
+        return index
 
     #update CO2
     def updateCO2(self,sensorBank):

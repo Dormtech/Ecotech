@@ -14,8 +14,10 @@ import time
 from logg import deviceLog
 
 if __name__ == "__main__":
+    plantName = "Plant1"
+    plantStran = "Kush"
     startTime = time.time()
-    index = deviceLog().findIndex("dayLog.txt","Plant1","Kush")
+    index = deviceLog().findIndex("dayLog.txt",plantName,plantStran)
     print(index)
     elecSP = 40
     phSP = 50
@@ -28,7 +30,7 @@ if __name__ == "__main__":
     potLight2 = fullSP[5]
     potLight3 = fullSP[6]
     #ser = network.openSerial()
-    deviceLog().dayLog(index,"Plant1","Kush")
+    deviceLog().dayLog(index,plantName,plantStran)
 
     #Main Loop
     try:
