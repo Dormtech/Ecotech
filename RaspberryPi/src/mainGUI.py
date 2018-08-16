@@ -8,7 +8,6 @@
  */
  """
 import kivy
-from cameraSequence import camera
 from atmSequence import atmosphere
 from control import deviceControl
 from networking import network
@@ -112,7 +111,7 @@ class defaultScreen(Screen):
                 os.remove(fileName)
                 time.sleep(0.1)
                 self.remove_widget(self.imgVar)
-            control.takePicture(fileName)
+            deviceControl.captureIMG(fileName)
             self.imgVar = Image(source=fileName, pos=(200,75), size_hint=(.5,.5))
             self.add_widget(self.imgVar)
         except Exception as e:

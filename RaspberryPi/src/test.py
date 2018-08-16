@@ -9,7 +9,7 @@
  """
 import time
 from atmSequence import atmosphere
-from pumpSequence import pumps
+#from pumpSequence import pumps
 from networking import network
 from logg import deviceLog
 
@@ -37,7 +37,7 @@ if __name__ == "__main__":
         for x in range(10):
             print("Count = " + str(x + 1))
             atmosphere().atmMain(humiditySP,carbonSP,tempatureSP,mainLight,potLight1,potLight2,potLight3,elecSP,ser)
-            pumps().pumpMain(phSP)
+            #pumps().pumpMain(phSP)
             print("")
         network.closeSerial(ser)
         endTime = time.time()

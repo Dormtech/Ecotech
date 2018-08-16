@@ -370,7 +370,7 @@ class deviceControl():
     """Input: fileName - string value containing the name you wish to save photo as
         Function: takes and saves picture of plant
         Output: returns a boolean value to inform user of machine state"""
-    def takePicture(fileName):
+    def captureIMG(fileName):
         if fileName is not None:
             if os.path.isfile(fileName):
                 os.remove(fileName)
