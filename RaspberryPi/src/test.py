@@ -8,9 +8,9 @@
  */
  """
 import time
-#from atmSequence import atmosphere
-#from pumpSequence import pumps
-#from networking import network
+from atmSequence import atmosphere
+from pumpSequence import pumps
+from networking import network
 from logg import deviceLog
 
 if __name__ == "__main__":
@@ -29,17 +29,17 @@ if __name__ == "__main__":
     potLight1 = fullSP[4]
     potLight2 = fullSP[5]
     potLight3 = fullSP[6]
-    #ser = network.openSerial()
+    ser = network.openSerial()
     deviceLog().dayLog(index,plantName,plantStrain)
 
     #Main Loop
     try:
         for x in range(10):
             print("Count = " + str(x + 1))
-            #atmosphere().atmMain(humiditySP,carbonSP,tempatureSP,mainLight,potLight1,potLight2,potLight3,elecSP,ser)
-            #pumps().pumpMain(phSP)
+            atmosphere().atmMain(humiditySP,carbonSP,tempatureSP,mainLight,potLight1,potLight2,potLight3,elecSP,ser)
+            pumps().pumpMain(phSP)
             print("")
-        #network.closeSerial(ser)
+        network.closeSerial(ser)
         endTime = time.time()
         elapsedTime = endTime - startTime
         print("**********************************")
@@ -48,7 +48,7 @@ if __name__ == "__main__":
         print("Elapsed time: " + str(elapsedTime))
         print("**********************************")
     except KeyboardInterrupt or (raw_input().upper() == "END"):
-        #network.closeSerial(ser)
+        network.closeSerial(ser)
         endTime = time.time()
         elapsedTime = endTime - startTime
         print("**********************************")

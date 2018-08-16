@@ -13,8 +13,8 @@ import shutil
 import datetime
 from time import gmtime,strftime
 
-#from atmSequence import atmosphere
-#from control import deviceControl
+from atmSequence import atmosphere
+from control import deviceControl
 
 class deviceLog():
 
@@ -56,17 +56,17 @@ class deviceLog():
                     #variables
                     date = strftime("%Y-%m-%d %H:%M:%S", gmtime())
                     logFile = str(self.logDir) + str("dayLog.txt")
-                    #tBank = deviceControl().sensBank("T","C",5,sensorBank)
-                    #tempWeight = [1,1,1,1,1]
-                    #temp = atmosphere().wAverage(tBank,tempWeight)
-                    #hBank = deviceControl().sensBank("H","%",5,sensorBank)
-                    #humidWeight = [1,1,1,1,1]
-                    #humid = atmosphere().wAverage(hBank,humidWeight)
-                    #CO2 = deviceControl().sensorValue("C1","%",sensorBank)
-                    #plantWeight = 0.5
+                    tBank = deviceControl().sensBank("T","C",5,sensorBank)
+                    tempWeight = [1,1,1,1,1]
+                    temp = atmosphere().wAverage(tBank,tempWeight)
+                    hBank = deviceControl().sensBank("H","%",5,sensorBank)
+                    humidWeight = [1,1,1,1,1]
+                    humid = atmosphere().wAverage(hBank,humidWeight)
+                    CO2 = deviceControl().sensorValue("C1","%",sensorBank)
+                    plantWeight = 0.5
 
-                    content = [str(date),"Index=" + str(index),"Name=" + str(name),"Strain=" + str(strain)]
-                    #content = [str(date),"Index=" + str(index),"Name=" + str(name),"Strain=" + str(strain),"Tempature=" + str(temp),"Humidity=" + str(humid),"CO2=" + str(CO2),"Weight=" + str(plantWeight)]
+                    #content = [str(date),"Index=" + str(index),"Name=" + str(name),"Strain=" + str(strain)]
+                    content = [str(date),"Index=" + str(index),"Name=" + str(name),"Strain=" + str(strain),"Tempature=" + str(temp),"Humidity=" + str(humid),"CO2=" + str(CO2),"Weight=" + str(plantWeight)]
                     content = "~".join(content)
                     if self.writeFile(logFile,content) == True:
                         return True
