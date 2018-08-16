@@ -12,7 +12,6 @@ import csv
 import shutil
 import datetime
 from time import gmtime,strftime
-
 from atmSequence import atmosphere
 from control import deviceControl
 
