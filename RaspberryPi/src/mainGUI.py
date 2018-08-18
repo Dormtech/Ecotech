@@ -59,7 +59,7 @@ class defaultScreen(Screen):
         self.ser = network.openSerial()
         self.plantName = "Plant1"
         self.plantStrain = "Kush"
-        deviceLog().dayLog(deviceLog().findIndex("dayLog.txt","Machine Start"),"Machine Start","NA")
+        deviceLog().dayLog(deviceLog().findIndex("dayLog.txt","Machine Start"),"Machine Start","NA",["Machine start up"])
 
     #will update all the variables on screen
     def update(self, dt):
@@ -100,7 +100,8 @@ class defaultScreen(Screen):
     def takePicture(self,plantName,plantStrain):
         try:
             index = deviceLog().findIndex("dayLog.txt",plantName)
-            deviceLog().dayLog(index,plantName,plantStrain)
+            stats = ["Tempature=20"]
+            deviceLog().dayLog(index,plantName,plantStrain,stats)
             dirHold = os.getcwd().split("/")
             dirHold = dirHold[:-1]
             picDir = "/".join(dirHold) + str("logs/pics")

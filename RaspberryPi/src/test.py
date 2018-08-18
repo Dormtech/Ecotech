@@ -30,7 +30,8 @@ if __name__ == "__main__":
     potLight2 = fullSP[5]
     potLight3 = fullSP[6]
     ser = network.openSerial()
-    deviceLog().dayLog(index,plantName,plantStrain)
+    stats = ["Tempature=20"]
+    deviceLog().dayLog(index,plantName,plantStrain,stats)
 
     #Main Loop
     try:
