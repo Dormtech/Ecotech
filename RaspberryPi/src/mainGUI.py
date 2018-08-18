@@ -104,7 +104,7 @@ class defaultScreen(Screen):
             deviceLog().dayLog(index,plantName,plantStrain,stats)
             dirHold = os.getcwd().split("/")
             dirHold = dirHold[:-1]
-            picDir = "/".join(dirHold) + str("logs/pics")
+            picDir = "/".join(dirHold) + str("/logs/pics")
             if os.path.isdir(picDir) == False:
                 os.mkdir(picDir)
             fileName = picDir + "/" + plantName + "(" + time.strftime("%d-%y-%m_%H:%M:%S", time.gmtime()) + ").png"
