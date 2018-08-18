@@ -8,7 +8,7 @@
  */
  """
 import RPi.GPIO as GPIO
-import time
+import time, os
 from time import gmtime,strftime
 from logg import deviceLog
 import cv2
