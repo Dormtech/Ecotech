@@ -107,7 +107,6 @@ class deviceLog():
                     fileRead.close()
                     fileHold.insert(len(fileHold),content)
                     fileWrite = open(fileName,"w")
-                    x = 0
                     for x in range(len(fileHold)):
                         fileWrite.write(fileHold[x].replace("\n",""))
                         if x < len(fileHold) - 1:
