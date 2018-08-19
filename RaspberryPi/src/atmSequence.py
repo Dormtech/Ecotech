@@ -130,8 +130,8 @@ class atmosphere():
                                                 fBank = deviceControl().sensBank("F","",5,sensorBank3)
                                                 try:
                                                     fire = 0
-                                                    for x in range(fBank):
-                                                        fire = fire + fBank[x]
+                                                    for x in range(len(fBank)):
+                                                        fire = fire + int(fBank[x])
                                                     print("Fire levels are = " + str(fire))
                                                 except:
                                                     fire = "NA"
