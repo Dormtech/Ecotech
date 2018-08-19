@@ -249,14 +249,20 @@ class deviceLog():
         if fileName is not None:
             fullFile = str(self.logDir) + str(fileName)
             if os.path.isfile(fullFile):
-                #variables
+                #Read file
                 fileRead = open(fullFile,"r")
                 fileHold = fileRead.readlines()
                 fileRead.close()
-                recentLog = fileHold[len(fileHold)-1].split("~")
-                logDate = recentLog[0].split(" ")[0]
-                logName = recentLog[2].split("=")[1].strip()
 
+                #Find most recent day log
+                for x in range(len(fileHold)):
+                    recentLog = fileHold[len(fileHold)-(x+1)].split("~")
+                    logDate = recentLog[0].split(" ")[0]
+                    logName = recentLog[2].split("=")[1].strip()
+                    if str(name) == str(logName):
+                        break
+
+                #Determine index of day
                 if str(name) == str(logName):
                     if logDate == strftime("%Y-%m-%d", gmtime()):
                         index = int(recentLog[1].split("=")[1])
