@@ -292,7 +292,7 @@ class deviceLog():
                 if type(index) == int:
                     #Variables
                     fullSchedule = self.readCSV(fileName)
-                    fullSP = fullSchedule[int(index)+1]
+                    fullSP = fullSchedule[int(index)+2]
                     tempBank = [fullSP[1],fullSP[2],fullSP[3]]
                     humidBank = [fullSP[4],fullSP[5],fullSP[6]]
                     CO2Bank = [fullSP[7],fullSP[8],fullSP[9]]

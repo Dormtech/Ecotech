@@ -150,7 +150,7 @@ class deviceControl():
             return False
 
     """Input: pin - integer value containing the light pin location
-              light - float value containing the desired output time of light
+              light - list containing offset (hrs) and amount of day light (hrs)
        Function: controls output state of a light
        Output: returns a integer to inform user of lights current state"""
     def Light(self,pin,light):
@@ -160,12 +160,15 @@ class deviceControl():
                 if init == True:
                     try:
                         #Handling of day Ligh
-                        light_sp = int((float(light)/(100.00))*(24.00))
+                        light = light.split(",")
+                        offset = light[0]
+                        dayLight = light[1]
+                        lightEnd = int(offset) + int(dayLight)
                         hour = strftime("%H", gmtime())
-                        if int(hour) <= light_sp:
+                        if int(hour) > int(offset) and int(hour) <= int(lightEnd):
                             GPIO.output(pin, True)
                             return 0 #ON
-                        elif int(hour) > light_sp:
+                        else:
                             GPIO.output(pin, False)
                             return 1 #OFF
                     except Exception as e:
@@ -207,10 +210,10 @@ class deviceControl():
                             runTime = time.time() + (60.00 * (float(amount)/float(flowRate)))
                             while time.time() <= runTime:
                                 GPIO.output(pin, True)
-                            return 1 #ON
+                            return 0 #ON
                         else:
                             GPIO.output(pin, False)
-                            return 0 #OFF
+                            return 1 #OFF
                     except Exception as e:
                         errCode = "ERROR CONTROLING PUMP"
                         errMsg = "Error occured when trying to control pump on GPIO pin " + str(pin) + ". The following error code appeared; " + str(e)
@@ -389,3 +392,51 @@ class deviceControl():
             deviceLog().errorLog(errCode,errMsg)
             print("NO FILE NAME PROVIDED")
             return False
+
+    """Input: valueBank - list containing all values to include in calculation
+              weightBank - list containing all weights for the calculation
+        Function: determines the weighted average of given values
+        Output: returns a real value containing the weighted average"""
+    def wAverage(self,valueBank,weightBank):
+        if valueBank is not None:
+            if weightBank is not None:
+                if len(valueBank) == len(weightBank):
+                    count = 0
+                    value = 0
+                    for x in range(len(valueBank)):
+                        if type(valueBank[x]) is not str:
+                            try:
+                                value = value + (int(valueBank[x]) * weightBank[x])
+                                count = count + 1
+                            except:
+                                pass
+                    if count == 0:
+                        value = "NA"
+                        errCode = "SYSTEM FAILURE"
+                        errMsg = "Unable to process values failed while calculating weighted average for valueBank " + str(valueBank) + "."
+                        deviceLog().errorLog(errCode,errMsg)
+                        print("SYSTEM FAILURE - CALCULATION FAILURE")
+                    else:
+                        value = value/count
+                    return value
+                else:
+                    value = "NA"
+                    errCode = "BANKS ARE NOT SAME LENGTH"
+                    errMsg = "Banks supplied are different sizes."
+                    deviceLog().errorLog(errCode,errMsg)
+                    print("BANKS ARE NOT SAME LENGTH")
+                    return value
+            else:
+                value = "NA"
+                errCode = "NO WEIGHT BANK PROVIDED"
+                errMsg = "No weight bank list was provided for the machine."
+                deviceLog().errorLog(errCode,errMsg)
+                print("NO WEIGHT BANK PROVIDED")
+                return value
+        else:
+            value = "NA"
+            errCode = "NO VALUE BANK PROVIDED"
+            errMsg = "No value bank list was provided for the machine."
+            deviceLog().errorLog(errCode,errMsg)
+            print("NO VALUE BANK PROVIDED")
+            return value

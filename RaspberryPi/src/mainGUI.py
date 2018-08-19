@@ -8,7 +8,6 @@
  */
  """
 import kivy
-from atmSequence import atmosphere
 from control import deviceControl
 from networking import network
 from logg import deviceLog
@@ -79,13 +78,13 @@ class defaultScreen(Screen):
     def updateTemp(self,sensorBank):
         tBank = deviceControl().sensBank("T","C",5,sensorBank)
         tempWeight = [1,1,1,1,1]
-        return atmosphere().wAverage(tBank,tempWeight)
+        return deviceControl().wAverage(tBank,tempWeight)
 
     #updates humidity
     def updateHumid(self,sensorBank):
         hBank = deviceControl().sensBank("H","%",5,sensorBank)
         humidWeight = [1,1,1,1,1]
-        return atmosphere().wAverage(hBank,humidWeight)
+        return deviceControl().wAverage(hBank,humidWeight)
 
     #updates the index
     def updateIndex(self,plantName):

@@ -12,54 +12,6 @@ from logg import deviceLog
 from networking import network
 
 class atmosphere():
-    """Input: valueBank - list containing all values to include in calculation
-              weightBank - list containing all weights for the calculation
-        Function: determines the weighted average of given values
-        Output: returns a real value containing the weighted average"""
-    def wAverage(self,valueBank,weightBank):
-        if valueBank is not None:
-            if weightBank is not None:
-                if len(valueBank) == len(weightBank):
-                    count = 0
-                    value = 0
-                    for x in range(len(valueBank)):
-                        if type(valueBank[x]) is not str:
-                            try:
-                                value = value + (int(valueBank[x]) * weightBank[x])
-                                count = count + 1
-                            except:
-                                pass
-                    if count == 0:
-                        value = "NA"
-                        errCode = "SYSTEM FAILURE"
-                        errMsg = "Unable to process values failed while calculating weighted average for valueBank " + str(valueBank) + "."
-                        deviceLog().errorLog(errCode,errMsg)
-                        print("SYSTEM FAILURE - CALCULATION FAILURE")
-                    else:
-                        value = value/count
-                    return value
-                else:
-                    value = "NA"
-                    errCode = "BANKS ARE NOT SAME LENGTH"
-                    errMsg = "Banks supplied are different sizes."
-                    deviceLog().errorLog(errCode,errMsg)
-                    print("BANKS ARE NOT SAME LENGTH")
-                    return value
-            else:
-                value = "NA"
-                errCode = "NO WEIGHT BANK PROVIDED"
-                errMsg = "No weight bank list was provided for the machine."
-                deviceLog().errorLog(errCode,errMsg)
-                print("NO WEIGHT BANK PROVIDED")
-                return value
-        else:
-            value = "NA"
-            errCode = "NO VALUE BANK PROVIDED"
-            errMsg = "No value bank list was provided for the machine."
-            deviceLog().errorLog(errCode,errMsg)
-            print("NO VALUE BANK PROVIDED")
-            return value
-
     """Input: humiditySP - integer value containing the humidity setpoint
               carbonSP - integer value containing the carbon setpoint
               tempatureSP - integer value containing the tempature setpoint in degrees celsius
@@ -98,18 +50,17 @@ class atmosphere():
                                                 #Temp sensors
                                                 tBank = deviceControl().sensBank("T","C",5,sensorBank1)
                                                 tempWeight = [1,1,1,1,1]
-                                                temp = self.wAverage(tBank,tempWeight)
+                                                temp = deviceControl().wAverage(tBank,tempWeight)
                                                 print("temp = " + str(temp))
 
                                                 #Humidity sensors
                                                 hBank = deviceControl().sensBank("H","%",5,sensorBank1)
                                                 humidWeight = [1,1,1,1,1]
-                                                humid = self.wAverage(hBank,humidWeight)
+                                                humid = deviceControl().wAverage(hBank,humidWeight)
                                                 print("humidity = " + str(humid))
 
                                                 #Electrical box sensors
                                                 t6 = deviceControl().sensorValue("T6","C",sensorBank1) #Electrical box
-                                                h6 = deviceControl().sensorValue("H6","%",sensorBank1) #Electrical box
                                                 try:
                                                     elecTemp = int(t6)
                                                     print("Electircal Box Tempature = " + str(elecTemp))
@@ -131,8 +82,13 @@ class atmosphere():
                                                 try:
                                                     fire = 0
                                                     for x in range(len(fBank)):
-                                                        fire = fire + int(fBank[x])
-                                                    print("Fire levels are = " + str(fire))
+                                                        if fBank[x] != "NA":
+                                                            fire = fire + int(fBank[x])
+                                                    if fire == 0:
+                                                        fire = "NA"
+                                                        print("SYSTEM FAILURE - FIRE SENSORS OFFLINE")
+                                                    else:
+                                                        print("Fire levels are = " + str(fire))
                                                 except:
                                                     fire = "NA"
                                                     print("SYSTEM FAILURE - FIRE SENSORS OFFLINE")
@@ -141,54 +97,54 @@ class atmosphere():
                                                 fireLevel = 1000
                                                 if fire == "NA":
                                                     return False
-                                                elif fire <= fireLevel and fire != "NA": #If fire is not detected
+                                                elif int(fire) <= int(fireLevel) and fire != "NA": #If fire is not detected
                                                     deviceControl().Light(L1_Pin,mainLight) #Light
                                                     deviceControl().Light(L2_Pin,potLight1) #Light
                                                     deviceControl().Light(L3_Pin,potLight2) #Light
                                                     deviceControl().Light(L4_Pin,potLight3) #Light
                                                     deviceControl().Fan(F1_Pin, True) #Circulation
 
-                                                    if elecSP <= elecTemp and elecTemp != "NA": #Electrical box to hot
-                                                        if tempatureSP <= temp and temp != "NA": #Too hot
-                                                            if carbonSP <= carbon and carbon != "NA": #Too much carbon dioxide
+                                                    if float(elecSP) <= float(elecTemp) and elecTemp != "NA": #Electrical box to hot
+                                                        if float(tempatureSP) <= float(temp) and temp != "NA": #Too hot
+                                                            if float(carbonSP) <= float(carbon) and carbon != "NA": #Too much carbon dioxide
                                                                 deviceControl().Fan(F2_Pin, True) #Exhaust
                                                                 deviceControl().Fan(F3_Pin, True) #Intake
-                                                                deviceControl().Fan(F4_Pin, False) #Transition
+                                                                deviceControl().Fan(F4_Pin, False) #Circulation
                                                                 deviceControl().Fan(F5_Pin, True) #Electrical exhaust
                                                                 deviceControl().Fan(F6_Pin, True) #Electrical intake
-                                                                print("[f2,f3,f5,f6]")
-                                                                print("[1,1,1,1]")
+                                                                print("[f2,f3,f4,f5,f6]")
+                                                                print("[1,1,0,1,1]")
 
-                                                            elif carbonSP > carbon and carbon != "NA": #Too little carbon dioxide
+                                                            elif float(carbonSP) > float(carbon) and carbon != "NA": #Too little carbon dioxide
                                                                 deviceControl().Fan(F2_Pin, False) #Exhaust
                                                                 deviceControl().Fan(F3_Pin, True) #Intake
-                                                                deviceControl().Fan(F4_Pin, True) #Transition
+                                                                deviceControl().Fan(F4_Pin, True) #Circulation
                                                                 deviceControl().Fan(F5_Pin, False) #Electrical exhaust
                                                                 deviceControl().Fan(F6_Pin, True) #Electrical intake
-                                                                print("[f2,f3,f5,f6]")
-                                                                print("[0,1,0,1]")
+                                                                print("[f2,f3,f4,f5,f6]")
+                                                                print("[0,1,1,0,1]")
 
                                                             elif carbon == "NA": #Carbon sensors offline
                                                                 return False
 
-                                                        elif tempatureSP > temp and temp != "NA": #Too cold
-                                                            if carbonSP <= carbon and carbon != "NA": #Too much carbon dioxide
+                                                        elif float(tempatureSP) > float(temp) and temp != "NA": #Too cold
+                                                            if float(carbonSP) <= float(carbon) and carbon != "NA": #Too much carbon dioxide
                                                                 deviceControl().Fan(F2_Pin, False) #Exhaust
                                                                 deviceControl().Fan(F3_Pin, False) #Intake
-                                                                deviceControl().Fan(F4_Pin, False) #Transition
+                                                                deviceControl().Fan(F4_Pin, False) #Circulation
                                                                 deviceControl().Fan(F5_Pin, True) #Electrical exhaust
                                                                 deviceControl().Fan(F6_Pin, True) #Electrical intake
-                                                                print("[f2,f3,f5,f6]")
-                                                                print("[0,0,1,1]")
+                                                                print("[f2,f3,f4,f5,f6]")
+                                                                print("[0,0,0,1,1]")
 
-                                                            elif carbonSP > carbon and carbon != "NA": #Too little carbon dioxide
+                                                            elif float(carbonSP) > float(carbon) and carbon != "NA": #Too little carbon dioxide
                                                                 deviceControl().Fan(F2_Pin, True) #Exhaust
                                                                 deviceControl().Fan(F3_Pin, False) #Intake
-                                                                deviceControl().Fan(F4_Pin, True) #Transition
+                                                                deviceControl().Fan(F4_Pin, True) #Circulation
                                                                 deviceControl().Fan(F5_Pin, False) #Electrical exhaust
                                                                 deviceControl().Fan(F6_Pin, True) #Electrical intake
-                                                                print("[f2,f3,f5,f6]")
-                                                                print("[1,0,0,1]")
+                                                                print("[f2,f3,f4,f5,f6]")
+                                                                print("[1,0,1,0,1]")
 
                                                             elif carbon == "NA": #Carbon sensor offline
                                                                 return False
@@ -196,47 +152,47 @@ class atmosphere():
                                                         elif temp == "NA": #Tempature sensors offline
                                                             return False
 
-                                                    elif elecSP > elecTemp and elecTemp != "NA": #Electrical box ok
-                                                        if tempatureSP <= temp and temp != "NA": #Too hot
-                                                            if carbonSP <= carbon and carbon != "NA": #Too much carbon dioxide
+                                                    elif float(elecSP) > float(elecTemp) and elecTemp != "NA": #Electrical box ok
+                                                        if float(tempatureSP) <= float(temp) and temp != "NA": #Too hot
+                                                            if float(carbonSP) <= float(carbon) and carbon != "NA": #Too much carbon dioxide
                                                                 deviceControl().Fan(F2_Pin, True) #Exhaust
                                                                 deviceControl().Fan(F3_Pin, True) #Intake
-                                                                deviceControl().Fan(F4_Pin, False) #Transition
+                                                                deviceControl().Fan(F4_Pin, False) #Circulation
                                                                 deviceControl().Fan(F5_Pin, False) #Electrical exhaust
                                                                 deviceControl().Fan(F6_Pin, False) #Electrical intake
-                                                                print("[f2,f3,f5,f6]")
-                                                                print("[1,1,0,0]")
+                                                                print("[f2,f3,f4,f5,f6]")
+                                                                print("[1,1,0,0,0]")
 
-                                                            elif carbonSP > carbon and carbon != "NA": #Too little carbon dioxide
+                                                            elif float(carbonSP) > float(carbon) and carbon != "NA": #Too little carbon dioxide
                                                                 deviceControl().Fan(F2_Pin, True) #Exhaust
                                                                 deviceControl().Fan(F3_Pin, False) #Intake
-                                                                deviceControl().Fan(F4_Pin, True) #Transition
+                                                                deviceControl().Fan(F4_Pin, True) #Circulation
                                                                 deviceControl().Fan(F5_Pin, False) #Electrical exhaust
                                                                 deviceControl().Fan(F6_Pin, True) #Electrical intake
-                                                                print("[f2,f3,f5,f6]")
-                                                                print("[1,0,0,1]")
+                                                                print("[f2,f3,f4,f5,f6]")
+                                                                print("[1,0,1,0,1]")
 
                                                             elif carbon == "NA": #Carbon sensor offline
                                                                 return False
 
-                                                        elif tempatureSP > temp and temp != "NA": #Too cold
-                                                            if carbonSP <= carbon: #Too much carbon dioxide
+                                                        elif float(tempatureSP) > float(temp) and temp != "NA": #Too cold
+                                                            if float(carbonSP) <= float(carbon): #Too much carbon dioxide
                                                                 deviceControl().Fan(F2_Pin, False) #Exhaust
                                                                 deviceControl().Fan(F3_Pin, False) #Intake
-                                                                deviceControl().Fan(F4_Pin, True) #Transition
+                                                                deviceControl().Fan(F4_Pin, True) #Circulation
                                                                 deviceControl().Fan(F5_Pin, True) #Electrical exhaust
                                                                 deviceControl().Fan(F6_Pin, False) #Electrical intake
-                                                                print("[f2,f3,f5,f6]")
-                                                                print("[0,0,1,0]")
+                                                                print("[f2,f3,f4,f5,f6]")
+                                                                print("[0,0,1,1,0]")
 
-                                                            elif carbonSP > carbon and carbon != "NA": #Too little carbon dioxide
+                                                            elif float(carbonSP) > float(carbon) and carbon != "NA": #Too little carbon dioxide
                                                                 deviceControl().Fan(F2_Pin, True) #Exhaust
                                                                 deviceControl().Fan(F3_Pin, False) #Intake
-                                                                deviceControl().Fan(F4_Pin, True) #Transition
+                                                                deviceControl().Fan(F4_Pin, True) #Circulation
                                                                 deviceControl().Fan(F5_Pin, False) #Electrical exhaust
                                                                 deviceControl().Fan(F6_Pin, True) #Electrical intake
-                                                                print("[f2,f3,f5,f6]")
-                                                                print("[1,0,0,1]")
+                                                                print("[f2,f3,f4,f5,f6]")
+                                                                print("[1,0,1,0,1]")
 
                                                             elif carbon == "NA": #Carbon sensor offline
                                                                 return False
@@ -250,7 +206,7 @@ class atmosphere():
                                                     deviceControl().Mister(M1_Pin, humid, humiditySP) #Mister
                                                     return True
 
-                                                elif fire > fireLevel and fire != "NA":
+                                                elif int(fire) > int(fireLevel) and fire != "NA":
                                                     if int(fBank[0]) > fireLevel:
                                                         deviceControl().Fire("F1")
                                                     elif int(fBank[1]) > fireLevel:
