@@ -8,10 +8,10 @@
  */
 """
 import kivy
-from atmSequence import atmosphere
+"""from atmSequence import atmosphere
 from control import deviceControl
 from networking import network
-from logg import deviceLog
+from logg import deviceLog"""
 
 from kivy.app import App
 from kivy.uix.label import Label
@@ -63,18 +63,18 @@ class defaultScreen(Screen):
         self.addWidgetsDefault(optionFile)
         Clock.schedule_interval(self.update, 1)
 
-        self.ser = network.openSerial()
+        #self.ser = network.openSerial()
         self.plantName = "Plant1"
         self.plantStrain = "Kush"
-        deviceLog().dayLog(deviceLog().findIndex("dayLog.txt","Machine Start"),"Machine Start","NA",["Machine start up"])
+        #deviceLog().dayLog(deviceLog().findIndex("dayLog.txt","Machine Start"),"Machine Start","NA",["Machine start up"])
 
     #will update all the variables on screen
     def update(self, dt):
-        sensorBank1 = network.readSerial(self.ser,1)
+        """sensorBank1 = network.readSerial(self.ser,1)
         temp = self.updateTemp(sensorBank1)
         humid = self.updateHumid(sensorBank1)
         CO2 = self.updateCO2(sensorBank1)
-        day = self.updateIndex(self.plantName)
+        day = self.updateIndex(self.plantName)"""
         self.temperatureVar.text = str(temp)
         self.humidityVar.text = str(humid)
         self.CO2Var.text = str(CO2)
@@ -82,14 +82,6 @@ class defaultScreen(Screen):
         self.dayVar.text = str(day)
 
         #self.ser = network.openSerial()
-
-    #will update all the variables on screen
-    def update(self, dt):
-
-        temp = self.updateTemp() 
-        self.temperatureVar = str(temp)
-        self.dayVar.text = '00'
-        self.clockDisplay.text = time.asctime()
 
     #updates temperature
     def updateTemp(self,sensorBank):
@@ -116,7 +108,7 @@ class defaultScreen(Screen):
         return c1
 
     def takePicture(self,plantName,plantStrain):
-        try:
+        """try:
             index = deviceLog().findIndex("dayLog.txt",plantName)
             stats = ["Tempature=20"]
             deviceLog().dayLog(index,plantName,plantStrain,stats)
@@ -136,14 +128,12 @@ class defaultScreen(Screen):
         except Exception as e:
             errCode = "FAILED TO TAKE PICTURE"
             errMsg = "Failed while attempting to take picture with the following error " + str(e)
-            deviceLog().errorLog(errCode,errMsg)
+            deviceLog().errorLog(errCode,errMsg)"""
+        pass
 
     #reads the user options and imports the nessacary widgets
     def addWidgetsDefault(self, optionFile):
-        self.temperatureVar = Label()
-        self.add_widget(self.temperatureVar)
-        self.temperatureVar.pos = (-275,100)
-
+        
         self.humidityVar = Label()
         self.add_widget(self.humidityVar)
         self.humidityVar.pos = (275,100)
@@ -156,8 +146,6 @@ class defaultScreen(Screen):
         self.add_widget(self.strainVar)
         self.strainVar.pos = (275,-100)
 
-                                self.add_widget(self.temperatureVar)
-                                self.temperatureVar.pos = (-275,100)
                         
         self.clockDisplay = Label()
         self.add_widget(self.clockDisplay)

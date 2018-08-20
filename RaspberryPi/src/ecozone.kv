@@ -24,27 +24,73 @@
         Label:
             text:root.temperatureVar
             pos:(-275,100)
-        Label:
-            text: 'Day'
-            font_size: default_font_size
-            pos:(0,175)
+           
+
         Label:
             text: 'Humidity'
             font_size: default_font_size
             pos:(275,150)
         Label:
+            text:root.humidtyVar
+            pos:(275,100)
+
+
+        Label:
+            text: 'pH'
+            font_size: default_font_size
+            pos:(275,-50)
+        Label:
+            text:root.pHVar
+            pos(275,-100)
+
+
+        Label:
             text: 'CO2'
             font_size: default_font_size
             pos:(-275,-50)
         Label:
-            text: 'Stain'
+            text:root.CO2Var
+            pos:(-275,-100)
+
+
+        Label:
+            text: 'Day'
             font_size: default_font_size
-            pos:(275,-50)
+            pos:(0,175)
+        Label:
+            text:root.dayVar
+            pos:(0,120)
+            font_size: '55'
+
+
+        Label:
+            text: 'Strain'
+            font_size: default_font_size
+            pos:(200,200)
 
 <optionScreen>:
     size:(480,800)
     FloatLayout:
         id: optionScreenLayout
+        BoxLayout:
+            orientation: 'vertical'
+            BoxLayout:
+                id: opWords
+                orientation:'horizontal'
+
+            BoxLayout:
+                id: opButtons
+                orientation:'horizontal'
+
+                ToggleButton:
+                    text:'Celcius'
+                    group:'temp'
+                    state:'down'
+                ToggleButton:
+                    text:'Fahrenheit'
+                    group:'temp'
+
+
 
         Button:
             text: 'Back'
