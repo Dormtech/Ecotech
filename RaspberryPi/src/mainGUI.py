@@ -41,13 +41,9 @@ class GUIFunc():
     #creates the option file used to store user config
     def createGUIOptions(pathway):
         optionFile = open(pathway+"/options/GUIOptions.txt","w+")
-<<<<<<< HEAD
-=======
         
         optionFile.write("c\n")
 
-
->>>>>>> sJuly17
         return optionFile
 
 #default stats display
@@ -66,7 +62,7 @@ class defaultScreen(Screen):
 
         self.addWidgetsDefault(optionFile)
         Clock.schedule_interval(self.update, 1)
-<<<<<<< HEAD
+
         self.ser = network.openSerial()
         self.plantName = "Plant1"
         self.plantStrain = "Kush"
@@ -84,7 +80,7 @@ class defaultScreen(Screen):
         self.CO2Var.text = str(CO2)
         self.strainVar.text = 'NA'
         self.dayVar.text = str(day)
-=======
+
         #self.ser = network.openSerial()
 
     #will update all the variables on screen
@@ -93,7 +89,6 @@ class defaultScreen(Screen):
         temp = self.updateTemp() 
         self.temperatureVar = str(temp)
         self.dayVar.text = '00'
->>>>>>> sJuly17
         self.clockDisplay.text = time.asctime()
 
     #updates temperature
@@ -102,15 +97,13 @@ class defaultScreen(Screen):
         tempWeight = [1,1,1,1,1]
         return atmosphere().wAverage(tBank,tempWeight)
 
-<<<<<<< HEAD
     #updates humidity
     def updateHumid(self,sensorBank):
         hBank = deviceControl().sensBank("H","%",5,sensorBank)
         humidWeight = [1,1,1,1,1]
         return atmosphere().wAverage(hBank,humidWeight)
-=======
+
         return str(random.randint(1,100))#atmosphere.wAverage(tempBank,tempWeight)
->>>>>>> sJuly17
 
     #updates the index
     def updateIndex(self,plantName):
@@ -148,7 +141,6 @@ class defaultScreen(Screen):
     #reads the user options and imports the nessacary widgets
     def addWidgetsDefault(self, optionFile):
         self.temperatureVar = Label()
-<<<<<<< HEAD
         self.add_widget(self.temperatureVar)
         self.temperatureVar.pos = (-275,100)
 
@@ -163,25 +155,22 @@ class defaultScreen(Screen):
         self.strainVar = Label()
         self.add_widget(self.strainVar)
         self.strainVar.pos = (275,-100)
-=======
+
                                 self.add_widget(self.temperatureVar)
                                 self.temperatureVar.pos = (-275,100)
                         
         self.clockDisplay = Label()
         self.add_widget(self.clockDisplay)
         self.clockDisplay.pos = (300,220)
->>>>>>> sJuly17
 
         self.dayVar = Label()
         self.add_widget(self.dayVar)
         self.dayVar.pos = (0,120)
         self.dayVar.font_size = 55
 
-<<<<<<< HEAD
         self.capture = Button(text="Capture", on_release=lambda a:self.takePicture(self.plantName,self.plantStrain), size_hint=(.25,.1), pos_hint={'x':0.4,'y':0.9})
-=======
+
         self.capture = Button(text="Capture", on_release=lambda a:self.takePicture(), size_hint=(.25,.1), pos_hint={'center_x':0.5,'y':0.9})
->>>>>>> sJuly17
         self.add_widget(self.capture)
 
         self.clockDisplay = Label()
