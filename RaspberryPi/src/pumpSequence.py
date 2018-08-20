@@ -2,30 +2,71 @@
  * @file pumpSequence.py
  * @authors Steven Kalapos & Ben Bellerose
  * @date May 2018
- * @modified May 30 2018
+ * @modified July 30 2018
  * @modifiedby BB
  * @brief control sequence for the pumps of the machine
  */
  """
-from runMode import deviceControl
+from control import deviceControl
 
 class pumps():
 
-    """Input: no input needed for function
+    """Input: phSP - integer value containing the PH setpoint
+              ser - open serial instance
         Function: controls the atmosphere inside the machine
         Output: returns a boolean value to inform user of machine state"""
-    def pumpMain(self):
-        #Output Pin variable
-        P0_Pin = 9 #Main resevoir pump GPIO 13
-        P1_Pin = 5 #Dosing pump GPIO 21
-        P2_Pin = 13 #Dosing pump GPIO 23
-        P3_Pin = 16 #Dosing pump GPIO 27
-        P4_Pin = 1 #Dosing pump GPIO
-        P5_Pin = 22 #Dosing pump GPIO 3
-        P6_Pin = 27 #Dosing pump GPIO 2
-        Drain_Pin =  19 #Drain solenoid GPIO 24
+    def pumpMain(self,phSP,ser):
+        if phSP is not None:
+            #Output Pin variable
+            P1_Pin = 13 #Main resevoir pump GPIO 23
+            P2_Pin = 19 #Dosing pump GPIO 24
+            P3_Pin = 26 #Dosing pump GPIO 25
+            P4_Pin = 14 #Dosing pump GPIO 15
+            P5_Pin = 15 #Dosing pump GPIO 16
+            P6_Pin = 18 #Dosing pump GPIO 1
+            P7_Pin = 23 #Dosing pump GPIO 4
+            P8_Pin = 24 #Dosing pump GPIO 5
+            P9_Pin = 25 #Dosing pump GPIO 6
+            Drain_Pin =  12 #Drain solenoid GPIO 26
+            sensorBank2 = network.readSerial(ser,2)
+            sensorBank3 = network.readSerial(ser,3)
 
-        #Inputs
-        w1 = deviceControl().sensor_Value("WL1","")
-        f1 = deviceControl().sensor_Value("F1","")
-        return True
+            #Water level sensors
+            wlBank = deviceControl().sensBank("WL","C",9,sensorBank2)
+
+            #Fire sensors
+            fBank = deviceControl().sensBank("F","",5,sensorBank3)
+            try:
+                fire = 0
+                for x in range(fBank):
+                    fire = fire + fBank[x]
+                print("Fire levels are = " + str(fire))
+            except:
+                fire = "NA"
+                print("SYSTEM FAILURE - FIRE SENSORS OFFLINE")
+
+            #Output control
+            fireLevel = 10
+            if fire <= fireLevel and fire != "NA": #If fire is not detected
+                
+            elif fire > fireLevel and fire != "NA": #If fire is detected
+                if int(fBank[0]) > fireLevel:
+                    deviceControl().Fire("F1")
+                elif int(fBank[1]) > fireLevel:
+                    deviceControl().Fire("F2")
+                elif int(fBank[2]) > fireLevel:
+                    deviceControl().Fire("F3")
+                elif int(fBank[3]) > fireLevel:
+                    deviceControl().Fire("F4")
+                elif int(fBank[4]) > fireLevel:
+                    deviceControl().Fire("F5")
+                return False
+
+            elif fire == "NA": #If all fire sensors are offline
+                return False
+        else:
+            errCode = "NO PH SETPOINT PROVIDED"
+            errMsg = "No ph setpoint value was provided for the machine."
+            deviceLog().errorLog(errCode,errMsg)
+            print("NO PH SETPOINT PROVIDED")
+            return False

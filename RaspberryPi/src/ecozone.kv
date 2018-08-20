@@ -8,59 +8,59 @@
     size:(480,800)
     FloatLayout:
         id: defaultScreenLayout
-        
+
         Button:
             text: 'Back'
-            on_release: 
+            on_release:
                 root.manager.transition = SlideTransition(direction='up')
                 root.manager.current = 'main'
             size_hint: (.1,.1)
-            pos_hint:{'x':0,'y':0}
+            pos_hint:{'x':0,'y':0.9}
 
         Label:
-            text: 'Temperature'
+            text:'Temperature'
             font_size: default_font_size
             pos:(-275, 150)
+        Label:
+            text:root.temperatureVar
+            pos:(-275,100)
         Label:
             text: 'Day'
             font_size: default_font_size
             pos:(0,175)
         Label:
-            text: 'Label2'
+            text: 'Humidity'
             font_size: default_font_size
             pos:(275,150)
         Label:
-            text: 'Label3'
+            text: 'CO2'
             font_size: default_font_size
-            pos:(-275,-50)      
+            pos:(-275,-50)
         Label:
-            text: 'Label5'
+            text: 'Stain'
             font_size: default_font_size
-            pos:(275,-50)    
-        BoxLayout:
-            size_hint:(.5,.5)
-            pos:(200,75)
+            pos:(275,-50)
 
 <optionScreen>:
     size:(480,800)
     FloatLayout:
         id: optionScreenLayout
-        
+
         Button:
             text: 'Back'
-            on_release: 
+            on_release:
                 root.manager.transition = SlideTransition(direction='left')
                 root.manager.current = 'main'
             size_hint: (.1,.1)
-            pos_hint:{'x':0,'y':0}          
-                
+            pos_hint:{'x':0,'y':0.9}
+
 <mainScreen>:
     FloatLayout:
         id: mainScreenLayout
 
         Button:
             text: 'To Default'
-            on_release: 
+            on_release:
                 root.manager.transition = SlideTransition(direction='down')
                 root.manager.current = 'default'
             size_hint: (.25,.25)

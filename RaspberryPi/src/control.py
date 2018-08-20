@@ -1,77 +1,66 @@
 """
- * @file runMode.py
+ * @file control.py
  * @authors Steven Kalapos & Ben Bellerose
- * @date May 2018
- * @modified May 27 2018
+ * @date May 21 2018
+ * @modified July 30 2018
  * @modifiedby BB
  * @brief contains various output controls for device
  */
  """
-import serial
 import RPi.GPIO as GPIO
-import time
+import time, os
 from time import gmtime,strftime
 from logg import deviceLog
+import cv2
+from picamera.array import PiRGBArray
+from picamera import PiCamera
 
 class deviceControl():
 
-    """Input: no input needed for function
-       Function: reads sensor values over serial communication
-       Output: writes out array of values for all sensors or NA if there is a problem"""
-    def readSensor(self):
-        if serial.Serial('/dev/ttyACM0', 9600):
-            try:
-                ser = serial.Serial('/dev/ttyACM0', 9600) #/dev/ttyACM0 location of serial device
-                hold1 = ser.readline().replace("\r", "")
-                hold1 = hold1.replace("\n", "")
-                hold1 = hold1.split("-")
-                bank = []
-                x = 0
-                while x < len(hold1):
-                    hold = hold1[x].split("=")
-                    bank.insert(len(bank), hold)
-                    x = x + 1
-                return bank
-            except Exception as e:
-                errCode = "ERROR READING SERIAL"
-                errMsg = e
-                deviceLog().errorLog(errCode,errMsg)
-                print("ERROR READING SERIAL")
-                bank = ["ERROR"]
-                return bank
-        else:
-            errCode = "NO SERIAL"
-            errMsg = "No serial communication device unpluged."
-            deviceLog().errorLog(errCode,errMsg)
-            print("NO SERIAL CONNECTION")
-            bank = ["ERROR"]
-            return bank
+    def __init__(self):
+        GPIO.setwarnings(False)
 
     """Input: sensor - string containing the sensor you are trying to find
               unit - string containing the unit of the sensor you are looking for
+              reading - bytes containg sensor values
        Function: finds your chosen sensor value from the sensor array
        Output: writes float value for the desired sensor or NA if there is a problem"""
-    def sensorValue(self, sensor, unit):
+    def sensorValue(self,sensor,unit,reading):
         if sensor is not None:
             if unit is not None:
-                try:
-                    values = self.readSensor()
-                    x = 0
-            	    #print(values)
-                    while x < len(values):
-                        if str(values[x][0]) == str(sensor):
-                            sens_val = values[x][1].replace(str(unit), "")
-                            sens_val = float(sens_val)
-                            x = len(values)
-                        else:
-                            sens_val = "ERROR"
-                        x = x + 1
-                    return sens_val
-                except Exception as e:
-                    errCode = "ERROR FINDING SENSOR"
-                    errMsg = "Error finding sensor "+ str(sensor) + ". The following error code appeared; " + str(e)
+                if reading is not None:
+                    try:
+                        #Processing of serial
+                        reading = reading.decode("utf-8").replace("\\r", "")
+                        reading = reading.replace("\\n'", "")
+                        reading = reading.replace("b'", "")
+                        reading = reading.split(",")
+                        bank = []
+                        for x in range(len(reading)):
+                            hold = reading[x].split("=")
+                            bank.insert(len(bank),hold)
+
+                        #Parsing of data for sensor value
+                        for x in range(len(bank)):
+                            if str(bank[x][0]) == str(sensor):
+                                sens_val = bank[x][1].replace(str(unit), "")
+                                sens_val = float(sens_val)
+                                break
+                            else:
+                                sens_val = "ERROR"
+                        return sens_val
+                    except Exception as e:
+                        errCode = "ERROR FINDING SENSOR"
+                        errMsg = "Error finding sensor "+ str(sensor) + ". The following error code appeared; " + str(e)
+                        deviceLog().errorLog(errCode,errMsg)
+                        print("ERROR FINDING SENSOR")
+                        sens_val = "ERROR"
+                        return sens_val
+                else:
+                    errCode = "NO READING GIVEN"
+                    errMsg = "No reading provided for finding sensor " + str(sensor) + "."
                     deviceLog().errorLog(errCode,errMsg)
-                    print("ERROR FINDING SENSOR")
+                    print("NO READING GIVEN FOR SENSOR " + str(sensor))
                     sens_val = "ERROR"
                     return sens_val
             else:
@@ -89,16 +78,48 @@ class deviceControl():
             sens_val = "ERROR"
             return sens_val
 
+    """Input: var - string value containing the varaible prefix of sensor (t)
+              unit - string value containing the unit of sensor (C)
+              size - integer containing size of sensor bank (3 = [t1,t2,t3])
+       Function: builds a bank of sensors and there respective values
+       Output: returns a list full of sensor values [var,val]"""
+    def sensBank(self,var,unit,size,reading):
+        if var is not None:
+            if size is not None:
+                bank = []
+                for x in range(size):
+                    varHold = var + str(x)
+                    if self.sensorValue(varHold,unit,reading) == "ERROR":
+                        valHold = "NA"
+                    else:
+                        valHold = self.sensorValue(varHold,unit,reading)
+                    bank.insert(0,valHold)
+                return bank
+            else:
+                errCode = "SIZE NOT SUPPLIED"
+                errMsg = "Size was not passed to the sensBank function."
+                deviceLog().errorLog(errCode,errMsg)
+                print("SIZE NOT SUPPLIED")
+                bank = ["NA"]
+                return bank
+        else:
+            errCode = "VAR NOT SUPPLIED"
+            errMsg = " Var was not passed to the sesBank function."
+            deviceLog().errorLog(errCode,errMsg)
+            print("VAR NOT SUPPLIED")
+            bank = ["NA"]
+            return bank
+
     """Input: pin - integer value containing the desired pin
        Function: set a desired pin to an output
        Output: returns a boolean to inform user when done"""
-    def initalizeOut(self, pin):
+    def initalizeOut(self,pin):
         if pin is not None:
             try:
                 GPIO.setmode(GPIO.BCM)
                 GPIO.setup(pin, GPIO.OUT)
                 GPIO.output(pin, False) #Initalize as off
-                time.sleep(0.5)
+                time.sleep(0.1)
                 return True
             except Exception as e:
                 errCode = "ERROR INITALIZING OUTPUT"
@@ -112,12 +133,12 @@ class deviceControl():
     """Input: pin - integer value containing the desired pin
        Function: set a desired pin to an input
        Output: returns a boolean to inform user when done"""
-    def initalizeIn(self, pin):
+    def initalizeIn(self,pin):
         if pin is not None:
             try:
                 GPIO.setmode(GPIO.BCM)
                 GPIO.setup(pin, GPIO.IN)
-                time.sleep(0.5)
+                time.sleep(0.1)
                 return True
             except Exception as e:
                 errCode = "ERROR INITALIZING INPUT"
@@ -132,7 +153,7 @@ class deviceControl():
               light - float value containing the desired output time of light
        Function: controls output state of a light
        Output: returns a integer to inform user of lights current state"""
-    def Light(self, pin, light):
+    def Light(self,pin,light):
         if pin is not None:
             if light is not None:
                 init = self.initalizeOut(pin)
@@ -141,10 +162,10 @@ class deviceControl():
                         #Handling of day Ligh
                         light_sp = int((float(light)/(100.00))*(24.00))
                         hour = strftime("%H", gmtime())
-                        if hour <= light_sp:
+                        if int(hour) <= light_sp:
                             GPIO.output(pin, True)
                             return 0 #ON
-                        elif hour > light_sp:
+                        elif int(hour) > light_sp:
                             GPIO.output(pin, False)
                             return 1 #OFF
                     except Exception as e:
@@ -171,9 +192,11 @@ class deviceControl():
 
     """Input: pin - integer value containing the pump pin location
               ws - integer value containing the current value of the water sensor
+              amount - real value (L) containing the wanted amount of liquid from the pump
+              flowRate - real value (L/min) containing the pumps flow rate
        Function: controls output state of a pump
        Output: returns a integer to inform user of pumps current state"""
-    def Pump(self,pin, ws):
+    def Pump(self,pin,ws,amount,flowRate):
         if pin is not None:
             if ws is not None:
                 init = self.initalizeOut(pin)
@@ -181,11 +204,13 @@ class deviceControl():
                     try:
                         #Handaling of water pumps
                         if int(ws) >= 200:
-                            GPIO.output(pin, False)
-                            return 1 #OFF
+                            runTime = time.time() + (60.00 * (float(amount)/float(flowRate)))
+                            while time.time() <= runTime:
+                                GPIO.output(pin, True)
+                            return 1 #ON
                         else:
-                            GPIO.output(pin, True)
-                            return 0 #ON
+                            GPIO.output(pin, False)
+                            return 0 #OFF
                     except Exception as e:
                         errCode = "ERROR CONTROLING PUMP"
                         errMsg = "Error occured when trying to control pump on GPIO pin " + str(pin) + ". The following error code appeared; " + str(e)
@@ -213,7 +238,7 @@ class deviceControl():
               humidity_sp - integer value containing the wanted humidity value
        Function: controls output state of a mister
        Output: returns a integer to inform user of mister current state"""
-    def Mister(self, pin, humidity, humidity_sp):
+    def Mister(self,pin,humidity,humidity_sp):
         if pin is not None:
             if humidity is not None:
                 if humidity_sp is not None:
@@ -258,7 +283,7 @@ class deviceControl():
               output - boolean value containing the desired output of the fan
        Function: controls output state of a fan
        Output: returns a integer to inform user of fans current state"""
-    def Fan(self, pin, output):
+    def Fan(self,pin,output):
         if pin is not None:
             if output is not None:
                 init = self.initalizeOut(pin)
@@ -297,7 +322,7 @@ class deviceControl():
               output - boolean value containing the desired output of the fan
        Function: controls output state of a hotplate
        Output: returns a integer to inform user of hotplates current state"""
-    def hotPlate(self, pin, output):
+    def hotPlate(self,pin,output):
         if pin is not None:
             if output is not None:
                 init = self.initalizeOut(pin)
@@ -335,9 +360,32 @@ class deviceControl():
     """Input: sensor - string containing
        Function: shuts down all GPIO outputs in a case of a fire
        Output: returns a boolean to inform user of function state"""
-    def Fire(self, sensor):
+    def Fire(sensor):
         errCode = "FIRE"
         errMsg = "Fire was detected with fire sensor " + str(sensor)
         deviceLog().errorLog(errCode,errMsg)
         GPIO.cleanup()
         return True
+
+    """Input: fileName - string value containing the name you wish to save photo as
+        Function: takes and saves picture of plant
+        Output: returns a boolean value to inform user of machine state"""
+    def captureIMG(fileName):
+        if fileName is not None:
+            if os.path.isfile(fileName):
+                os.remove(fileName)
+                time.sleep(0.1)
+            cameraPi = PiCamera()
+            rawCapture = PiRGBArray(cameraPi)
+            time.sleep(0.1)
+            cameraPi.capture(rawCapture, format="bgr")
+            image = rawCapture.array
+            cv2.imwrite(fileName,image)
+            cameraPi.close()
+            return True
+        else:
+            errCode = "NO FILE NAME PROVIDED"
+            errMsg = "No file name was provided for the photo to be saved as."
+            deviceLog().errorLog(errCode,errMsg)
+            print("NO FILE NAME PROVIDED")
+            return False

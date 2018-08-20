@@ -8,15 +8,6 @@
  */
  """
 from mainGUI import ecozoneApp
-#from atmSequence import atmosphere
-#from pumpSequence import pumps
 
 if __name__ == "__main__":
     ecozoneApp().run()
-    humiditySP = 60
-    carbonSP = 10
-    tempatureSP = 30
-    light = 80
-    elecSP = 40
-    #atmosphere().atmMain(humiditySP,carbonSP,tempatureSP,light,elecSP)
-    #pumps().pumpMain()
