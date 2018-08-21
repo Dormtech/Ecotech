@@ -7,6 +7,7 @@
 <defaultScreen>:
     size:(480,800)
     FloatLayout:
+        size:(480,800)
         id: defaultScreenLayout
 
         Button:
@@ -16,7 +17,11 @@
                 root.manager.current = 'main'
             size_hint: (.1,.1)
             pos_hint:{'x':0,'y':0.9}
-
+        
+        Label:
+            text: root.strainVar
+            pos_hint:{'x':0,'y':-0.45}
+        
         Label:
             text:'Temperature'
             font_size: default_font_size
@@ -56,16 +61,22 @@
         Label:
             text: 'Day'
             font_size: '55'
-            pos:(0,175)
+            pos:(0,170)
         Label:
             text:root.dayVar
             pos:(0,120)
             font_size: '55'
 
+        Button:
+            id:capture
+            text:"Capture Image"
+            size_hint:(.25,.1)
+            pos_hint:{'y':.9}
+            pos_x: 0 
+            on_release:
+                root.takePicture()
 
-        Label:
-            text: root.strainVar
-            pos_hint:{'x':0,'y':0}
+        
 
 
 <optionScreen>:

@@ -74,7 +74,8 @@ class defaultScreen(Screen):
 
         #self.ser = network.openSerial()
         self.plantName = "Plant1"
-        self.plantStrain = "Kush"
+        self.strainVar = "Kush"
+        self.dayVar = "01"
         #deviceLog().dayLog(deviceLog().findIndex("dayLog.txt","Machine Start"),"Machine Start","NA",["Machine start up"])
 
     """
@@ -96,10 +97,9 @@ class defaultScreen(Screen):
         CO2 = self.updateCO2(sensorBank1)
         day = self.updateIndex(self.plantName)"""
         self.temperatureVar = str(random.randint(1,100))
-        self.humidityVar = '1'
-        self.CO2Var = '1'
-        self.strainVar = 'NA'
-        self.dayVar = '00'
+        self.humidityVar =str(random.randint(20,80))
+        self.CO2Var =str(random.randint(0,100))
+        self.pHVar = str(random.randint(0,14))
 
         #self.ser = network.openSerial()
 
@@ -120,8 +120,8 @@ class defaultScreen(Screen):
         return str(random.randint(1,100))#atmosphere.wAverage(tempBank,tempWeight)
 
     #updates the index
-    def updateIndex(self,plantName):
-        index = deviceLog().findIndex("dayLog.txt",plantName)
+    def updateIndex(self):
+        index = deviceLog().findIndex("dayLog.txt",self.plantName)
         return index
 
     #update CO2
@@ -129,17 +129,17 @@ class defaultScreen(Screen):
         c1 = deviceControl().sensorValue("C1","%",sensorBank)
         return c1
 
-    def takePicture(self,plantName,plantStrain):
+    def takePicture(self):
         """try:
-            index = deviceLog().findIndex("dayLog.txt",plantName)
+            index = deviceLog().findIndex("dayLog.txt",self.plantName)
             stats = ["Tempature=20"]
-            deviceLog().dayLog(index,plantName,plantStrain,stats)
+            deviceLog().dayLog(index,self.plantName,self.strainVar,stats)
             dirHold = os.getcwd().split("/")
             dirHold = dirHold[:-1]
             picDir = "/".join(dirHold) + str("logs/pics")
             if os.path.isdir(picDir) == False:
                 os.mkdir(picDir)
-            fileName = picDir + "/" + plantName + "(" + time.strftime("%d-%y-%m_%H:%M:%S", time.gmtime()) + ").png"
+            fileName = picDir + "/" + self.plantName + "(" + time.strftime("%d-%y-%m_%H:%M:%S", time.gmtime()) + ").png"
             if os.path.isfile(fileName):
                 os.remove(fileName)
                 time.sleep(0.1)
@@ -151,19 +151,11 @@ class defaultScreen(Screen):
             errCode = "FAILED TO TAKE PICTURE"
             errMsg = "Failed while attempting to take picture with the following error " + str(e)
             deviceLog().errorLog(errCode,errMsg)"""
-        pass
+        print("flash")
 
     #reads the user options and imports the nessacary widgets
     def addWidgetsDefault(self, optionFile):
-
-
-        self.capture = Button(text="Capture", on_release=lambda a:self.takePicture(self.plantName,self.plantStrain), size_hint=(.25,.1), pos_hint={'x':0.4,'y':0.9})
-
-        self.capture = Button(text="Capture", on_release=lambda a:self.takePicture(), size_hint=(.25,.1), pos_hint={'center_x':0.5,'y':0.9})
-        self.add_widget(self.capture)
-
-        
-        
+        pass
 
 #screen where user can pick different options
 class optionScreen(Screen):
@@ -220,8 +212,13 @@ class mainScreen(Screen):
 #main App GUI control
 class ecozoneApp(App): 
 
-    def build(self):
+    def build_config(self, config):
+        config.setdefaults('options', {
+            'temp': 'C'
+        })
 
+    def build(self):
+        config = self.config
         sm = ScreenManager()
         sm.add_widget(mainScreen(name="main"))
         sm.add_widget(defaultScreen(name="default"))
