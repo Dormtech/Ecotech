@@ -31,7 +31,7 @@
             font_size: default_font_size
             pos:(275,150)
         Label:
-            text:root.humidtyVar
+            text:root.humidityVar
             pos:(275,100)
 
 
@@ -41,7 +41,7 @@
             pos:(275,-50)
         Label:
             text:root.pHVar
-            pos(275,-100)
+            pos:(275,-100)
 
 
         Label:
@@ -55,7 +55,7 @@
 
         Label:
             text: 'Day'
-            font_size: default_font_size
+            font_size: '55'
             pos:(0,175)
         Label:
             text:root.dayVar
@@ -64,31 +64,19 @@
 
 
         Label:
-            text: 'Strain'
-            font_size: default_font_size
-            pos:(200,200)
+            text: root.strainVar
+            pos_hint:{'x':0,'y':0}
+
 
 <optionScreen>:
     size:(480,800)
     FloatLayout:
         id: optionScreenLayout
         BoxLayout:
-            orientation: 'vertical'
-            BoxLayout:
-                id: opWords
-                orientation:'horizontal'
+            orientation: 'horizontal'
 
-            BoxLayout:
-                id: opButtons
-                orientation:'horizontal'
-
-                ToggleButton:
-                    text:'Celcius'
-                    group:'temp'
-                    state:'down'
-                ToggleButton:
-                    text:'Fahrenheit'
-                    group:'temp'
+            Switch:
+                active: '1'
 
 
 

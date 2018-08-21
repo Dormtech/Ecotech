@@ -34,7 +34,6 @@ from kivy.config import Config
 Config.set('graphics', 'width', '800')
 Config.set('graphics', 'height', '480')
 
-theTime = StringProperty()
 
 class GUIFunc():
 
@@ -48,11 +47,19 @@ class GUIFunc():
 
 #default stats display
 class defaultScreen(Screen):
-
+    
     temperatureVar = StringProperty()
+    humidityVar = StringProperty()
+    CO2Var = StringProperty()
+    pHVar = StringProperty()
+    dayVar = StringProperty()
+    strainVar = StringProperty()
+
 
     def __init__(self, **kwargs):
         super(defaultScreen, self).__init__(**kwargs)
+
+        self.makeClock()
 
         pathway = os.path.dirname(os.path.abspath( __file__ ))
         try:
@@ -60,13 +67,26 @@ class defaultScreen(Screen):
         except IOError:
             optionFile = createGUIOptions(pathway)
 
+        self.update(1)
+
         self.addWidgetsDefault(optionFile)
-        Clock.schedule_interval(self.update, 1)
+        Clock.schedule_interval(self.update,5)
 
         #self.ser = network.openSerial()
         self.plantName = "Plant1"
         self.plantStrain = "Kush"
         #deviceLog().dayLog(deviceLog().findIndex("dayLog.txt","Machine Start"),"Machine Start","NA",["Machine start up"])
+
+    """
+    Makes clock for screen
+    """
+    def makeClock(self):
+        self.clockDisplay = Label(text=time.asctime(), pos=(300,220))
+        self.add_widget(self.clockDisplay)
+        Clock.schedule_interval(self.updateTime,1)
+    def updateTime(self,dt):
+        self.clockDisplay.text=time.asctime()
+    
 
     #will update all the variables on screen
     def update(self, dt):
@@ -75,13 +95,15 @@ class defaultScreen(Screen):
         humid = self.updateHumid(sensorBank1)
         CO2 = self.updateCO2(sensorBank1)
         day = self.updateIndex(self.plantName)"""
-        self.temperatureVar.text = str(temp)
-        self.humidityVar.text = str(humid)
-        self.CO2Var.text = str(CO2)
-        self.strainVar.text = 'NA'
-        self.dayVar.text = str(day)
+        self.temperatureVar = str(random.randint(1,100))
+        self.humidityVar = '1'
+        self.CO2Var = '1'
+        self.strainVar = 'NA'
+        self.dayVar = '00'
 
         #self.ser = network.openSerial()
+
+    
 
     #updates temperature
     def updateTemp(self,sensorBank):
@@ -133,38 +155,15 @@ class defaultScreen(Screen):
 
     #reads the user options and imports the nessacary widgets
     def addWidgetsDefault(self, optionFile):
-        
-        self.humidityVar = Label()
-        self.add_widget(self.humidityVar)
-        self.humidityVar.pos = (275,100)
 
-        self.CO2Var = Label()
-        self.add_widget(self.CO2Var)
-        self.CO2Var.pos = (-275,-100)
-
-        self.strainVar = Label()
-        self.add_widget(self.strainVar)
-        self.strainVar.pos = (275,-100)
-
-                        
-        self.clockDisplay = Label()
-        self.add_widget(self.clockDisplay)
-        self.clockDisplay.pos = (300,220)
-
-        self.dayVar = Label()
-        self.add_widget(self.dayVar)
-        self.dayVar.pos = (0,120)
-        self.dayVar.font_size = 55
 
         self.capture = Button(text="Capture", on_release=lambda a:self.takePicture(self.plantName,self.plantStrain), size_hint=(.25,.1), pos_hint={'x':0.4,'y':0.9})
 
         self.capture = Button(text="Capture", on_release=lambda a:self.takePicture(), size_hint=(.25,.1), pos_hint={'center_x':0.5,'y':0.9})
         self.add_widget(self.capture)
 
-        self.clockDisplay = Label()
-        self.add_widget(self.clockDisplay)
-        self.clockDisplay.pos = (300,220)
-        Clock.schedule_interval(self.update, 1)
+        
+        
 
 #screen where user can pick different options
 class optionScreen(Screen):
@@ -177,12 +176,20 @@ class optionScreen(Screen):
         except IOError:
             optionFile = createGUIOptions(pathway)
 
-        self.clockDisplay = Label()
-        self.add_widget(self.clockDisplay)
-        self.clockDisplay.pos = (300,220)
-        Clock.schedule_interval(self.update, 1)
+        self.makeClock()
 
         self.colourButton = Button(text="Colour", on_release=lambda a:self.changeColour(),size_hint=(.1,.1), pos=(100,200))
+
+
+    """
+    Makes clock for screen
+    """
+    def makeClock(self):
+        self.clockDisplay = Label(text=time.asctime(), pos=(300,220))
+        self.add_widget(self.clockDisplay)
+        Clock.schedule_interval(self.updateTime,1)
+    def updateTime(self,dt):
+        self.clockDisplay.text=time.asctime()
 
 
     def changeColour(self):
@@ -190,7 +197,7 @@ class optionScreen(Screen):
 
     #will update all the variables on screen
     def update(self, dt):
-        self.clockDisplay.text = time.asctime()
+        pass
 
 #main screen
 class mainScreen(Screen):
@@ -198,20 +205,23 @@ class mainScreen(Screen):
     def __init__(self, **kwargs):
         super(mainScreen, self).__init__(**kwargs)
 
-        self.clockDisplay = Label()
+        self.makeClock()
+
+    """
+    Makes clock for screen
+    """
+    def makeClock(self):
+        self.clockDisplay = Label(text=time.asctime(), pos=(300,220))
         self.add_widget(self.clockDisplay)
-        self.clockDisplay.pos = (300,220)
-        Clock.schedule_interval(self.update, 1)
-
-
-    #will update all the variables on screen
-    def update(self, dt):
-        self.clockDisplay.text = time.asctime()
+        Clock.schedule_interval(self.updateTime,1)
+    def updateTime(self,dt):
+        self.clockDisplay.text=time.asctime()
 
 #main App GUI control
-class ecozoneApp(App):
+class ecozoneApp(App): 
 
     def build(self):
+
         sm = ScreenManager()
         sm.add_widget(mainScreen(name="main"))
         sm.add_widget(defaultScreen(name="default"))
