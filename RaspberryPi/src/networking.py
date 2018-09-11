@@ -2,7 +2,7 @@
  * @file networking.py
  * @authors Steven Kalapos & Ben Bellerose
  * @date July 12 2018
- * @modified July 16 2018
+ * @modified September 10 2018
  * @modifiedby BB
  * @brief device network interactions
  */
@@ -14,6 +14,11 @@ import subprocess
 from logg import deviceLog
 
 class network():
+    def __init__(self, sock=None):
+        if sock is None:
+            self.sock = socket.socket(socket.AF_INET, socket.SOCK_STREAM)
+        else:
+            self.sock = sock
 
     """Input: no input needed for function
         Function: downloads most current version of code avalible
@@ -119,3 +124,75 @@ class network():
             print("NO SERIAL GIVEN")
             reading = None
             return reading
+
+    """Input: host - string containing host adress for tcp server
+              port - integer containing the port of the tcp server
+        Function: start messaging TCP server
+        Output: returns boolean for output state"""
+    def tcpMSG(self, host, port, msg):
+        if host is not None:
+            if port is not None:
+                if msg is not None:
+                    self.sock.settimeout(10)
+                    self.sock.connect((host, port))
+                    self.sock.sendall(str.encode(msg))
+                    data = self.sock.recv(len(msg)+2)
+                    if str(data).replace('b','').replace("'",'') == msg:
+                        return True
+                    else:
+                        errCode = "ICORRECT MESSAGE"
+                        errMsg = "TCP return message did not match origonal message."
+                        deviceLog().errorLog(errCode,errMsg)
+                        print("ICORRECT MESSAGE")
+                        return False
+                else:
+                    errCode = "MISSING MESSAGE"
+                    errMsg = "No message was given to the function."
+                    deviceLog().errorLog(errCode,errMsg)
+                    print("MISSING MESSAGE")
+                    return False
+            else:
+                errCode = "MISSING PORT"
+                errMsg = "No port was given to the function."
+                deviceLog().errorLog(errCode,errMsg)
+                print("MISSING PORT")
+                return False
+        else:
+            errCode = "MISSING HOST"
+            errMsg = "No host was given to the function."
+            deviceLog().errorLog(errCode,errMsg)
+            print("MISSING HOST")
+            return False
+
+    """Input: host - string containing host adress for tcp server
+              port - integer containing the port of the tcp server
+        Function: start messaging TCP server
+        Output: returns boolean for output state"""
+    def tcpServer(self, host, port):
+        if host is not None:
+            if port is not None:
+                self.sock.settimeout(10)
+                self.sock.bind((host, port))
+                self.sock.listen()
+                conn, addr = self.sock.accept()
+                with conn:
+                    print('Connected by', addr)
+                    while True:
+                        data = conn.recv(1024)
+                        if not data:
+                            break
+                        conn.sendall(data)
+                self.sock.close()
+                return True
+            else:
+                errCode = "MISSING PORT"
+                errMsg = "No port was given to the function."
+                deviceLog().errorLog(errCode,errMsg)
+                print("MISSING PORT")
+                return False
+        else:
+            errCode = "MISSING HOST"
+            errMsg = "No host was given to the function."
+            deviceLog().errorLog(errCode,errMsg)
+            print("MISSING HOST")
+            return False
