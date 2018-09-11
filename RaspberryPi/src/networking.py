@@ -11,6 +11,7 @@ import os
 import serial
 import time
 import subprocess
+import socket
 from logg import deviceLog
 
 class network():
@@ -92,7 +93,6 @@ class network():
             print("NO SERIAL GIVEN")
             return False
 
-
     """Input: ser - open serial instance
               code - value (1-3) indicating what action serial device should preform
         Function: reads values from the serial port
@@ -125,8 +125,9 @@ class network():
             reading = None
             return reading
 
-    """Input: host - string containing host adress for tcp server
-              port - integer containing the port of the tcp server
+    """Input: host - string containing host adress for TCP server
+              port - integer containing the port of the TCP server
+              msg -  string containing message to send to the desired TCP server
         Function: start messaging TCP server
         Output: returns boolean for output state"""
     def tcpMSG(self, host, port, msg):
