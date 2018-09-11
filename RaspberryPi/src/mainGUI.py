@@ -6,7 +6,7 @@
  * @modifiedby BB
  * @brief GUI managment and creation
  */
- """
+"""
 import kivy
 from control import deviceControl
 from networking import network
@@ -19,11 +19,12 @@ from kivy.graphics import Color, Rectangle
 from kivy.uix.image import Image
 from kivy.uix.boxlayout import BoxLayout
 from kivy.uix.button import Button
-from kivy.properties import StringProperty, NumericProperty, ObjectProperty
+from kivy.properties import StringProperty, NumericProperty, ObjectProperty, ListProperty
 from kivy.uix.widget import Widget
 from kivy.clock import Clock
 from kivy.uix.screenmanager import ScreenManager, Screen
 from kivy.garden.graph import MeshLinePlot
+from kivy.uix.colorpicker import ColorPicker
 
 import random, os, time
 
@@ -32,17 +33,22 @@ from kivy.config import Config
 Config.set('graphics', 'width', '800')
 Config.set('graphics', 'height', '480')
 
-global buttonPressed
+theTime = StringProperty()
 
 class GUIFunc():
 
     #creates the option file used to store user config
     def createGUIOptions(pathway):
         optionFile = open(pathway+"/options/GUIOptions.txt","w+")
+        
+        optionFile.write("c\n")
+
         return optionFile
 
 #default stats display
 class defaultScreen(Screen):
+
+    temperatureVar = StringProperty()
 
     def __init__(self, **kwargs):
         super(defaultScreen, self).__init__(**kwargs)
@@ -55,6 +61,7 @@ class defaultScreen(Screen):
 
         self.addWidgetsDefault(optionFile)
         Clock.schedule_interval(self.update, 1)
+
         self.ser = network.openSerial()
         self.plantName = "Plant1"
         self.plantStrain = "Kush"
@@ -72,6 +79,15 @@ class defaultScreen(Screen):
         self.CO2Var.text = str(CO2)
         self.strainVar.text = 'NA'
         self.dayVar.text = str(day)
+
+        #self.ser = network.openSerial()
+
+    #will update all the variables on screen
+    def update(self, dt):
+
+        temp = self.updateTemp() 
+        self.temperatureVar = str(temp)
+        self.dayVar.text = '00'
         self.clockDisplay.text = time.asctime()
 
     #updates temperature
@@ -85,6 +101,8 @@ class defaultScreen(Screen):
         hBank = deviceControl().sensBank("H","%",5,sensorBank)
         humidWeight = [1,1,1,1,1]
         return deviceControl().wAverage(hBank,humidWeight)
+
+        return str(random.randint(1,100))#atmosphere.wAverage(tempBank,tempWeight)
 
     #updates the index
     def updateIndex(self,plantName):
@@ -137,12 +155,21 @@ class defaultScreen(Screen):
         self.add_widget(self.strainVar)
         self.strainVar.pos = (275,-100)
 
+                                self.add_widget(self.temperatureVar)
+                                self.temperatureVar.pos = (-275,100)
+                        
+        self.clockDisplay = Label()
+        self.add_widget(self.clockDisplay)
+        self.clockDisplay.pos = (300,220)
+
         self.dayVar = Label()
         self.add_widget(self.dayVar)
         self.dayVar.pos = (0,120)
         self.dayVar.font_size = 55
 
         self.capture = Button(text="Capture", on_release=lambda a:self.takePicture(self.plantName,self.plantStrain), size_hint=(.25,.1), pos_hint={'x':0.4,'y':0.9})
+
+        self.capture = Button(text="Capture", on_release=lambda a:self.takePicture(), size_hint=(.25,.1), pos_hint={'center_x':0.5,'y':0.9})
         self.add_widget(self.capture)
 
         self.clockDisplay = Label()
@@ -166,12 +193,19 @@ class optionScreen(Screen):
         self.clockDisplay.pos = (300,220)
         Clock.schedule_interval(self.update, 1)
 
+        self.colourButton = Button(text="Colour", on_release=lambda a:self.changeColour(),size_hint=(.1,.1), pos=(100,200))
+
+
+    def changeColour(self):
+        pass
+
     #will update all the variables on screen
     def update(self, dt):
         self.clockDisplay.text = time.asctime()
 
 #main screen
 class mainScreen(Screen):
+
     def __init__(self, **kwargs):
         super(mainScreen, self).__init__(**kwargs)
 
@@ -179,6 +213,7 @@ class mainScreen(Screen):
         self.add_widget(self.clockDisplay)
         self.clockDisplay.pos = (300,220)
         Clock.schedule_interval(self.update, 1)
+
 
     #will update all the variables on screen
     def update(self, dt):
