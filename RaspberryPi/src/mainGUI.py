@@ -2,8 +2,8 @@
  * @file mainGUI.py
  * @authors Steven Kalapos & Ben Bellerose
  * @date May 22 2018
- * @modified August 13 2018
- * @modifiedby BB
+ * @modified Oct 12 2018
+ * @modifiedby SK
  * @brief GUI managment and creation
  */
 """
