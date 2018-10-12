@@ -69,7 +69,6 @@ class defaultScreen(Screen):
 
         self.update(1)
 
-        self.addWidgetsDefault(optionFile)
         Clock.schedule_interval(self.update,5)
 
         #self.ser = network.openSerial()
@@ -152,50 +151,6 @@ class defaultScreen(Screen):
             errMsg = "Failed while attempting to take picture with the following error " + str(e)
             deviceLog().errorLog(errCode,errMsg)"""
         print("flash")
-
-    #reads the user options and imports the nessacary widgets
-    def addWidgetsDefault(self, optionFile):
-<<<<<<< HEAD
-        self.temperatureVar = Label()
-        self.add_widget(self.temperatureVar)
-        self.temperatureVar.pos = (-275,100)
-
-        self.humidityVar = Label()
-        self.add_widget(self.humidityVar)
-        self.humidityVar.pos = (275,100)
-
-        self.CO2Var = Label()
-        self.add_widget(self.CO2Var)
-        self.CO2Var.pos = (-275,-100)
-
-        self.strainVar = Label()
-        self.add_widget(self.strainVar)
-        self.strainVar.pos = (275,-100)
-
-        self.add_widget(self.temperatureVar)
-        self.temperatureVar.pos = (-275,100)
-                        
-        self.clockDisplay = Label()
-        self.add_widget(self.clockDisplay)
-        self.clockDisplay.pos = (300,220)
-
-        self.dayVar = Label()
-        self.add_widget(self.dayVar)
-        self.dayVar.pos = (0,120)
-        self.dayVar.font_size = 55
-
-        self.capture = Button(text="Capture", on_release=lambda a:self.takePicture(self.plantName,self.plantStrain), size_hint=(.25,.1), pos_hint={'x':0.4,'y':0.9})
-
-        self.capture = Button(text="Capture", on_release=lambda a:self.takePicture(), size_hint=(.25,.1), pos_hint={'center_x':0.5,'y':0.9})
-        self.add_widget(self.capture)
-
-        self.clockDisplay = Label()
-        self.add_widget(self.clockDisplay)
-        self.clockDisplay.pos = (300,220)
-        Clock.schedule_interval(self.update, 1)
-=======
-        pass
->>>>>>> steven-testBranch
 
 #screen where user can pick different options
 class optionScreen(Screen):
