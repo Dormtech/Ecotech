@@ -8,10 +8,10 @@
  */
 """
 import kivy
-"""from atmSequence import atmosphere
+from atmSequence import atmosphere
 from control import deviceControl
 from networking import network
-from logg import deviceLog"""
+from logg import deviceLog
 
 from kivy.app import App
 from kivy.uix.label import Label
@@ -129,7 +129,7 @@ class defaultScreen(Screen):
         return c1
 
     def takePicture(self):
-        """try:
+        try:
             index = deviceLog().findIndex("dayLog.txt",self.plantName)
             stats = ["Tempature=20"]
             deviceLog().dayLog(index,self.plantName,self.strainVar,stats)
@@ -149,8 +149,8 @@ class defaultScreen(Screen):
         except Exception as e:
             errCode = "FAILED TO TAKE PICTURE"
             errMsg = "Failed while attempting to take picture with the following error " + str(e)
-            deviceLog().errorLog(errCode,errMsg)"""
-        print("flash")
+            deviceLog().errorLog(errCode,errMsg)
+        #print("flash")
 
 #screen where user can pick different options
 class optionScreen(Screen):
