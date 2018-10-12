@@ -156,8 +156,8 @@ class defaultScreen(Screen):
         self.add_widget(self.strainVar)
         self.strainVar.pos = (275,-100)
 
-                                self.add_widget(self.temperatureVar)
-                                self.temperatureVar.pos = (-275,100)
+        self.add_widget(self.temperatureVar)
+        self.temperatureVar.pos = (-275,100)
                         
         self.clockDisplay = Label()
         self.add_widget(self.clockDisplay)
