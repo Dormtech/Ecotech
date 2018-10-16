@@ -8,10 +8,10 @@
  */
 """
 import kivy
-from atmSequence import atmosphere
+"""from atmSequence import atmosphere
 from control import deviceControl
 from networking import network
-from logg import deviceLog
+from logg import deviceLog"""
 
 from kivy.app import App
 from kivy.uix.label import Label
@@ -26,6 +26,8 @@ from kivy.clock import Clock
 from kivy.uix.screenmanager import ScreenManager, Screen
 from kivy.garden.graph import MeshLinePlot
 from kivy.uix.colorpicker import ColorPicker
+
+from json_settings import settings_json
 
 import random, os, time
 
@@ -129,7 +131,7 @@ class defaultScreen(Screen):
         return c1
 
     def takePicture(self):
-        try:
+        """try:
             index = deviceLog().findIndex("dayLog.txt",self.plantName)
             stats = ["Tempature=20"]
             deviceLog().dayLog(index,self.plantName,self.strainVar,stats)
@@ -149,42 +151,8 @@ class defaultScreen(Screen):
         except Exception as e:
             errCode = "FAILED TO TAKE PICTURE"
             errMsg = "Failed while attempting to take picture with the following error " + str(e)
-            deviceLog().errorLog(errCode,errMsg)
-        #print("flash")
-
-#screen where user can pick different options
-class optionScreen(Screen):
-    def __init__(self, **kwargs):
-        super(optionScreen, self).__init__(**kwargs)
-
-        pathway = os.path.dirname(os.path.abspath( __file__ ))
-        try:
-            optionFile = open(pathway+"/options/GUIOptions.txt","r+")
-        except IOError:
-            optionFile = createGUIOptions(pathway)
-
-        self.makeClock()
-
-        self.colourButton = Button(text="Colour", on_release=lambda a:self.changeColour(),size_hint=(.1,.1), pos=(100,200))
-
-
-    """
-    Makes clock for screen
-    """
-    def makeClock(self):
-        self.clockDisplay = Label(text=time.asctime(), pos=(300,220))
-        self.add_widget(self.clockDisplay)
-        Clock.schedule_interval(self.updateTime,1)
-    def updateTime(self,dt):
-        self.clockDisplay.text=time.asctime()
-
-
-    def changeColour(self):
-        pass
-
-    #will update all the variables on screen
-    def update(self, dt):
-        pass
+            deviceLog().errorLog(errCode,errMsg)"""
+        print("flash")
 
 #main screen
 class mainScreen(Screen):
@@ -208,15 +176,21 @@ class mainScreen(Screen):
 class ecozoneApp(App): 
 
     def build_config(self, config):
-        config.setdefaults('options', {
-            'temp': 'C'
-        })
+        config.setdefaults("Basic", {
+            "Units":"Metric", 'colour':'Black'
+            })
+    
+    def build_settings(self, settings):
+        
+        settings.add_json_panel('Options',
+                                self.config,
+                                data=settings_json)
 
     def build(self):
-        config = self.config
+        self.use_kivy_settings = False
+        setting = self.config.get('Visual', 'Units')
         sm = ScreenManager()
         sm.add_widget(mainScreen(name="main"))
         sm.add_widget(defaultScreen(name="default"))
-        sm.add_widget(optionScreen(name='option'))
-
+        
         return sm

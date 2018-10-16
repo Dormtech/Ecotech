@@ -79,27 +79,8 @@
         
 
 
-<optionScreen>:
-    size:(480,800)
-    FloatLayout:
-        id: optionScreenLayout
-        BoxLayout:
-            orientation: 'horizontal'
-
-            Switch:
-                active: '1'
-
-
-
-        Button:
-            text: 'Back'
-            on_release:
-                root.manager.transition = SlideTransition(direction='left')
-                root.manager.current = 'main'
-            size_hint: (.1,.1)
-            pos_hint:{'x':0,'y':0.9}
-
 <mainScreen>:
+	
     FloatLayout:
         id: mainScreenLayout
 
@@ -114,6 +95,6 @@
             text: "Options"
             on_release:
                 root.manager.transition = SlideTransition(direction='right')
-                root.manager.current = 'option'
+                app.open_settings()
             size_hint: (.25,.25)
             pos:(100,100)
