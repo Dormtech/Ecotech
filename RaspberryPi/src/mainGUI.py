@@ -2,15 +2,16 @@
  * @file mainGUI.py
  * @authors Steven Kalapos & Ben Bellerose
  * @date May 22 2018
- * @modified August 13 2018
- * @modifiedby BB
+ * @modified Oct 12 2018
+ * @modifiedby SK
  * @brief GUI managment and creation
  */
 """
 import kivy
+"""from atmSequence import atmosphere
 from control import deviceControl
 from networking import network
-from logg import deviceLog
+from logg import deviceLog"""
 
 from kivy.app import App
 from kivy.uix.label import Label
@@ -26,6 +27,8 @@ from kivy.uix.screenmanager import ScreenManager, Screen
 from kivy.garden.graph import MeshLinePlot
 from kivy.uix.colorpicker import ColorPicker
 
+from json_settings import settings_json
+
 import random, os, time
 
 from kivy.config import Config
@@ -33,14 +36,13 @@ from kivy.config import Config
 Config.set('graphics', 'width', '800')
 Config.set('graphics', 'height', '480')
 
-theTime = StringProperty()
 
 class GUIFunc():
 
     #creates the option file used to store user config
     def createGUIOptions(pathway):
         optionFile = open(pathway+"/options/GUIOptions.txt","w+")
-        
+
         optionFile.write("c\n")
 
         return optionFile
@@ -49,9 +51,17 @@ class GUIFunc():
 class defaultScreen(Screen):
 
     temperatureVar = StringProperty()
+    humidityVar = StringProperty()
+    CO2Var = StringProperty()
+    pHVar = StringProperty()
+    dayVar = StringProperty()
+    strainVar = StringProperty()
+
 
     def __init__(self, **kwargs):
         super(defaultScreen, self).__init__(**kwargs)
+
+        self.makeClock()
 
         pathway = os.path.dirname(os.path.abspath( __file__ ))
         try:
@@ -59,36 +69,42 @@ class defaultScreen(Screen):
         except IOError:
             optionFile = createGUIOptions(pathway)
 
-        self.addWidgetsDefault(optionFile)
-        Clock.schedule_interval(self.update, 1)
+        self.update(1)
 
-        self.ser = network.openSerial()
+        Clock.schedule_interval(self.update,5)
+
+        #self.ser = network.openSerial()
         self.plantName = "Plant1"
-        self.plantStrain = "Kush"
-        deviceLog().dayLog(deviceLog().findIndex("dayLog.txt","Machine Start"),"Machine Start","NA",["Machine start up"])
+        self.strainVar = "Kush"
+        self.dayVar = "01"
+        #deviceLog().dayLog(deviceLog().findIndex("dayLog.txt","Machine Start"),"Machine Start","NA",["Machine start up"])
+
+    """
+    Makes clock for screen
+    """
+    def makeClock(self):
+        self.clockDisplay = Label(text=time.asctime(), pos=(300,220))
+        self.add_widget(self.clockDisplay)
+        Clock.schedule_interval(self.updateTime,1)
+    def updateTime(self,dt):
+        self.clockDisplay.text=time.asctime()
+
 
     #will update all the variables on screen
     def update(self, dt):
-        sensorBank1 = network.readSerial(self.ser,1)
+        """sensorBank1 = network.readSerial(self.ser,1)
         temp = self.updateTemp(sensorBank1)
         humid = self.updateHumid(sensorBank1)
         CO2 = self.updateCO2(sensorBank1)
-        day = self.updateIndex(self.plantName)
-        self.temperatureVar.text = str(temp)
-        self.humidityVar.text = str(humid)
-        self.CO2Var.text = str(CO2)
-        self.strainVar.text = 'NA'
-        self.dayVar.text = str(day)
+        day = self.updateIndex(self.plantName)"""
+        self.temperatureVar = str(random.randint(1,100))
+        self.humidityVar =str(random.randint(20,80))
+        self.CO2Var =str(random.randint(0,100))
+        self.pHVar = str(random.randint(0,14))
 
         #self.ser = network.openSerial()
 
-    #will update all the variables on screen
-    def update(self, dt):
 
-        temp = self.updateTemp() 
-        self.temperatureVar = str(temp)
-        self.dayVar.text = '00'
-        self.clockDisplay.text = time.asctime()
 
     #updates temperature
     def updateTemp(self,sensorBank):
@@ -105,8 +121,8 @@ class defaultScreen(Screen):
         return str(random.randint(1,100))#atmosphere.wAverage(tempBank,tempWeight)
 
     #updates the index
-    def updateIndex(self,plantName):
-        index = deviceLog().findIndex("dayLog.txt",plantName)
+    def updateIndex(self):
+        index = deviceLog().findIndex("dayLog.txt",self.plantName)
         return index
 
     #update CO2
@@ -114,17 +130,17 @@ class defaultScreen(Screen):
         c1 = deviceControl().sensorValue("C1","%",sensorBank)
         return c1
 
-    def takePicture(self,plantName,plantStrain):
-        try:
-            index = deviceLog().findIndex("dayLog.txt",plantName)
+    def takePicture(self):
+        """try:
+            index = deviceLog().findIndex("dayLog.txt",self.plantName)
             stats = ["Tempature=20"]
-            deviceLog().dayLog(index,plantName,plantStrain,stats)
+            deviceLog().dayLog(index,self.plantName,self.strainVar,stats)
             dirHold = os.getcwd().split("/")
             dirHold = dirHold[:-1]
             picDir = "/".join(dirHold) + str("/logs/pics")
             if os.path.isdir(picDir) == False:
                 os.mkdir(picDir)
-            fileName = picDir + "/" + plantName + "(" + time.strftime("%d-%y-%m_%H:%M:%S", time.gmtime()) + ").png"
+            fileName = picDir + "/" + self.plantName + "(" + time.strftime("%d-%y-%m_%H:%M:%S", time.gmtime()) + ").png"
             if os.path.isfile(fileName):
                 os.remove(fileName)
                 time.sleep(0.1)
@@ -135,73 +151,8 @@ class defaultScreen(Screen):
         except Exception as e:
             errCode = "FAILED TO TAKE PICTURE"
             errMsg = "Failed while attempting to take picture with the following error " + str(e)
-            deviceLog().errorLog(errCode,errMsg)
-
-    #reads the user options and imports the nessacary widgets
-    def addWidgetsDefault(self, optionFile):
-        self.temperatureVar = Label()
-        self.add_widget(self.temperatureVar)
-        self.temperatureVar.pos = (-275,100)
-
-        self.humidityVar = Label()
-        self.add_widget(self.humidityVar)
-        self.humidityVar.pos = (275,100)
-
-        self.CO2Var = Label()
-        self.add_widget(self.CO2Var)
-        self.CO2Var.pos = (-275,-100)
-
-        self.strainVar = Label()
-        self.add_widget(self.strainVar)
-        self.strainVar.pos = (275,-100)
-
-                                self.add_widget(self.temperatureVar)
-                                self.temperatureVar.pos = (-275,100)
-                        
-        self.clockDisplay = Label()
-        self.add_widget(self.clockDisplay)
-        self.clockDisplay.pos = (300,220)
-
-        self.dayVar = Label()
-        self.add_widget(self.dayVar)
-        self.dayVar.pos = (0,120)
-        self.dayVar.font_size = 55
-
-        self.capture = Button(text="Capture", on_release=lambda a:self.takePicture(self.plantName,self.plantStrain), size_hint=(.25,.1), pos_hint={'x':0.4,'y':0.9})
-
-        self.capture = Button(text="Capture", on_release=lambda a:self.takePicture(), size_hint=(.25,.1), pos_hint={'center_x':0.5,'y':0.9})
-        self.add_widget(self.capture)
-
-        self.clockDisplay = Label()
-        self.add_widget(self.clockDisplay)
-        self.clockDisplay.pos = (300,220)
-        Clock.schedule_interval(self.update, 1)
-
-#screen where user can pick different options
-class optionScreen(Screen):
-    def __init__(self, **kwargs):
-        super(optionScreen, self).__init__(**kwargs)
-
-        pathway = os.path.dirname(os.path.abspath( __file__ ))
-        try:
-            optionFile = open(pathway+"/options/GUIOptions.txt","r+")
-        except IOError:
-            optionFile = createGUIOptions(pathway)
-
-        self.clockDisplay = Label()
-        self.add_widget(self.clockDisplay)
-        self.clockDisplay.pos = (300,220)
-        Clock.schedule_interval(self.update, 1)
-
-        self.colourButton = Button(text="Colour", on_release=lambda a:self.changeColour(),size_hint=(.1,.1), pos=(100,200))
-
-
-    def changeColour(self):
-        pass
-
-    #will update all the variables on screen
-    def update(self, dt):
-        self.clockDisplay.text = time.asctime()
+            deviceLog().errorLog(errCode,errMsg)"""
+        print("flash")
 
 #main screen
 class mainScreen(Screen):
@@ -209,23 +160,37 @@ class mainScreen(Screen):
     def __init__(self, **kwargs):
         super(mainScreen, self).__init__(**kwargs)
 
-        self.clockDisplay = Label()
+        self.makeClock()
+
+    """
+    Makes clock for screen
+    """
+    def makeClock(self):
+        self.clockDisplay = Label(text=time.asctime(), pos=(300,220))
         self.add_widget(self.clockDisplay)
-        self.clockDisplay.pos = (300,220)
-        Clock.schedule_interval(self.update, 1)
-
-
-    #will update all the variables on screen
-    def update(self, dt):
-        self.clockDisplay.text = time.asctime()
+        Clock.schedule_interval(self.updateTime,1)
+    def updateTime(self,dt):
+        self.clockDisplay.text=time.asctime()
 
 #main App GUI control
 class ecozoneApp(App):
 
+    def build_config(self, config):
+        config.setdefaults("Basic", {
+            "Units":"Metric", 'colour':'Black'
+            })
+
+    def build_settings(self, settings):
+
+        settings.add_json_panel('Options',
+                                self.config,
+                                data=settings_json)
+
     def build(self):
+        self.use_kivy_settings = False
+        setting = self.config.get('Visual', 'Units')
         sm = ScreenManager()
         sm.add_widget(mainScreen(name="main"))
         sm.add_widget(defaultScreen(name="default"))
-        sm.add_widget(optionScreen(name='option'))
 
         return sm

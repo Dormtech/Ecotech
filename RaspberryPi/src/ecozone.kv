@@ -7,6 +7,7 @@
 <defaultScreen>:
     size:(480,800)
     FloatLayout:
+        size:(480,800)
         id: defaultScreenLayout
 
         Button:
@@ -16,7 +17,11 @@
                 root.manager.current = 'main'
             size_hint: (.1,.1)
             pos_hint:{'x':0,'y':0.9}
-
+        
+        Label:
+            text: root.strainVar
+            pos_hint:{'x':0,'y':-0.45}
+        
         Label:
             text:'Temperature'
             font_size: default_font_size
@@ -24,37 +29,58 @@
         Label:
             text:root.temperatureVar
             pos:(-275,100)
-        Label:
-            text: 'Day'
-            font_size: default_font_size
-            pos:(0,175)
+           
+
         Label:
             text: 'Humidity'
             font_size: default_font_size
             pos:(275,150)
         Label:
+            text:root.humidityVar
+            pos:(275,100)
+
+
+        Label:
+            text: 'pH'
+            font_size: default_font_size
+            pos:(275,-50)
+        Label:
+            text:root.pHVar
+            pos:(275,-100)
+
+
+        Label:
             text: 'CO2'
             font_size: default_font_size
             pos:(-275,-50)
         Label:
-            text: 'Stain'
-            font_size: default_font_size
-            pos:(275,-50)
+            text:root.CO2Var
+            pos:(-275,-100)
 
-<optionScreen>:
-    size:(480,800)
-    FloatLayout:
-        id: optionScreenLayout
+
+        Label:
+            text: 'Day'
+            font_size: '55'
+            pos:(0,170)
+        Label:
+            text:root.dayVar
+            pos:(0,120)
+            font_size: '55'
 
         Button:
-            text: 'Back'
+            id:capture
+            text:"Capture Image"
+            size_hint:(.25,.1)
+            pos_hint:{'x':.375,'y':.9}
+            pos_x: 0 
             on_release:
-                root.manager.transition = SlideTransition(direction='left')
-                root.manager.current = 'main'
-            size_hint: (.1,.1)
-            pos_hint:{'x':0,'y':0.9}
+                root.takePicture()
+
+        
+
 
 <mainScreen>:
+	
     FloatLayout:
         id: mainScreenLayout
 
@@ -69,6 +95,6 @@
             text: "Options"
             on_release:
                 root.manager.transition = SlideTransition(direction='right')
-                root.manager.current = 'option'
+                app.open_settings()
             size_hint: (.25,.25)
             pos:(100,100)
