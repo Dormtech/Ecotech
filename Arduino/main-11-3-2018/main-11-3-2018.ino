@@ -169,10 +169,10 @@ void loop() {
   //readPH(PH1pin);
 
   //Read berometer
-  if (!bmp.begin()) {
-    Serial.print(F("T2 = NA,P1 = NA,A1 = NA"));
+  //if (!bmp.begin()) {
+    //Serial.print(F("T2 = NA,P1 = NA,A1 = NA"));
     //while (1);
-  }
+  //}
 
   //Serial.print("T75= ");
   //Serial.print(bmp.readTemperature(),DEC);
@@ -189,5 +189,5 @@ void loop() {
   //Serial.print("m");
 
   Serial.println();
-  delay(20);
+  delay(2000);
 }
