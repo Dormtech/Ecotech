@@ -13,25 +13,21 @@
 #include <Adafruit_BMP280.h>
 #include "HX711.h"
 
-Adafruit_BMP280 bmp; // I2C
-HX711 scale(DOUT, CLK);
-
 // Pins
-int F1pin = 3;
-int DH1pin = 8;
-int WL1pin = 2;
-int C1pin = 11;
-int DOUT = 4;
-int CLK = 5;
-int ph_pin = A7;
+int F1pin = 3; //Fire pin
+int TH1pin = 8; //Temp humid pin
+int WL1pin = 2; //Water level pin
+int C1pin = 11; //CO2 pin
+int DOUT = 4; //Weight scale
+int CLK = 5; //Weight scale
+int PH1pin = A7; //PH pin
 
 //Global variables
-byte dat [5];
-float calibration_factor = -96650; //-106600 worked for my 40Kg max scale setup
-int weight_tare = 0;
+float calibration_factor = -96650; //-106600 worked for 40Kg max scale setup
+int weight_tare = 0; //Tare value for scale
 
-//Read Temp Humid data from sensor
-byte read_data (int pin) {
+//Gather Temp Humid data from sensor
+byte getTHData (int pin) {
   byte data;
   for (int i = 0; i < 8; i ++) {
     if (digitalRead (pin) == LOW) {
@@ -45,97 +41,124 @@ byte read_data (int pin) {
   return data;
 }
 
-//Test temp and humidity
-void start_test (int pin) {
+//Read temp and humidity
+void readTH (int pin) {
+  int datLen = 4;
+  byte dat [datLen];
   digitalWrite (pin, LOW); // bus down, send start signal
   delay (30); // delay greater than 18ms, so DHT11 start signal can be detected
 
+  pinMode (pin, OUTPUT);
   digitalWrite (pin, HIGH);
   delayMicroseconds (40); // Wait for DHT11 response
 
   pinMode (pin, INPUT);
-  while (digitalRead (pin) == HIGH);
+  while (digitalRead (pin) == HIGH){
     delayMicroseconds (80); // DHT11 response, pulled the bus 80us
-  if (digitalRead (pin) == LOW);
+  }
+  if (digitalRead (pin) == LOW){
     delayMicroseconds (80); // DHT11 80us after the bus pulled to start sending data
+  }
 
-  for (int i = 0; i < 4; i ++) // receive temperature and humidity data, the polarity bit is not considered
-    dat[i] = read_data (pin);
+  for (int i = 0; i < datLen; i ++) {// receive temperature and humidity data, the polarity bit is not considered
+    dat[i] = getTHData (pin);
+  }
 
-  pinMode (pin, OUTPUT);
-  digitalWrite (pin, HIGH); // send data once after releasing the bus, wait for the host to open the next Start signal
+  Serial.print ("H" & str(pin) & "=");
+  Serial.print (dat [0], DEC);
+  Serial.print ('.');
+  Serial.print (dat [1], DEC);
+  Serial.print ('%');
+  Serial.print(",");
+  Serial.print ("T" & str(pin) & "=");
+  Serial.print (dat [2], DEC);
+  Serial.print ('.');
+  Serial.print (dat [3], DEC);
+  Serial.print('C');
+  Serial.print(",");
 }
+
+//Read water level
+void readWL (pin){
+  pinMode(pin, INPUT);
+
+  int WL = analogRead(pin);
+
+  Serial.print("WL" & str(pin) & "=");
+  Serial.print(WL, DEC);
+  Serial.print("");
+  Serial.print(",");
+}
+
+//Read fire levels
+void readF(pin){
+  pinMode(pin, INPUT);
+
+  int fire = analogRead(pin);
+
+  Serial.print("F" & str(pin) & "=");
+  Serial.print(fire, DEC);
+  Serial.print("");
+  Serial.print(",");
+}
+
+//Read CO2 levels
+void readCO2(pin){
+  pinMode(pin , INPUT);
+
+  int Th = pulseIn(pin,HIGH); //Temp HIGH
+  int Tl = pulseIn(pin,LOW); //Temp LOW
+
+  int CO2 = (2000 * (Th - 0.002)) / (Th + Tl - 0.004);
+
+  Serial.print("C" & str(pin) & "= ");
+  Serial.print(CO2, DEC);
+  Serial.print(",");
+}
+
+//Read PH levels
+void readPH(pin){
+  pinMode(pin , INPUT);
+
+  int measure = analogRead(pin);
+  double voltage = 5 / 1024.0 * measure; //digital to voltage conversion
+  float Po = 7 + ((2.5 - voltage) / 0.18);
+
+  Serial.print("PH" & str(pin) & "= ");
+  Serial.print(Po, DEC);
+  Serial.print(",");
+}
+
+Adafruit_BMP280 bmp; //Pressure sensor
+HX711 scale(DOUT, CLK); //Weight sensor
 
 //////////////////
 void setup() {
-  pinMode(C1pin , INPUT);
-  pinMode(WL1pin, INPUT);
-  pinMode (DH1pin, OUTPUT);
-  pinMode(F1pin, INPUT);
   Serial.begin(9600);
   scale.set_scale(-96650);
 }
 
 void loop() {
   //Read Temp Humid Values
-  start_test (DH1pin);
-  Serial.print ("H1=");
-  Serial.print (dat [0], DEC);
-  Serial.print ('.');
-  Serial.print (dat [1], DEC);
-  Serial.print ('%');
-  Serial.print(",");
-  Serial.print ("T1=");
-  Serial.print (dat [2], DEC);
-  Serial.print ('.');
-  Serial.print (dat [3], DEC);
-  Serial.print('C');
-  Serial.print(",");
+  readTH (TH1pin);
 
   //Read Water Level
-  int WL1 = analogRead(WL1pin);
-  Serial.print("WL1=");
-  Serial.print(WL1, DEC);
-  Serial.print("");
-  Serial.print(",");
+  readWL(WL1pin);
 
   //Read Fire Level
-  int F1 = analogRead(F1pin);
-  Serial.print("F1=");
-  Serial.print(F1, DEC);
-  Serial.print("");
-  Serial.print(",");
+  readF(F1pin);
 
   //Read CO2 level
-  int Th = pulseIn(C1pin,HIGH);
-  int Tl = pulseIn(C1pin,LOW);
-  int CO2;
-  CO2 = (2000 * (Th - 0.002)) / (Th+Tl - 0.004);
-  Serial.print("C1 = ");
-  Serial.print(CO2, DEC);
-  Serial.print(",");
+  readCO2(C1pin);
 
   //Read Weight
-  Serial.print("W1 = ");
+  Serial.print("W" & DOUT & "= ");
   Serial.print(scale.get_units(), DEC);
   Serial.print(" kg");
   Serial.print(",");
 
   //Read PH
-  int measure = analogRead(ph_pin);
-  Serial.print("phM1 = ");
-  Serial.print(measure, DEC);
-  Serial.print(",");
-
-  double voltage = 5 / 1024.0 * measure; //digital to voltage conversion
-  Serial.print("V1 = ");
-  Serial.print(voltage, DEC);
-  Serial.print(",");
-
-  float Po = 7 + ((2.5 - voltage) / 0.18);
-  Serial.print("PH1 = ");
-  Serial.print(Po, DEC);
-  Serial.print(",");
+  readPH(PH1pin);
 
   //Read pressure sensor
   if (!bmp.begin()) {
@@ -143,17 +166,17 @@ void loop() {
     while (1);
   }
 
-  Serial.print("T2 = ");
+  Serial.print("T75= ");
   Serial.print(bmp.readTemperature(),DEC);
   Serial.print("C");
   Serial.print(",");
 
-  Serial.print("P1 = ");
+  Serial.print("P75= ");
   Serial.print(bmp.readPressure(),DEC);
   Serial.print("Pa");
   Serial.print(",");
 
-  Serial.print("A1 = ");
+  Serial.print("A75= ");
   Serial.print(bmp.readAltitude(1013.25),DEC);
   Serial.print("m");
 
