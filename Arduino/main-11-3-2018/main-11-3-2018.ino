@@ -30,8 +30,7 @@ byte getTHData (int pin) {
 
 //Read temp and humidity
 void readTH (int pin) {
-  int datLen = 4;
-  byte dat [datLen];
+  byte dat [5];
   pinMode (pin, OUTPUT);
   digitalWrite (pin, LOW); // bus down, send start signal
   delay (30); // delay greater than 18ms, so DHT11 start signal can be detected
@@ -46,9 +45,12 @@ void readTH (int pin) {
     delayMicroseconds (80); // DHT11 80us after the bus pulled to start sending data
   }
 
-  for (int i = 0; i < datLen; i ++) {// receive temperature and humidity data, the polarity bit is not considered
+  for (int i = 0; i < 4; i ++) {// receive temperature and humidity data, the polarity bit is not considered
     dat[i] = getTHData (pin);
   }
+
+  pinMode (pin, OUTPUT);
+  digitalWrite (pin, HIGH); // send data once after releasing the bus, wait for the host to open the next Start signal
 
   Serial.print ("H" + String(pin) + "=");
   Serial.print (dat [0], DEC);
@@ -123,6 +125,10 @@ void setup() {
 void loop() {
    // Pins
   int F1pin = A11; //Fire pin
+  int F2pin = A12; //Fire pin
+  int F3pin = A13; //Fire pin
+  int F4pin = A14; //Fire pin
+  int F5pin = A15; //Fire pin
   int TH1pin = 22; //Temp humid pin
   int TH2pin = 23; //Temp humid pin
   int TH3pin = 24; //Temp humid pin
@@ -155,6 +161,10 @@ void loop() {
 
   //Read Fire Level
   readF(F1pin);
+  readF(F2pin);
+  readF(F3pin);
+  readF(F4pin);
+  readF(F5pin);
 
   //Read CO2 level
   readCO2(C1pin);
