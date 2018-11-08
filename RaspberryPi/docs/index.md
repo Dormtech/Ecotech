@@ -1,5 +1,5 @@
 #Overview
-This is the device code for the Ecozone.
+This is the general software documentation for the Ecozone. This document was created to help all developers work together. When developing programs for the device please refer to this documentation.
 
 ##Index
 main.py
