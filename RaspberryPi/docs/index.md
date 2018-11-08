@@ -1,7 +1,7 @@
-#Overview
+# Overview
 This is the general software documentation for the Ecozone. This document was created to help all developers work together. When developing programs for the device please refer to this documentation.
 
-##Index
+## Index
 main.py
 test.py
 mainGUI.py
