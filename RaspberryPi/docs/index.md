@@ -6,7 +6,7 @@ This is the general software documentation for the Ecozone. This document was cr
 ## Index
 - [main.py](https://github.com/Dormtech/Ecotech/blob/master/RaspberryPi/docs/index.md#mainpy)
 - [test.py](https://github.com/Dormtech/Ecotech/blob/master/RaspberryPi/docs/index.md#testpy)
-- [mainGUI.py](https://github.com/Dormtech/Ecotech/blob/master/RaspberryPi/docs/index.md#mainGUInpy)
+- [mainGUI.py](https://github.com/Dormtech/Ecotech/blob/master/RaspberryPi/docs/index.md#mainGUIpy)
 - [logg.py](https://github.com/Dormtech/Ecotech/blob/master/RaspberryPi/docs/index.md#loggpy)
 - [control.py](https://github.com/Dormtech/Ecotech/blob/master/RaspberryPi/docs/index.md#controlpy)
 - [networking.py](https://github.com/Dormtech/Ecotech/blob/master/RaspberryPi/docs/index.md#networkingpy)
