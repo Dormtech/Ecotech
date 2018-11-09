@@ -2,7 +2,7 @@
 // @file main.ino
 //@authors Ben Bellerose & Jake Smiley
 //@date June 2018
-//@modified November 3 2018
+//@modified November 8 2018
 //modified by BB
 //@brief sensor control and output through serial communication
 //*****************************************
@@ -139,7 +139,8 @@ void loop() {
   //int DOUT = 4; //Weight scale
   //int CLK = 5; //Weight scale
   //int PH1pin = A7; //PH pin
-  
+  byte ch = 0;
+
   //Global variables
   float calibration_factor = -96650; //-106600 worked for 40Kg max scale setup
   int weight_tare = 0; //Tare value for scale
@@ -148,55 +149,63 @@ void loop() {
   //HX711 scale(DOUT, CLK); //Weight sensor
 
   //scale.set_scale(-96650);
-  
-  //Read Temp Humid Values
-  readTH (TH1pin);
-  readTH (TH2pin);
-  readTH (TH3pin);
-  readTH (TH4pin);
-  readTH (TH5pin);
 
-  //Read Water Level
-  //readWL(WL1pin);
+  if (Serial.available()) {
+   ch = Serial.read();
+   hold = String(ch,HEX);
+   if (hold == "31") {
+     //Read Temp Humid Values
+     readTH (TH1pin);
+     readTH (TH2pin);
+     readTH (TH3pin);
+     readTH (TH4pin);
+     readTH (TH5pin);
 
-  //Read Fire Level
-  readF(F1pin);
-  readF(F2pin);
-  readF(F3pin);
-  readF(F4pin);
-  readF(F5pin);
+     //Read CO2 level
+     readCO2(C1pin);
 
-  //Read CO2 level
-  readCO2(C1pin);
+     //Read berometer
+     //if (!bmp.begin()) {
+       //Serial.print(F("T2 = NA,P1 = NA,A1 = NA"));
+       //while (1);
+     //}
+
+     //Serial.print("T75= ");
+     //Serial.print(bmp.readTemperature(),DEC);
+     //Serial.print("F");
+     //Serial.print(",");
+
+     //Serial.print("P75= ");
+     //Serial.print(bmp.readPressure(),DEC);
+     //Serial.print("Pa");
+     //Serial.print(",");
+
+     //Serial.print("A75= ");
+     //Serial.print(bmp.readAltitude(1013.25),DEC);
+     //Serial.print("m");
+
+    } else if (hold == "32") {
+      delay(5)
+      //Read Water Level
+      //readWL(WL1pin);
+
+      //Read PH
+      //readPH(PH1pin);
+    } else if (hold == "33") {
+      //Read Fire Level
+      readF(F1pin);
+      readF(F2pin);
+      readF(F3pin);
+      readF(F4pin);
+      readF(F5pin);
+    }
+  }
 
   //Read Weight
   //Serial.print("W" + String(DOUT) + "= ");
   //Serial.print(scale.get_units(), DEC);
   //Serial.print(" kg");
   //Serial.print(",");
-
-  //Read PH
-  //readPH(PH1pin);
-
-  //Read berometer
-  //if (!bmp.begin()) {
-    //Serial.print(F("T2 = NA,P1 = NA,A1 = NA"));
-    //while (1);
-  //}
-
-  //Serial.print("T75= ");
-  //Serial.print(bmp.readTemperature(),DEC);
-  //Serial.print("F");
-  //Serial.print(",");
-
-  //Serial.print("P75= ");
-  //Serial.print(bmp.readPressure(),DEC);
-  //Serial.print("Pa");
-  //Serial.print(",");
-
-  //Serial.print("A75= ");
-  //Serial.print(bmp.readAltitude(1013.25),DEC);
-  //Serial.print("m");
 
   Serial.println();
   delay(2000);

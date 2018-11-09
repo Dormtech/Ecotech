@@ -48,13 +48,20 @@ class atmosphere():
                                                 sensorBank3 = network.readSerial(ser,3)
 
                                                 #Temp sensors
-                                                tBank = deviceControl().sensBank("T","C",5,sensorBank1)
+                                                thIndex = 11
+                                                tBank = []
+                                                for x in range(5):
+                                                    tempHold = deviceControl().sensorValue("T" + str(x + thIndex),"C",sensorBank1) #Main box
+                                                    tBank.insert(len(tBank),tempHold)
                                                 tempWeight = [1,1,1,1,1]
                                                 temp = deviceControl().wAverage(tBank,tempWeight)
                                                 print("temp = " + str(temp))
 
                                                 #Humidity sensors
-                                                hBank = deviceControl().sensBank("H","%",5,sensorBank1)
+                                                hBank = []
+                                                for x in range(5):
+                                                    humidHold = deviceControl().sensorValue("H" + str(x + thIndex),"%",sensorBank1) #Main box
+                                                    hBank.insert(len(hBank),humidHold)
                                                 humidWeight = [1,1,1,1,1]
                                                 humid = deviceControl().wAverage(hBank,humidWeight)
                                                 print("humidity = " + str(humid))
@@ -78,12 +85,16 @@ class atmosphere():
                                                     print("SYSTEM FAILURE - CARBON SENSORS OFFLINE")
 
                                                 #Fire sensors
-                                                fBank = deviceControl().sensBank("F","",5,sensorBank3)
+                                                fIndex = 11
+                                                fBank = []
+                                                for x in range(5):
+                                                    fireHold = deviceControl().sensorValue("F" + str(x + fIndex),"C",sensorBank3) #Fire sensore in bix
+                                                    fBank.insert(len(fBank),fireHold)
                                                 try:
                                                     fire = 0
-                                                    for x in range(len(fBank)):
-                                                        if fBank[x] != "NA":
-                                                            fire = fire + int(fBank[x])
+                                                    for value in fBank:
+                                                        if value != "NA":
+                                                            fire = fire + int(value)
                                                     if fire == 0:
                                                         fire = "NA"
                                                         print("SYSTEM FAILURE - FIRE SENSORS OFFLINE")
