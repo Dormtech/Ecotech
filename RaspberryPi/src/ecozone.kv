@@ -18,6 +18,7 @@
             size_hint: (.1,.1)
             pos_hint:{'x':0,'y':0.9}
         
+
         Label:
             text: root.strainVar
             pos_hint:{'x':0,'y':-0.45}
@@ -98,3 +99,10 @@
                 app.open_settings()
             size_hint: (.25,.25)
             pos:(100,100)
+
+        Button:
+            text: 'Exit'
+            on_release:
+                quit()
+            size_hint: (.1,.1)
+            pos_hint:{'x':0,'y':0.9}
