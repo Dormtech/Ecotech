@@ -20,7 +20,7 @@ from kivy.graphics import Color, Rectangle
 from kivy.uix.image import Image
 from kivy.uix.boxlayout import BoxLayout
 from kivy.uix.button import Button
-from kivy.properties import StringProperty, NumericProperty, ObjectProperty, ListProperty
+from kivy.properties import StringProperty, NumericProperty, ObjectProperty, ListProperty, VariableListProperty
 from kivy.uix.widget import Widget
 from kivy.clock import Clock
 from kivy.uix.screenmanager import ScreenManager, Screen
@@ -35,6 +35,9 @@ from kivy.config import Config
 
 Config.set('graphics', 'width', '800')
 Config.set('graphics', 'height', '480')
+
+colour = VariableListProperty()
+colour = (1,1,1,0)
 
 class useCamera(threading.Thread):
     def __init__(self, filename):
@@ -51,16 +54,6 @@ class useCamera(threading.Thread):
             errMsg = "Failed while attempting to take picture with the following error " + str(e)
             deviceLog().errorLog(errCode,errMsg)
 
-class GUIFunc():
-
-    #creates the option file used to store user config
-    def createGUIOptions(pathway):
-        optionFile = open(pathway+"/options/GUIOptions.txt","w+")
-
-        optionFile.write("c\n")
-
-        return optionFile
-
 #default stats display
 class defaultScreen(Screen):
 
@@ -76,12 +69,6 @@ class defaultScreen(Screen):
         super(defaultScreen, self).__init__(**kwargs)
 
         self.makeClock()
-
-        pathway = os.path.dirname(os.path.abspath( __file__ ))
-        try:
-            optionFile = open(pathway+"/options/GUIOptions.txt","r+")
-        except IOError:
-            optionFile = createGUIOptions(pathway)
 
         self.update(1)
 
@@ -173,9 +160,26 @@ class defaultScreen(Screen):
 
 #main screen
 class mainScreen(Screen):
+    rgba = colour
 
     def __init__(self, **kwargs):
         super(mainScreen, self).__init__(**kwargs)
+
+        self.makeClock()
+
+    """
+    Makes clock for screen
+    """
+    def makeClock(self):
+        self.clockDisplay = Label(text=time.asctime(), pos=(300,220))
+        self.add_widget(self.clockDisplay)
+        Clock.schedule_interval(self.updateTime,1)
+    def updateTime(self,dt):
+        self.clockDisplay.text=time.asctime()
+
+class openingScreen(Screen):
+    def __init__(self, **kwargs):
+        super(openingScreen, self).__init__(**kwargs)
 
         self.makeClock()
 
@@ -199,14 +203,15 @@ class ecozoneApp(App):
 
     def build_settings(self, settings):
 
-        settings.add_json_panel('Options',
-                                self.config,
-                                data=settings_json)
+        settings.add_json_panel('Options', self.config, data=settings_json)
+
+    def on_config_change(self):
+
 
     def build(self):
         self.use_kivy_settings = False
-        setting = self.config.get('Visual', 'Units')
         sm = ScreenManager()
+        sm.add_widget(openingScreen(name="open"))
         sm.add_widget(mainScreen(name="main"))
         sm.add_widget(defaultScreen(name="default"))
 
