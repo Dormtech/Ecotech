@@ -29,13 +29,27 @@ from kivy.uix.colorpicker import ColorPicker
 
 from json_settings import settings_json
 
-import random, os, time
+import random, os, time, threading
 
 from kivy.config import Config
 
 Config.set('graphics', 'width', '800')
 Config.set('graphics', 'height', '480')
 
+class useCamera(threading.Thread):
+    def __init__(self, filename):
+        threading.Thread.__init__(self)
+        self.filename = filename
+    def run(self):
+        try:
+            """deviceControl.captureIMG(self.fileName)
+            self.imgVar = Image(source=self.fileName, pos=(200,75), size_hint=(.5,.5))
+            self.add_widget(self.imgVar)"""
+            print('flash')
+        except Exception as e:
+            errCode = "FAILED TO TAKE PICTURE"
+            errMsg = "Failed while attempting to take picture with the following error " + str(e)
+            deviceLog().errorLog(errCode,errMsg)
 
 class GUIFunc():
 
@@ -131,8 +145,8 @@ class defaultScreen(Screen):
         return c1
 
     def takePicture(self):
-        """try:
-            index = deviceLog().findIndex("dayLog.txt",self.plantName)
+        try:
+            """index = deviceLog().findIndex("dayLog.txt",self.plantName)
             stats = ["Tempature=20"]
             deviceLog().dayLog(index,self.plantName,self.strainVar,stats)
             dirHold = os.getcwd().split("/")
@@ -144,15 +158,18 @@ class defaultScreen(Screen):
             if os.path.isfile(fileName):
                 os.remove(fileName)
                 time.sleep(0.1)
-                self.remove_widget(self.imgVar)
-            deviceControl.captureIMG(fileName)
-            self.imgVar = Image(source=fileName, pos=(200,75), size_hint=(.5,.5))
-            self.add_widget(self.imgVar)
+                self.remove_widget(self.imgVar)"""
+            filename = "test.txt"
+            newThread = useCamera(filename)
+            newThread.start()
+            newThread.join()
+
         except Exception as e:
             errCode = "FAILED TO TAKE PICTURE"
             errMsg = "Failed while attempting to take picture with the following error " + str(e)
-            deviceLog().errorLog(errCode,errMsg)"""
-        print("flash")
+            deviceLog().errorLog(errCode,errMsg)
+            print("no pic taken")
+
 
 #main screen
 class mainScreen(Screen):
