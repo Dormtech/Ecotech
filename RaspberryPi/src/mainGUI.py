@@ -8,10 +8,10 @@
  */
 """
 import kivy
-"""from atmSequence import atmosphere"""
+"""from atmSequence import atmosphere
 from control import deviceControl
 from networking import network
-from logg import deviceLog
+from logg import deviceLog"""
 
 from kivy.app import App
 from kivy.uix.label import Label
@@ -42,14 +42,14 @@ class GUIFunc():
     #creates the option file used to store user config
     def createGUIOptions(pathway):
         optionFile = open(pathway+"/options/GUIOptions.txt","w+")
-        
+
         optionFile.write("c\n")
 
         return optionFile
 
 #default stats display
 class defaultScreen(Screen):
-    
+
     temperatureVar = StringProperty()
     humidityVar = StringProperty()
     CO2Var = StringProperty()
@@ -88,7 +88,7 @@ class defaultScreen(Screen):
         Clock.schedule_interval(self.updateTime,1)
     def updateTime(self,dt):
         self.clockDisplay.text=time.asctime()
-    
+
 
     #will update all the variables on screen
     def update(self, dt):
@@ -104,7 +104,7 @@ class defaultScreen(Screen):
 
         #self.ser = network.openSerial()
 
-    
+
 
     #updates temperature
     def updateTemp(self,sensorBank):
@@ -131,7 +131,7 @@ class defaultScreen(Screen):
         return c1
 
     def takePicture(self):
-        try:
+        """try:
             index = deviceLog().findIndex("dayLog.txt",self.plantName)
             stats = ["Tempature=20"]
             deviceLog().dayLog(index,self.plantName,self.strainVar,stats)
@@ -151,7 +151,7 @@ class defaultScreen(Screen):
         except Exception as e:
             errCode = "FAILED TO TAKE PICTURE"
             errMsg = "Failed while attempting to take picture with the following error " + str(e)
-            deviceLog().errorLog(errCode,errMsg)
+            deviceLog().errorLog(errCode,errMsg)"""
         print("flash")
 
 #main screen
@@ -173,15 +173,15 @@ class mainScreen(Screen):
         self.clockDisplay.text=time.asctime()
 
 #main App GUI control
-class ecozoneApp(App): 
+class ecozoneApp(App):
 
     def build_config(self, config):
         config.setdefaults("Basic", {
             "Units":"Metric", 'colour':'Black'
             })
-    
+
     def build_settings(self, settings):
-        
+
         settings.add_json_panel('Options',
                                 self.config,
                                 data=settings_json)
@@ -192,5 +192,5 @@ class ecozoneApp(App):
         sm = ScreenManager()
         sm.add_widget(mainScreen(name="main"))
         sm.add_widget(defaultScreen(name="default"))
-        
+
         return sm
