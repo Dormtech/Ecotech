@@ -206,7 +206,7 @@ class ecozoneApp(App):
         settings.add_json_panel('Options', self.config, data=settings_json)
 
     def on_config_change(self):
-
+        pass
 
     def build(self):
         self.use_kivy_settings = False
