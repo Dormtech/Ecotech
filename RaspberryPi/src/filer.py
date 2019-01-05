@@ -9,3 +9,15 @@
  """
 
 class filer():
+
+    def loadFile():
+        return True
+
+    def moveToDay():
+        return True
+
+    def storeList():
+        return True
+
+    def readTarget():
+        return True
