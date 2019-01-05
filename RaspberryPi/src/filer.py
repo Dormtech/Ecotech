@@ -9,6 +9,7 @@
  """
 import os
 import csv
+from logger import deviceLog
 
 class filer():
 
@@ -53,13 +54,13 @@ class filer():
             else:
                 errCode = "NO CONTENT GIVEN"
                 errMsg = "No content was given for the file to write."
-                self.errorLog(errCode,errMsg)
+                deviceLog.errorLog(errCode,errMsg)
                 print("NO CONTENT GIVEN")
                 return False
         else:
             errCode = "NO FILE NAME GIVEN"
             errMsg = "No file name was given for the file."
-            self.errorLog(errCode,errMsg)
+            deviceLog.errorLog(errCode,errMsg)
             print("NO FILE NAME GIVEN")
             return False
 
@@ -76,22 +77,21 @@ class filer():
                     return content
                 except Exception as e:
                     errCode = "ERROR READING FILE"
-                    errMsg = "Error reading CSV file. The following error code appeared; " + str(e)
-                    self.errorLog(errCode,errMsg)
+                    deviceLog.errorLog(errCode,errMsg)
                     print("ERROR READING FILE")
                     content = None
                     return content
             else:
                 errCode = "FILE NOT FOUND"
                 errMsg = "The given file adress for the CSV file does not exist."
-                self.errorLog(errCode,errMsg)
+                deviceLog.errorLog(errCode,errMsg)
                 print("FILE NOT FOUND")
                 content = None
                 return content
         else:
             errCode = "NO FILE NAME GIVEN"
             errMsg = "No file name was given for the CSV file."
-            self.errorLog(errCode,errMsg)
+            deviceLog.errorLog(errCode,errMsg)
             print("NO FILE NAME GIVEN")
             content = None
             return content
@@ -117,25 +117,25 @@ class filer():
                     except Exception as e:
                         errCode = "ERROR WRITING CSV"
                         errMsg = "Unable to write the CSV file. The following error occured; " + str(e)
-                        self.errorLog(errCode,errMsg)
+                        deviceLog.errorLog(errCode,errMsg)
                         print("ERROR WRITING CSV")
                         return False
                 else:
                     errCode = "FILE NOT FOUND"
                     errMsg = "The given file adress for the CSV file does not exist."
-                    self.errorLog(errCode,errMsg)
+                    deviceLog.errorLog(errCode,errMsg)
                     print("FILE NOT FOUND")
                     return False
             else:
                 errCode = "NO FILE GIVEN"
                 errMsg = "A file adress was not given as an input."
-                self.errorLog(errCode,errMsg)
+                deviceLog.errorLog(errCode,errMsg)
                 print("NO FILE GIVEN")
                 return False
         else:
             errCode = "NO CONTENT GIVEN"
             errMsg = "There was no content given as an input."
-            self.errorLog(errCode,errMsg)
+            deviceLog.errorLog(errCode,errMsg)
             print("NO CONTENT GIVEN")
             return False
 
@@ -182,7 +182,7 @@ class filer():
         else:
             errCode = "NO FILE NAME GIVEN"
             errMsg = "No file name was given for the file."
-            self.errorLog(errCode,errMsg)
+            deviceLog.errorLog(errCode,errMsg)
             print("NO FILE NAME GIVEN")
             return "NA"
 
@@ -216,19 +216,19 @@ class filer():
                 else:
                     errCode = "INDEX NOT INTEGER"
                     errMsg = "The given index was not the correct data type."
-                    self.errorLog(errCode,errMsg)
+                    deviceLog.errorLog(errCode,errMsg)
                     print("INDEX NOT INTEGER")
                     return ["ERROR"]
             else:
                 errCode = "NO INDEX GIVEN"
                 errMsg = "There was no index provided as an input."
-                self.errorLog(errCode,errMsg)
+                deviceLog.errorLog(errCode,errMsg)
                 print("NO INDEX GIVEN")
                 return ["ERROR"]
         else:
             errCode = "NO FILE NAME GIVEN"
             errMsg = "There was no file name as an input."
-            self.errorLog(errCode,errMsg)
+            deviceLog.errorLog(errCode,errMsg)
             print("NO FILE NAME GIVEN")
             return ["ERROR"]
 
@@ -250,19 +250,19 @@ class filer():
                 else:
                     errCode = "FILE NOT FOUND"
                     errMsg = "The given file could not be found."
-                    self.errorLog(errCode,errMsg)
+                    deviceLog.errorLog(errCode,errMsg)
                     print("FILE NOT FOUND")
                     return False
             else:
                 errCode = "NO NEW NAME GIVEN"
                 errMsg = "There was no new file name provided as an input."
-                self.errorLog(errCode,errMsg)
+                deviceLog.errorLog(errCode,errMsg)
                 print("NO NEW NAME GIVEN")
                 return False
         else:
             errCode = "NO FILE NAME GIVEN"
             errMsg = "There was no file name provided as an input."
-            self.errorLog(errCode,errMsg)
+            deviceLog.errorLog(errCode,errMsg)
             print("NO FILE NAME GIVEN")
             return False
 
