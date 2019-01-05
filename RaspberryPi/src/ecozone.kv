@@ -17,12 +17,12 @@
                 root.manager.current = 'main'
             size_hint: (.1,.1)
             pos_hint:{'x':0,'y':0.9}
-        
+
 
         Label:
             text: root.strainVar
             pos_hint:{'x':0,'y':-0.45}
-        
+
         Label:
             text:'Temperature'
             font_size: default_font_size
@@ -30,7 +30,7 @@
         Label:
             text:root.temperatureVar
             pos:(-275,100)
-           
+
 
         Label:
             text: 'Humidity'
@@ -73,17 +73,21 @@
             text:"Capture Image"
             size_hint:(.25,.1)
             pos_hint:{'x':.375,'y':.9}
-            pos_x: 0 
+            pos_x: 0
             on_release:
                 root.takePicture()
 
-        
-
-
 <mainScreen>:
-	
+
     FloatLayout:
         id: mainScreenLayout
+
+        canvas.before:
+            Color:
+                rgba: root.rgba
+            Rectangle:
+                pos:self.pos
+                size:self.size
 
         Button:
             text: 'To Default'
@@ -106,3 +110,13 @@
                 quit()
             size_hint: (.1,.1)
             pos_hint:{'x':0,'y':0.9}
+
+<openingScreen>
+
+    Button:
+        text: 'To Default'
+        on_release:
+            root.manager.transition = SlideTransition(direction='down')
+            root.manager.current = 'default'
+        size_hint: (.25,.25)
+        pos:(100,300)
