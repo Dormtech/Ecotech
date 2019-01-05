@@ -11,7 +11,8 @@ import time
 from atmSequence import atmosphere
 #from pumpSequence import pumps
 from networking import network
-from logg import deviceLog
+from logger import deviceLog
+from filer import filer
 
 if __name__ == "__main__":
     startTime = time.time()

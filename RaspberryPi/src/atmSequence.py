@@ -8,7 +8,7 @@
  */
  """
 from control import deviceControl
-from logg import deviceLog
+from logger import deviceLog
 from networking import network
 
 class atmosphere():

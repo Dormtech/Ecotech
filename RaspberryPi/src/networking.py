@@ -12,7 +12,7 @@ import serial
 import time
 import subprocess
 import socket
-from logg import deviceLog
+from logger import deviceLog
 
 class network():
     def __init__(self, sock=None):
