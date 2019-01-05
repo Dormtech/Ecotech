@@ -8,10 +8,10 @@
  */
 """
 import kivy
-"""from atmSequence import atmosphere"""
+"""from atmSequence import atmosphere
 from control import deviceControl
 from networking import network
-from logg import deviceLog
+from logg import deviceLog"""
 
 from kivy.app import App
 from kivy.uix.label import Label
@@ -20,7 +20,7 @@ from kivy.graphics import Color, Rectangle
 from kivy.uix.image import Image
 from kivy.uix.boxlayout import BoxLayout
 from kivy.uix.button import Button
-from kivy.properties import StringProperty, NumericProperty, ObjectProperty, ListProperty
+from kivy.properties import StringProperty, NumericProperty, ObjectProperty, ListProperty, VariableListProperty
 from kivy.uix.widget import Widget
 from kivy.clock import Clock
 from kivy.uix.screenmanager import ScreenManager, Screen
@@ -29,27 +29,34 @@ from kivy.uix.colorpicker import ColorPicker
 
 from json_settings import settings_json
 
-import random, os, time
+import random, os, time, threading
 
 from kivy.config import Config
 
 Config.set('graphics', 'width', '800')
 Config.set('graphics', 'height', '480')
 
+colour = VariableListProperty()
+colour = (1,1,1,0)
 
-class GUIFunc():
-
-    #creates the option file used to store user config
-    def createGUIOptions(pathway):
-        optionFile = open(pathway+"/options/GUIOptions.txt","w+")
-        
-        optionFile.write("c\n")
-
-        return optionFile
+class useCamera(threading.Thread):
+    def __init__(self, filename):
+        threading.Thread.__init__(self)
+        self.filename = filename
+    def run(self):
+        try:
+            """deviceControl.captureIMG(self.fileName)
+            self.imgVar = Image(source=self.fileName, pos=(200,75), size_hint=(.5,.5))
+            self.add_widget(self.imgVar)"""
+            print('flash')
+        except Exception as e:
+            errCode = "FAILED TO TAKE PICTURE"
+            errMsg = "Failed while attempting to take picture with the following error " + str(e)
+            deviceLog().errorLog(errCode,errMsg)
 
 #default stats display
 class defaultScreen(Screen):
-    
+
     temperatureVar = StringProperty()
     humidityVar = StringProperty()
     CO2Var = StringProperty()
@@ -62,12 +69,6 @@ class defaultScreen(Screen):
         super(defaultScreen, self).__init__(**kwargs)
 
         self.makeClock()
-
-        pathway = os.path.dirname(os.path.abspath( __file__ ))
-        try:
-            optionFile = open(pathway+"/options/GUIOptions.txt","r+")
-        except IOError:
-            optionFile = createGUIOptions(pathway)
 
         self.update(1)
 
@@ -88,7 +89,7 @@ class defaultScreen(Screen):
         Clock.schedule_interval(self.updateTime,1)
     def updateTime(self,dt):
         self.clockDisplay.text=time.asctime()
-    
+
 
     #will update all the variables on screen
     def update(self, dt):
@@ -104,7 +105,7 @@ class defaultScreen(Screen):
 
         #self.ser = network.openSerial()
 
-    
+
 
     #updates temperature
     def updateTemp(self,sensorBank):
@@ -132,7 +133,7 @@ class defaultScreen(Screen):
 
     def takePicture(self):
         try:
-            index = deviceLog().findIndex("dayLog.txt",self.plantName)
+            """index = deviceLog().findIndex("dayLog.txt",self.plantName)
             stats = ["Tempature=20"]
             deviceLog().dayLog(index,self.plantName,self.strainVar,stats)
             dirHold = os.getcwd().split("/")
@@ -144,18 +145,22 @@ class defaultScreen(Screen):
             if os.path.isfile(fileName):
                 os.remove(fileName)
                 time.sleep(0.1)
-                self.remove_widget(self.imgVar)
-            deviceControl.captureIMG(fileName)
-            self.imgVar = Image(source=fileName, pos=(200,75), size_hint=(.5,.5))
-            self.add_widget(self.imgVar)
+                self.remove_widget(self.imgVar)"""
+            filename = "test.txt"
+            newThread = useCamera(filename)
+            newThread.start()
+            newThread.join()
+
         except Exception as e:
             errCode = "FAILED TO TAKE PICTURE"
             errMsg = "Failed while attempting to take picture with the following error " + str(e)
             deviceLog().errorLog(errCode,errMsg)
-        print("flash")
+            print("no pic taken")
+
 
 #main screen
 class mainScreen(Screen):
+    rgba = colour
 
     def __init__(self, **kwargs):
         super(mainScreen, self).__init__(**kwargs)
@@ -172,25 +177,42 @@ class mainScreen(Screen):
     def updateTime(self,dt):
         self.clockDisplay.text=time.asctime()
 
+class openingScreen(Screen):
+    def __init__(self, **kwargs):
+        super(openingScreen, self).__init__(**kwargs)
+
+        self.makeClock()
+
+    """
+    Makes clock for screen
+    """
+    def makeClock(self):
+        self.clockDisplay = Label(text=time.asctime(), pos=(300,220))
+        self.add_widget(self.clockDisplay)
+        Clock.schedule_interval(self.updateTime,1)
+    def updateTime(self,dt):
+        self.clockDisplay.text=time.asctime()
+
 #main App GUI control
-class ecozoneApp(App): 
+class ecozoneApp(App):
 
     def build_config(self, config):
         config.setdefaults("Basic", {
             "Units":"Metric", 'colour':'Black'
             })
-    
+
     def build_settings(self, settings):
-        
-        settings.add_json_panel('Options',
-                                self.config,
-                                data=settings_json)
+
+        settings.add_json_panel('Options', self.config, data=settings_json)
+
+    def on_config_change(self):
+        pass
 
     def build(self):
         self.use_kivy_settings = False
-        setting = self.config.get('Visual', 'Units')
         sm = ScreenManager()
+        sm.add_widget(openingScreen(name="open"))
         sm.add_widget(mainScreen(name="main"))
         sm.add_widget(defaultScreen(name="default"))
-        
+
         return sm
