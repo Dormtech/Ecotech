@@ -58,6 +58,7 @@ class useCamera(threading.Thread):
 class defaultScreen(Screen):
 
     temperatureVar = StringProperty()
+    tempSp = StringProperty()
     humidityVar = StringProperty()
     CO2Var = StringProperty()
     pHVar = StringProperty()
@@ -74,6 +75,7 @@ class defaultScreen(Screen):
 
         Clock.schedule_interval(self.update,5)
 
+        self.tempSp="25"
         #self.ser = network.openSerial()
         self.plantName = "Plant1"
         self.strainVar = "Kush"
@@ -102,6 +104,7 @@ class defaultScreen(Screen):
         self.humidityVar =str(random.randint(20,80))
         self.CO2Var =str(random.randint(0,100))
         self.pHVar = str(random.randint(0,14))
+
 
         #self.ser = network.openSerial()
 
@@ -132,31 +135,10 @@ class defaultScreen(Screen):
         return c1
 
     def takePicture(self):
-        try:
-            """index = deviceLog().findIndex("dayLog.txt",self.plantName)
-            stats = ["Tempature=20"]
-            deviceLog().dayLog(index,self.plantName,self.strainVar,stats)
-            dirHold = os.getcwd().split("/")
-            dirHold = dirHold[:-1]
-            picDir = "/".join(dirHold) + str("/logs/pics")
-            if os.path.isdir(picDir) == False:
-                os.mkdir(picDir)
-            fileName = picDir + "/" + self.plantName + "(" + time.strftime("%d-%y-%m_%H:%M:%S", time.gmtime()) + ").png"
-            if os.path.isfile(fileName):
-                os.remove(fileName)
-                time.sleep(0.1)
-                self.remove_widget(self.imgVar)"""
-            filename = "test.txt"
+            filename = "test.png"
             newThread = useCamera(filename)
             newThread.start()
             newThread.join()
-
-        except Exception as e:
-            errCode = "FAILED TO TAKE PICTURE"
-            errMsg = "Failed while attempting to take picture with the following error " + str(e)
-            deviceLog().errorLog(errCode,errMsg)
-            print("no pic taken")
-
 
 #main screen
 class mainScreen(Screen):
