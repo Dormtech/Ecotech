@@ -3,6 +3,7 @@
 
 #:set default_font_size "52sp"
 #:set default_font_name "Arial"
+#:set default_button_font_size "20sp"
 
 #Custom Buttons
 <upButton@Button>:
@@ -26,6 +27,7 @@
                 root.manager.current = 'main'
             size_hint: (.1,.1)
             pos_hint:{'x':0,'y':0.9}
+            font_size: default_button_font_size
 
 
         Label:
@@ -79,29 +81,31 @@
         Label:
             text: 'pH'
             font_size: default_font_size
-            pos:(275,-50)
+            pos:(230,-75)
         Label:
             text:root.pHVar
-            pos:(275,-100)
+            font_size:"48sp"
+            pos:(230,-145)
 
 
         Label:
             text: 'CO2'
             font_size: default_font_size
-            pos:(-275,-50)
+            pos:(-230,-75)
         Label:
             text:root.CO2Var
-            pos:(-275,-100)
+            pos:(-230,-145)
+            font_size:"48sp"
 
 
         Label:
             text: 'Day'
-            font_size: '55'
-            pos:(0,170)
+            font_size: '65sp'
+            pos:(0,160)
         Label:
             text:root.dayVar
-            pos:(0,120)
-            font_size: '55'
+            pos:(0,110)
+            font_size: '55sp'
 
         Button:
             id:capture
@@ -111,6 +115,7 @@
             pos_x: 0
             on_release:
                 root.takePicture()
+            font_size: default_button_font_size
 
 <mainScreen>:
 
@@ -131,6 +136,7 @@
                 root.manager.current = 'default'
             size_hint: (.25,.25)
             pos:(100,300)
+            font_size: default_button_font_size
         Button:
             text: "Options"
             on_release:
@@ -138,6 +144,7 @@
                 app.open_settings()
             size_hint: (.25,.25)
             pos:(100,100)
+            font_size: default_button_font_size
 
         Button:
             text: 'Exit'
@@ -145,6 +152,7 @@
                 quit()
             size_hint: (.1,.1)
             pos_hint:{'x':0,'y':0.9}
+            font_size: default_button_font_size
 
 <openingScreen>
 
@@ -155,3 +163,4 @@
             root.manager.current = 'default'
         size_hint: (.25,.25)
         pos:(100,300)
+        font_size: default_button_font_size
