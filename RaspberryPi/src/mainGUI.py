@@ -96,12 +96,12 @@ class defaultScreen(Screen):
     #will update all the variables on screen
     def update(self, dt):
         """sensorBank1 = network.readSerial(self.ser,1)
-        temp = self.updateTemp(sensorBank1)
+        self.emp = self.updateTemp(sensorBank1)
         humid = self.updateHumid(sensorBank1)
         CO2 = self.updateCO2(sensorBank1)
         day = self.updateIndex(self.plantName)"""
         self.temperatureVar = str(random.randint(1,100))
-        self.humidityVar =str(random.randint(20,80))
+        self.humidityVar =str(random.randint(20,80))+"%"
         self.CO2Var =str(random.randint(0,100))
         self.pHVar = str(random.randint(0,14))
 
