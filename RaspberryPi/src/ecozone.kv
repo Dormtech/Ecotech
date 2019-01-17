@@ -1,8 +1,17 @@
 #:import main mainGUI
 #:import SlideTransition kivy.uix.screenmanager.SlideTransition
 
-#:set default_font_size "24sp"
+#:set default_font_size "52sp"
 #:set default_font_name "Arial"
+
+#Custom Buttons
+<upButton@Button>:
+    size_hint:(.1,.1)
+    background_normal:'upColour.png'
+
+<downButton@Button>:
+    size_hint:(.1,.1)
+    background_normal:'downColour.png'
 
 <defaultScreen>:
     size:(480,800)
@@ -26,19 +35,33 @@
         Label:
             text:'Temperature'
             font_size: default_font_size
-            pos:(-275, 150)
+            pos:(-230, 150)
         Label:
             text:root.temperatureVar
-            pos:(-275,100)
+            font_size: "48sp"
+            pos:(-230,80)
+        Label:
+            text:root.tempSp
+            font_size:"36sp"
+            pos:(-230, 15)
+        upButton:
+            pos:(65,225)
+            on_release:
+                root.tempSp=str(int(root.tempSp)+1)
+        downButton:
+            pos:(195,225)
+            on_release:
+                root.tempSp=str(int(root.tempSp)-1)
 
 
         Label:
             text: 'Humidity'
             font_size: default_font_size
-            pos:(275,150)
+            pos:(230,150)
         Label:
             text:root.humidityVar
-            pos:(275,100)
+            font_size: "48sp"
+            pos:(230,100)
 
 
         Label:
