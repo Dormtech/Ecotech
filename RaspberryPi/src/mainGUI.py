@@ -60,6 +60,7 @@ class defaultScreen(Screen):
     temperatureVar = StringProperty()
     tempSp = StringProperty()
     humidityVar = StringProperty()
+    humiditySp = StringProperty()
     CO2Var = StringProperty()
     pHVar = StringProperty()
     dayVar = StringProperty()
@@ -76,6 +77,7 @@ class defaultScreen(Screen):
         Clock.schedule_interval(self.update,5)
 
         self.tempSp="25"
+        self.humiditySp="60"
         #self.ser = network.openSerial()
         self.plantName = "Plant1"
         self.strainVar = "Kush"

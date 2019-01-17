@@ -61,7 +61,19 @@
         Label:
             text:root.humidityVar
             font_size: "48sp"
-            pos:(230,100)
+            pos:(230,80)
+        Label:
+            text:root.humiditySp
+            font_size:"36sp"
+            pos:(230,15)
+        upButton:
+            pos:(525,225)
+            on_release:
+                root.humiditySp=str(int(root.humiditySp)+1)
+        downButton:
+            pos:(655,225)
+            on_release:
+                root.humiditySp=str(int(root.humiditySp)-1)
 
 
         Label:
