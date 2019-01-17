@@ -4,6 +4,14 @@
 #:set default_font_size "24sp"
 #:set default_font_name "Arial"
 
+#Custom Buttons
+<upButton@Button>:
+    size_hint:(.1,.1)
+    background_normal:'upColour.png'
+<downButton@Button>:
+    size_hint:(.1,.1)
+    background_normal:'downColour.png'
+
 <defaultScreen>:
     size:(480,800)
     FloatLayout:
@@ -76,6 +84,11 @@
             pos_x: 0
             on_release:
                 root.takePicture()
+
+        upButton:
+            pos:(0,100)
+
+
 
 <mainScreen>:
 
