@@ -96,8 +96,8 @@ class filer():
             content = None
             return content
 
-    """Input: content - list containing data you want to input into csv
-              fileName - string containing the name of the file
+    """Input: fileName - string containing the name of the file
+              content - list containing data you want to input into csv
        Function: overwrite all data inside of the csv with chosen data
        Output: writes boolean value to show user success of csv write"""
     def inputCSV(self,content,fileName):

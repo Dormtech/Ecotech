@@ -39,6 +39,7 @@ Config.set('graphics', 'height', '480')
 colour = VariableListProperty()
 colour = (1,1,1,0)
 
+#Camera seperate thread class
 class useCamera(threading.Thread):
     def __init__(self, filename):
         threading.Thread.__init__(self)
