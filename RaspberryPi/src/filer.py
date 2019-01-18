@@ -96,8 +96,8 @@ class filer():
             content = None
             return content
 
-    """Input: content - list containing data you want to input into csv
-              fileName - string containing the name of the file
+    """Input: fileName - string containing the name of the file
+              content - list containing data you want to input into csv
        Function: overwrite all data inside of the csv with chosen data
        Output: writes boolean value to show user success of csv write"""
     def inputCSV(self,content,fileName):
@@ -265,27 +265,3 @@ class filer():
             deviceLog.errorLog(errCode,errMsg)
             print("NO FILE NAME GIVEN")
             return False
-
-    """Input: fileName - string containing file adress
-       Function: read contents of a desired file
-       Output: returns a dictionary containing files data"""
-    def loadFile(self,fileName):
-        fileType = self.fileType(fileName)
-
-        if fileType == 'csv':
-            filePath = open(os.getcwd() + csvFile, "r")
-            fileContent = list(csv.reader(filePath))
-
-        return True
-
-    """Input: none
-       Function: moves to the desired day index
-       Output: boolean"""
-    def moveToDay():
-        return True
-
-    """Input: none
-       Function: finds your chosen sensor value from the sensor array
-       Output: boolean"""
-    def readTarget():
-        return True
