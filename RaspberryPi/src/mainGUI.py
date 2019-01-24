@@ -178,6 +178,24 @@ class openingScreen(Screen):
     def updateTime(self,dt):
         self.clockDisplay.text=time.asctime()
 
+class newPlantScreen(Screen):
+    def __init__(self, **kwargs):
+        super(newPlantScreen, self).__init__(**kwargs)
+
+        fp = open("files\strains.txt", mode='r')
+        strain=fp.readline()
+
+        while strain:
+            #tempBtn=Button(text='1')
+            #selectMenu.add_widget(tempBtn)
+            strain = fp.readline()
+        fp.close()
+
+
+class continuePlantScreen(Screen):
+    def __init__(self, **kwargs):
+        super(continuePlantScreen, self).__init__(**kwargs)
+
 #main App GUI control
 class ecozoneApp(App):
 
@@ -197,6 +215,8 @@ class ecozoneApp(App):
         self.use_kivy_settings = False
         sm = ScreenManager()
         sm.add_widget(openingScreen(name="open"))
+        sm.add_widget(newPlantScreen(name='newPlantS'))
+        sm.add_widget(continuePlantScreen(name='continuePlantS'))
         sm.add_widget(mainScreen(name="main"))
         sm.add_widget(defaultScreen(name="default"))
 

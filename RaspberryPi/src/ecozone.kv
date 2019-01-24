@@ -155,12 +155,29 @@
             font_size: default_button_font_size
 
 <openingScreen>
-
+    size:(480,800)
     Button:
-        text: 'To Default'
+        text: 'New'
+        on_release:
+            root.manager.transition = SlideTransition(direction='down')
+            root.manager.current = 'newPlantS'
+        size_hint: (.25,.25)
+        pos:(100,300)
+        font_size: default_button_font_size
+    Button:
+        text: 'Continue...'
+        on_release:
+            root.manager.transition = SlideTransition(direction='down')
+            root.manager.current = 'continuePlantS'
+
+        size_hint: (.25,.25)
+        pos:(500,300)
+        font_size: default_button_font_size
+    Button:
+        text: 'Skip'
         on_release:
             root.manager.transition = SlideTransition(direction='down')
             root.manager.current = 'default'
         size_hint: (.25,.25)
-        pos:(100,300)
+        pos:(350,100)
         font_size: default_button_font_size
