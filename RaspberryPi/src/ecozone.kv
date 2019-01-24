@@ -5,6 +5,7 @@
 #:set default_font_name "Arial"
 #:set default_button_font_size "20sp"
 
+
 #Custom Buttons
 <upButton@Button>:
     size_hint:(.1,.1)
@@ -16,6 +17,9 @@
 
 <defaultScreen>:
     size:(480,800)
+    on_pre_enter:
+        root.updateStrain()
+    id: defaultScreen
     FloatLayout:
         size:(480,800)
         id: defaultScreenLayout
@@ -31,6 +35,7 @@
 
 
         Label:
+            id: strainName
             text: root.strainVar
             pos_hint:{'x':0,'y':-0.45}
 
@@ -118,7 +123,7 @@
             font_size: default_button_font_size
 
 <mainScreen>:
-
+    size:(480,800)
     FloatLayout:
         id: mainScreenLayout
 
@@ -181,3 +186,22 @@
         size_hint: (.25,.25)
         pos:(350,100)
         font_size: default_button_font_size
+
+<newPlantScreen>
+    size:(480,800)
+    Spinner:
+        id: selectMenu
+        text: "Select Strain"
+        size_hint:(.25,.25)
+        pos:(250,300)
+        values: root.strains
+        on_text:
+            root.currentStrain = self.text
+
+    Button:
+        text:"confirm"
+        size_hint:(.1,.1)
+        pos:(600,50)
+        on_release:
+            root.confirmStrain()
+            root.manager.current = 'main'

@@ -26,6 +26,8 @@ from kivy.clock import Clock
 from kivy.uix.screenmanager import ScreenManager, Screen
 from kivy.garden.graph import MeshLinePlot
 from kivy.uix.colorpicker import ColorPicker
+from kivy.uix.spinner import Spinner
+
 
 from json_settings import settings_json
 
@@ -35,9 +37,13 @@ from kivy.config import Config
 
 Config.set('graphics', 'width', '800')
 Config.set('graphics', 'height', '480')
+Config.write()
 
 colour = VariableListProperty()
 colour = (1,1,1,0)
+
+strain =StringProperty('')
+
 
 #Camera seperate thread class
 class useCamera(threading.Thread):
@@ -67,7 +73,6 @@ class defaultScreen(Screen):
     dayVar = StringProperty()
     strainVar = StringProperty()
 
-
     def __init__(self, **kwargs):
         super(defaultScreen, self).__init__(**kwargs)
 
@@ -81,8 +86,8 @@ class defaultScreen(Screen):
         self.humiditySp="60"
         #self.ser = network.openSerial()
         self.plantName = "Plant1"
-        self.strainVar = "Kush"
         self.dayVar = "01"
+        self.strainVar = 'test'
         #deviceLog().dayLog(deviceLog().findIndex("dayLog.txt","Machine Start"),"Machine Start","NA",["Machine start up"])
 
     """
@@ -95,6 +100,9 @@ class defaultScreen(Screen):
     def updateTime(self,dt):
         self.clockDisplay.text=time.asctime()
 
+    def updateStrain(self):
+        global strain
+        self.strainVar = strain
 
     #will update all the variables on screen
     def update(self, dt):
@@ -107,11 +115,7 @@ class defaultScreen(Screen):
         self.humidityVar =str(random.randint(20,80))+"%"
         self.CO2Var =str(random.randint(0,100))
         self.pHVar = str(random.randint(0,14))
-
-
         #self.ser = network.openSerial()
-
-
 
     #updates temperature
     def updateTemp(self,sensorBank):
@@ -179,18 +183,20 @@ class openingScreen(Screen):
         self.clockDisplay.text=time.asctime()
 
 class newPlantScreen(Screen):
+
+    strains = ListProperty()
+    fp = open("files\strains.txt", mode='r')
+    strains = fp.readlines()
+    fp.close()
+
+    currentStrain = StringProperty('')
+
     def __init__(self, **kwargs):
         super(newPlantScreen, self).__init__(**kwargs)
 
-        fp = open("files\strains.txt", mode='r')
-        strain=fp.readline()
-
-        while strain:
-            #tempBtn=Button(text='1')
-            #selectMenu.add_widget(tempBtn)
-            strain = fp.readline()
-        fp.close()
-
+    def confirmStrain(self):
+        global strain
+        strain = self.currentStrain
 
 class continuePlantScreen(Screen):
     def __init__(self, **kwargs):
