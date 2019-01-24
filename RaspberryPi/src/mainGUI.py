@@ -39,6 +39,7 @@ Config.set('graphics', 'height', '480')
 colour = VariableListProperty()
 colour = (1,1,1,0)
 
+
 class useCamera(threading.Thread):
     def __init__(self, filename):
         threading.Thread.__init__(self)
@@ -65,10 +66,11 @@ class defaultScreen(Screen):
     pHVar = StringProperty()
     dayVar = StringProperty()
     strainVar = StringProperty()
-
+    unitT = StringProperty()
 
     def __init__(self, **kwargs):
         super(defaultScreen, self).__init__(**kwargs)
+
 
         self.makeClock()
 
@@ -102,11 +104,12 @@ class defaultScreen(Screen):
         humid = self.updateHumid(sensorBank1)
         CO2 = self.updateCO2(sensorBank1)
         day = self.updateIndex(self.plantName)"""
-        self.temperatureVar = str(random.randint(1,100))
+
+        self.temperatureVar = str(random.randint(1,100))+chr(176)+self.unitT
+
         self.humidityVar =str(random.randint(20,80))+"%"
         self.CO2Var =str(random.randint(0,100))
         self.pHVar = str(random.randint(0,14))
-
 
         #self.ser = network.openSerial()
 
@@ -116,15 +119,16 @@ class defaultScreen(Screen):
     def updateTemp(self,sensorBank):
         tBank = deviceControl().sensBank("T","C",5,sensorBank)
         tempWeight = [1,1,1,1,1]
-        return atmosphere().wAverage(tBank,tempWeight)
+        temperature = atmosphere().wAverage(tBank,tempWeight)
+        return temperature
 
     #updates humidity
     def updateHumid(self,sensorBank):
-        hBank = deviceControl().sensBank("H","%",5,sensorBank)
-        humidWeight = [1,1,1,1,1]
+        hBank = deviceControl().sensBank("H", "%", 5, sensorBank)
+        humidWeight = [1, 1, 1, 1, 1]
         return atmosphere().wAverage(hBank,humidWeight)
 
-        return str(random.randint(1,100))#atmosphere.wAverage(tempBank,tempWeight)
+        return str(random.randint(1, 100))#atmosphere.wAverage(tempBank,tempWeight)
 
     #updates the index
     def updateIndex(self):
@@ -171,26 +175,31 @@ class openingScreen(Screen):
     Makes clock for screen
     """
     def makeClock(self):
-        self.clockDisplay = Label(text=time.asctime(), pos=(300,220))
+
+        self.clockDisplay = Label(text=time.asctime(), pos=(300, 220))
         self.add_widget(self.clockDisplay)
-        Clock.schedule_interval(self.updateTime,1)
-    def updateTime(self,dt):
+        Clock.schedule_interval(self.updateTime, 1)
+
+
+    def updateTime(self, dt):
+
         self.clockDisplay.text=time.asctime()
 
-#main App GUI control
+# main App GUI control
 class ecozoneApp(App):
 
     def build_config(self, config):
-        config.setdefaults("Basic", {
-            "Units":"Metric", 'colour':'Black'
-            })
+        config.setdefaults("Basic", {"Units": "Metric", 'Colour': 'Black'})
 
     def build_settings(self, settings):
-
         settings.add_json_panel('Options', self.config, data=settings_json)
 
-    def on_config_change(self):
-        pass
+    def on_config_change(self, config, section, key, value):
+        print(section)
+        if value == "Metric":
+            defaultScreen.unitT = "C"
+        elif value == "Imperial":
+            defaultScreen.unitT = "F"
 
     def build(self):
         self.use_kivy_settings = False

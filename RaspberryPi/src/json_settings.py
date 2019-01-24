@@ -19,6 +19,6 @@ settings_json = json.dumps([
 		'desc':'Choose the background colour',
 		'section': 'Basic',
 		'options':['Black','Blue','Red'],
-		'key':"colour",
+		'key':"Colour",
 	}
 ])
