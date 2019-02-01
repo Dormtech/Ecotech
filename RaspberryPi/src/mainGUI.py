@@ -37,13 +37,15 @@ from kivy.config import Config
 
 Config.set('graphics', 'width', '800')
 Config.set('graphics', 'height', '480')
+Config.set('kivy', 'keyboard_mode', 'systemannddock')
 Config.write()
 
 colour = VariableListProperty()
 colour = (1,1,1,0)
 
 strain =StringProperty('')
-
+name = StringProperty('')
+strain = 'Custom Kush'
 
 #Camera seperate thread class
 class useCamera(threading.Thread):
@@ -72,6 +74,7 @@ class defaultScreen(Screen):
     pHVar = StringProperty()
     dayVar = StringProperty()
     strainVar = StringProperty()
+    plantName = StringProperty()
 
     def __init__(self, **kwargs):
         super(defaultScreen, self).__init__(**kwargs)
@@ -85,7 +88,7 @@ class defaultScreen(Screen):
         self.tempSp="25"
         self.humiditySp="60"
         #self.ser = network.openSerial()
-        self.plantName = "Plant1"
+        self.plantName = 'test'
         self.dayVar = "01"
         self.strainVar = 'test'
         #deviceLog().dayLog(deviceLog().findIndex("dayLog.txt","Machine Start"),"Machine Start","NA",["Machine start up"])
@@ -102,6 +105,8 @@ class defaultScreen(Screen):
 
     def updateStrain(self):
         global strain
+        global name
+        self.plantName = name
         self.strainVar = strain
 
     #will update all the variables on screen
@@ -189,14 +194,30 @@ class newPlantScreen(Screen):
     strains = fp.readlines()
     fp.close()
 
-    currentStrain = StringProperty('')
+    currentStrain = StringProperty('None')
+    plantName = StringProperty('None')
 
     def __init__(self, **kwargs):
         super(newPlantScreen, self).__init__(**kwargs)
 
     def confirmStrain(self):
+        if (self.currentStrain is 'None') | (self.plantName is 'None'):
+            return
+        self.setGlobalGUI()
+        self.startBox()
+        self.manager.current = 'main'
+
+    #sets Global variables for the Gui to use
+    def setGlobalGUI(self):
         global strain
+        global name
+
         strain = self.currentStrain
+        name = self.plantName
+
+#starts the nessacry programs to operate all box functions
+    def startBox(self):
+        pass
 
 class continuePlantScreen(Screen):
     def __init__(self, **kwargs):
