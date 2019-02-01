@@ -43,9 +43,8 @@ Config.write()
 colour = VariableListProperty()
 colour = (1,1,1,0)
 
-strain =StringProperty('')
-name = StringProperty('')
-strain = 'Custom Kush'
+strain =StringProperty('None')
+name = StringProperty('None')
 
 #Camera seperate thread class
 class useCamera(threading.Thread):
@@ -106,8 +105,8 @@ class defaultScreen(Screen):
     def updateStrain(self):
         global strain
         global name
-        self.plantName = name
-        self.strainVar = strain
+        self.plantName = str(name)
+        self.strainVar = str(strain)
 
     #will update all the variables on screen
     def update(self, dt):
