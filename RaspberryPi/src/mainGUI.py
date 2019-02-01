@@ -15,18 +15,9 @@ from logg import deviceLog"""
 
 from kivy.app import App
 from kivy.uix.label import Label
-from kivy.uix.camera import Camera
-from kivy.graphics import Color, Rectangle
-from kivy.uix.image import Image
-from kivy.uix.boxlayout import BoxLayout
-from kivy.uix.button import Button
-from kivy.properties import StringProperty, NumericProperty, ObjectProperty, ListProperty, VariableListProperty
-from kivy.uix.widget import Widget
+from kivy.properties import StringProperty, ListProperty, VariableListProperty
 from kivy.clock import Clock
 from kivy.uix.screenmanager import ScreenManager, Screen
-from kivy.garden.graph import MeshLinePlot
-from kivy.uix.colorpicker import ColorPicker
-from kivy.uix.spinner import Spinner
 
 
 from json_settings import settings_json
