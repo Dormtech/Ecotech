@@ -2,7 +2,7 @@
  * @file mainGUI.py
  * @authors Steven Kalapos & Ben Bellerose
  * @date May 22 2018
- * @modified Oct 12 2018
+ * @modified Feb 3 2019
  * @modifiedby SK
  * @brief GUI managment and creation
  */
@@ -17,6 +17,8 @@ from kivy.app import App
 from kivy.uix.label import Label
 from kivy.properties import StringProperty, ListProperty, VariableListProperty
 from kivy.clock import Clock
+from kivy.core.window import Window
+from kivy.uix.vkeyboard import VKeyboard
 from kivy.uix.screenmanager import ScreenManager, Screen
 
 
@@ -28,7 +30,7 @@ from kivy.config import Config
 
 Config.set('graphics', 'width', '800')
 Config.set('graphics', 'height', '480')
-Config.set('kivy', 'keyboard_mode', 'systemannddock')
+Config.set('kivy', 'keyboard_mode', 'dock')
 Config.write()
 
 colour = VariableListProperty()
@@ -191,7 +193,7 @@ class newPlantScreen(Screen):
         super(newPlantScreen, self).__init__(**kwargs)
 
     def confirmStrain(self):
-        if (self.currentStrain is 'None') | (self.plantName is 'None'):
+        if (self.currentStrain is 'None') | (self.plantName is ''):
             return
         self.setGlobalGUI()
         self.startBox()
