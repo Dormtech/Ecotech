@@ -191,7 +191,8 @@ class newPlantScreen(Screen):
 
     def __init__(self, **kwargs):
         super(newPlantScreen, self).__init__(**kwargs)
-
+        
+#function linked to confirm Button press
     def confirmStrain(self):
         if (self.currentStrain is 'None') | (self.plantName is ''):
             return
