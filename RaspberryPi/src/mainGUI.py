@@ -17,8 +17,6 @@ from kivy.app import App
 from kivy.uix.label import Label
 from kivy.properties import StringProperty, ListProperty, VariableListProperty
 from kivy.clock import Clock
-from kivy.core.window import Window
-from kivy.uix.vkeyboard import VKeyboard
 from kivy.uix.screenmanager import ScreenManager, Screen
 
 
@@ -191,8 +189,8 @@ class newPlantScreen(Screen):
 
     def __init__(self, **kwargs):
         super(newPlantScreen, self).__init__(**kwargs)
-        
-#function linked to confirm Button press
+
+    #function linked to confirm Button press
     def confirmStrain(self):
         if (self.currentStrain is 'None') | (self.plantName is ''):
             return
@@ -208,7 +206,7 @@ class newPlantScreen(Screen):
         strain = self.currentStrain
         name = self.plantName
 
-#starts the nessacry programs to operate all box functions
+    #starts the nessacry programs to operate all box functions
     def startBox(self):
         pass
 
