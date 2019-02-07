@@ -47,6 +47,7 @@ class useCamera(threading.Thread):
             """deviceControl.captureIMG(self.fileName)
             self.imgVar = Image(source=self.fileName, pos=(200,75), size_hint=(.5,.5))
             self.add_widget(self.imgVar)"""
+
             print('flash')
         except Exception as e:
             errCode = "FAILED TO TAKE PICTURE"
@@ -229,6 +230,9 @@ class ecozoneApp(App):
     def on_config_change(self):
         pass
 
+    def box(self,dt):
+        print('hello world')
+
     def build(self):
         self.use_kivy_settings = False
         sm = ScreenManager()
@@ -237,5 +241,5 @@ class ecozoneApp(App):
         sm.add_widget(continuePlantScreen(name='continuePlantS'))
         sm.add_widget(mainScreen(name="main"))
         sm.add_widget(defaultScreen(name="default"))
-
+        Clock.schedule_interval(self.box,5)
         return sm
