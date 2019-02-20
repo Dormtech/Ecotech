@@ -193,7 +193,7 @@ class newPlantScreen(Screen):
 
     #function linked to confirm Button press
     def confirmStrain(self):
-        if (self.currentStrain is 'None') | (self.plantName is ''):
+        if (self.currentStrain is 'None') | (self.plantName is 'None'):
             return
         self.setGlobalGUI()
         self.startBox()
@@ -209,6 +209,7 @@ class newPlantScreen(Screen):
 
     #starts the nessacry programs to operate all box functions
     def startBox(self):
+        Clock.schedule_interval(ecozoneApp.boxFunctions,5)
         pass
 
 class continuePlantScreen(Screen):
@@ -230,8 +231,8 @@ class ecozoneApp(App):
     def on_config_change(self):
         pass
 
-    def box(self,dt):
-        print('hello world')
+    def boxFunctions(self):
+        print('box stuff')
 
     def build(self):
         self.use_kivy_settings = False
@@ -241,5 +242,4 @@ class ecozoneApp(App):
         sm.add_widget(continuePlantScreen(name='continuePlantS'))
         sm.add_widget(mainScreen(name="main"))
         sm.add_widget(defaultScreen(name="default"))
-        Clock.schedule_interval(self.box,5)
         return sm
