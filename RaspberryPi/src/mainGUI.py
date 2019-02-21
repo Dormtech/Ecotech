@@ -187,7 +187,11 @@ class openingScreen(Screen):
 class newPlantScreen(Screen):
 
     strains = ListProperty()
-    fp = open("files\strains.txt", mode='r')
+    operatingSystem = os.name
+    if operatingSystem == 'posix':
+        fp = open("files/strains.txt", mode='r')
+    else:
+        fp = open("files\strains.txt", mode='r')
     strains = fp.readlines()
     fp.close()
 
