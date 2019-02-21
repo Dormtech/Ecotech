@@ -19,7 +19,7 @@ from kivy.properties import StringProperty, ListProperty, VariableListProperty
 from kivy.clock import Clock
 from kivy.uix.screenmanager import ScreenManager, Screen
 from kivy.uix.settings import SettingsWithSidebar
-
+import pandas as pd
 from json_settings import settings_json
 
 import random, os, time, threading
@@ -191,11 +191,14 @@ class newPlantScreen(Screen):
     strains = ListProperty()
     operatingSystem = os.name
     if operatingSystem == 'posix':
-        fp = open("files/strains.txt", mode='r')
+        fp = pd.read_excel('files/strains.xlsx')
     else:
-        fp = open("files\strains.txt", mode='r')
-    strains = fp.readlines()
-    fp.close()
+        fp = pd.read_excel('files\strains.xlsx')
+
+    strainHold = []
+    for strain in fp['Strain']:
+        strainHold.append(strain)
+    strains = strainHold
 
     currentStrain = StringProperty('None')
     plantName = StringProperty('')
@@ -229,11 +232,15 @@ class continuePlantScreen(Screen):
     plants = ListProperty()
     operatingSystem = os.name
     if operatingSystem == 'posix':
-        fp = open("files/plants.txt", mode='r')
+        fp = pd.read_excel('files/plants.xlsx')
     else:
-        fp = open("files\plants.txt", mode='r')
-    plants = fp.readlines()
-    fp.close()
+        fp = pd.read_excel('files\plants.xlsx')
+
+    print(fp)
+    nameHold = []
+    for strain in fp['Name']:
+        nameHold.append(strain)
+    plants = nameHold
 
     currentPlant = StringProperty('')
 
@@ -243,7 +250,31 @@ class continuePlantScreen(Screen):
     def confirmPlant(self):
         if self.currentPlant == '':
             return
+        self.setGlobalGUI()
+        self.startBox()
         self.manager.current = 'main'
+
+    #sets Global variables for the Gui to use
+    def setGlobalGUI(self):
+        global name
+        global strain
+
+        name = self.currentPlant
+
+        operatingSystem = os.name
+        if operatingSystem == 'posix':
+            fp = pd.read_excel('files/plants.xlsx')
+        else:
+            fp = pd.read_excel('files\plants.xlsx')
+
+        for index, row in fp.iterrows():
+            if row['Name'] == name:
+                strain = row['Strain']
+
+    #starts the nessacry programs to operate all box functions
+    def startBox(self):
+        Clock.schedule_interval(ecozoneApp.boxFunctions,5)
+        pass
 
 #main App GUI control
 class ecozoneApp(App):
