@@ -2,7 +2,7 @@
  * @file mainGUI.py
  * @authors Steven Kalapos & Ben Bellerose
  * @date May 22 2018
- * @modified Feb 3 2019
+ * @modified Feb 21 2019
  * @modifiedby SK
  * @brief GUI managment and creation
  */
@@ -18,7 +18,7 @@ from kivy.uix.label import Label
 from kivy.properties import StringProperty, ListProperty, VariableListProperty
 from kivy.clock import Clock
 from kivy.uix.screenmanager import ScreenManager, Screen
-
+from kivy.uix.settings import SettingsWithSidebar
 
 from json_settings import settings_json
 
@@ -36,6 +36,7 @@ colour = (1,1,1,0)
 
 strain =StringProperty('None')
 name = StringProperty('None')
+unitGlob = 'None'
 
 #Camera seperate thread class
 class useCamera(threading.Thread):
@@ -103,11 +104,16 @@ class defaultScreen(Screen):
     #will update all the variables on screen
     def update(self, dt):
         """sensorBank1 = network.readSerial(self.ser,1)
-        self.emp = self.updateTemp(sensorBank1)
         humid = self.updateHumid(sensorBank1)
         CO2 = self.updateCO2(sensorBank1)
         day = self.updateIndex(self.plantName)"""
-        self.temperatureVar = str(random.randint(1,100))
+        global unitGlob
+
+        if unitGlob == 'Imperial':
+            self.temperatureVar = str(random.randint(1,100))+chr(176)+'F'
+            #self.temperatureVar = self.updateTemp(sensorBank1)+'F'
+        else:
+            self.temperatureVar = str(random.randint(1,100))+chr(176)+'C'
         self.humidityVar =str(random.randint(20,80))+"%"
         self.CO2Var =str(random.randint(0,100))
         self.pHVar = str(random.randint(0,14))
@@ -186,14 +192,14 @@ class newPlantScreen(Screen):
     fp.close()
 
     currentStrain = StringProperty('None')
-    plantName = StringProperty('None')
+    plantName = StringProperty('')
 
     def __init__(self, **kwargs):
         super(newPlantScreen, self).__init__(**kwargs)
 
     #function linked to confirm Button press
     def confirmStrain(self):
-        if (self.currentStrain is 'None') | (self.plantName is 'None'):
+        if (self.currentStrain == 'None') | (self.plantName == ''):
             return
         self.setGlobalGUI()
         self.startBox()
@@ -225,17 +231,25 @@ class ecozoneApp(App):
             })
 
     def build_settings(self, settings):
-
         settings.add_json_panel('Options', self.config, data=settings_json)
 
-    def on_config_change(self):
-        pass
+    def on_config_change(self, config, section, key, value):
+        global unitGlob
+
+        if key == 'Units':
+            if value == 'Imperial':
+                unitGlob = 'Imperial'
+            else:
+                unitGlob = 'Metric'
 
     def boxFunctions(self):
         print('box stuff')
 
     def build(self):
+        global unitGlob
         self.use_kivy_settings = False
+        self.settings_cls = SettingsWithSidebar
+        unitGlob = self.config.get('Basic', 'Units')
         sm = ScreenManager()
         sm.add_widget(openingScreen(name="open"))
         sm.add_widget(newPlantScreen(name='newPlantS'))
