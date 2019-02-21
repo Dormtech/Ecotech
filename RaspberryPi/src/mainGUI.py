@@ -222,6 +222,19 @@ class newPlantScreen(Screen):
         strain = self.currentStrain
         name = self.plantName
 
+        operatingSystem = os.name
+        if operatingSystem == 'posix':
+            fp = pd.read_excel('files/plants.xlsx')
+        else:
+            fp = pd.read_excel('files\plants.xlsx')
+
+        fp = fp.append({'Name':name,'Strain':strain}, ignore_index=True)
+
+        if operatingSystem == 'posix':
+            fp.to_excel('files/plants.xlsx',index=False)
+        else:
+            fp.to_excel('files\plants.xlsx',index=False)
+
     #starts the nessacry programs to operate all box functions
     def startBox(self):
         Clock.schedule_interval(ecozoneApp.boxFunctions,5)
