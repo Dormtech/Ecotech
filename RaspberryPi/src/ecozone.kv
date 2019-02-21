@@ -228,3 +228,31 @@
             multiline: False
             on_focus:
                 root.plantName = self.text
+<continuePlantScreen>
+    size:(480,800)
+    FloatLayout:
+        id: continuePlantScreen
+        Spinner:
+            id: selectMenu
+            text: "Pick Plant"
+            size_hint:(.25,.25)
+            pos:(250,300)
+            values: root.plants
+            on_text:
+                root.currentPlant = self.text
+
+        Button:
+            text:"confirm"
+            size_hint:(.1,.1)
+            pos:(600,50)
+            on_release:
+                root.confirmPlant()
+
+        Button:
+            text: 'Back'
+            on_release:
+                root.manager.transition = SlideTransition(direction='up')
+                root.manager.current = 'open'
+            size_hint: (.1,.1)
+            pos_hint:{'x':0,'y':0.9}
+            font_size: default_button_font_size

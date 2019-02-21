@@ -111,9 +111,11 @@ class defaultScreen(Screen):
 
         if unitGlob == 'Imperial':
             self.temperatureVar = str(random.randint(1,100))+chr(176)+'F'
-            #self.temperatureVar = self.updateTemp(sensorBank1)+'F'
+            #self.temperatureVar = self.updateTemp(sensorBank1)+chr(176)+'F'
         else:
             self.temperatureVar = str(random.randint(1,100))+chr(176)+'C'
+            #self.temperatureVar = self.updateTemp(sensorBank1)+chr(176)+'C'
+
         self.humidityVar =str(random.randint(20,80))+"%"
         self.CO2Var =str(random.randint(0,100))
         self.pHVar = str(random.randint(0,14))
@@ -223,8 +225,25 @@ class newPlantScreen(Screen):
         pass
 
 class continuePlantScreen(Screen):
+
+    plants = ListProperty()
+    operatingSystem = os.name
+    if operatingSystem == 'posix':
+        fp = open("files/plants.txt", mode='r')
+    else:
+        fp = open("files\plants.txt", mode='r')
+    plants = fp.readlines()
+    fp.close()
+
+    currentPlant = StringProperty('')
+
     def __init__(self, **kwargs):
         super(continuePlantScreen, self).__init__(**kwargs)
+
+    def confirmPlant(self):
+        if self.currentPlant == '':
+            return
+        self.manager.current = 'main'
 
 #main App GUI control
 class ecozoneApp(App):
