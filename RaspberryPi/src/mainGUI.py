@@ -13,6 +13,7 @@ from control import deviceControl
 from networking import network
 from logg import deviceLog"""
 
+from logger import plant_csv
 from kivy.app import App
 from kivy.uix.label import Label
 from kivy.properties import StringProperty, ListProperty, VariableListProperty
@@ -187,21 +188,15 @@ class openingScreen(Screen):
         self.clockDisplay.text=time.asctime()
 
 class newPlantScreen(Screen):
-    global fs
-    global fp
-    strains = ListProperty()
-    operatingSystem = os.name
-    if operatingSystem == 'posix':
-        fs = pd.read_csv('files/strains.csv')
-        fp = pd.read_csv('files/plants.csv')
-    else:
-        fs = pd.read_csv('files\strains.csv')
-        fp = pd.read_csv('files\plants.csv')
 
-    strainHold = []
-    for strain in fs['Strain']:
-        strainHold.append(strain)
-    strains = strainHold
+    strains = ListProperty()
+
+    if os.name == 'posix':
+        fp = open("files/GuiFiles/strains.txt", mode='r')
+    else:
+        fp = open("files\GuiFiles\strains.txt", mode='r')
+     strains = fp.readlines()
+     fp.close()
 
     currentStrain = StringProperty('None')
     plantName = StringProperty('')
@@ -226,33 +221,32 @@ class newPlantScreen(Screen):
         strain = self.currentStrain
         name = self.plantName
 
-        operatingSystem = os.name
+        try:
+            if os.name == 'posix':
+                fp = open("files/PlantFiles/strains.txt", mode='r')
+            else:
+                fp = open("files\PlantFiles\strains.txt", mode='r')
+            #print PopUp error Message
+            self.manager.current = 'open'
 
-        fp = fp.append({'Name':name,'Strain':strain,'Date':time.asctime()}, ignore_index=True)
-        print(fs)
-        if operatingSystem == 'posix':
-            fp.to_csv('files/plants.csv',index=False)
-        else:
-            fp.to_csv('files\plants.csv',index=False)
+        except FileNotFoundError:
+            newFile = plant_csv.create_CSV(name, strain)
 
     #starts the nessacry programs to operate all box functions
     def startBox(self):
         Clock.schedule_interval(ecozoneApp.boxFunctions,5)
         pass
 
-class continuePlantScreen(Screen):
-    global fp
-    plants = ListProperty()
-    operatingSystem = os.name
-    if operatingSystem == 'posix':
-        fp = pd.read_csv('files/plants.csv')
-    else:
-        fp = pd.read_csv('files\plants.csv')
+ class continuePlantScreen(Screen):
 
-    nameHold = []
-    for strain in fp['Name']:
-        nameHold.append(strain)
-    plants = nameHold
+    plants = ListProperty()
+
+    if os.name == 'posix':
+        fp = open("files/GuiFiles/plants.txt", mode='r')
+    else:
+        fp = open("files\GuiFiles\plants.txt", mode='r')
+    plants = fp.readlines()
+    fp.close()
 
     currentPlant = StringProperty('')
 
@@ -262,8 +256,7 @@ class continuePlantScreen(Screen):
     def confirmPlant(self):
         if self.currentPlant == '':
             return
-        self.setGlobalGUI()
-        self.startBox()
+
         self.manager.current = 'main'
 
     #sets Global variables for the Gui to use
