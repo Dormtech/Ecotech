@@ -228,7 +228,7 @@ class newPlantScreen(Screen):
 
         operatingSystem = os.name
 
-        fp = fp.append({'Name':name,'Strain':strain}, ignore_index=True)
+        fp = fp.append({'Name':name,'Strain':strain,'Date':time.asctime()}, ignore_index=True)
         print(fs)
         if operatingSystem == 'posix':
             fp.to_csv('files/plants.csv',index=False)
