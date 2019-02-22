@@ -194,10 +194,12 @@ class newPlantScreen(Screen):
     if os.name == 'posix':
         fp = open("files/GuiFiles/strains.txt", mode='r')
         strains = fp.readlines()
+        strains.sort()
         fp.close()
     else:
         fp = open("files\GuiFiles\strains.txt", mode='r')
         strains = fp.readlines()
+        strains.sort()
         fp.close()
 
     currentStrain = StringProperty('None')
@@ -252,7 +254,6 @@ class continuePlantScreen(Screen):
     def confirmPlant(self):
         if self.currentPlant == '':
             return
-
         self.manager.current = 'main'
 
     #sets Global variables for the Gui to use
@@ -263,7 +264,7 @@ class continuePlantScreen(Screen):
 
         name = self.currentPlant
 
-        strain = fp.loc[fp['Name'] == name]['Strain'].values[0]
+        strain = plant_csv.getStrain()
 
     #starts the nessacry programs to operate all box functions
     def startBox(self):

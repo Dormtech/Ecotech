@@ -17,7 +17,7 @@ import pandas as pd
 class plant_csv():
 
     def __init__(self):
-        pass
+        super(create_CSV, self).__init__(**kwargs)
 
     def create_CSV(strain, plantName):
         if plant_csv.doesExist(plantName) == True:
@@ -54,6 +54,14 @@ class plant_csv():
         else:
             check = os.path.isfile('files\PlantFiles\%s.csv'%plantName)
         return check
+
+class strain_csv(object):
+    """docstring for strain_csv.
+    holds all the functions to create and read strain documents"""
+    def __init__(self, arg):
+        super(strain_csv, self).__init__()
+        self.arg = arg
+
 
 class deviceLog():
 
