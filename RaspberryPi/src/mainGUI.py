@@ -187,16 +187,19 @@ class openingScreen(Screen):
         self.clockDisplay.text=time.asctime()
 
 class newPlantScreen(Screen):
-
+    global fs
+    global fp
     strains = ListProperty()
     operatingSystem = os.name
     if operatingSystem == 'posix':
-        fp = pd.read_excel('files/strains.xlsx')
+        fs = pd.read_csv('files/strains.csv')
+        fp = pd.read_csv('files/plants.csv')
     else:
-        fp = pd.read_excel('files\strains.xlsx')
+        fs = pd.read_csv('files\strains.csv')
+        fp = pd.read_csv('files\plants.csv')
 
     strainHold = []
-    for strain in fp['Strain']:
+    for strain in fs['Strain']:
         strainHold.append(strain)
     strains = strainHold
 
@@ -218,22 +221,19 @@ class newPlantScreen(Screen):
     def setGlobalGUI(self):
         global strain
         global name
+        global fp
 
         strain = self.currentStrain
         name = self.plantName
 
         operatingSystem = os.name
-        if operatingSystem == 'posix':
-            fp = pd.read_excel('files/plants.xlsx')
-        else:
-            fp = pd.read_excel('files\plants.xlsx')
 
         fp = fp.append({'Name':name,'Strain':strain}, ignore_index=True)
-
+        print(fs)
         if operatingSystem == 'posix':
-            fp.to_excel('files/plants.xlsx',index=False)
+            fp.to_csv('files/plants.csv',index=False)
         else:
-            fp.to_excel('files\plants.xlsx',index=False)
+            fp.to_csv('files\plants.csv',index=False)
 
     #starts the nessacry programs to operate all box functions
     def startBox(self):
@@ -241,15 +241,14 @@ class newPlantScreen(Screen):
         pass
 
 class continuePlantScreen(Screen):
-
+    global fp
     plants = ListProperty()
     operatingSystem = os.name
     if operatingSystem == 'posix':
-        fp = pd.read_excel('files/plants.xlsx')
+        fp = pd.read_csv('files/plants.csv')
     else:
-        fp = pd.read_excel('files\plants.xlsx')
+        fp = pd.read_csv('files\plants.csv')
 
-    print(fp)
     nameHold = []
     for strain in fp['Name']:
         nameHold.append(strain)
@@ -271,18 +270,11 @@ class continuePlantScreen(Screen):
     def setGlobalGUI(self):
         global name
         global strain
+        global fp
 
         name = self.currentPlant
 
-        operatingSystem = os.name
-        if operatingSystem == 'posix':
-            fp = pd.read_excel('files/plants.xlsx')
-        else:
-            fp = pd.read_excel('files\plants.xlsx')
-
-        for index, row in fp.iterrows():
-            if row['Name'] == name:
-                strain = row['Strain']
+        strain = fp.loc[fp['Name'] == name]['Strain']
 
     #starts the nessacry programs to operate all box functions
     def startBox(self):
