@@ -53,12 +53,11 @@ class plant_csv():
             fp = open("files\GuiFiles\plants.txt", mode='r+')
             fp.write(plantName+'\n')
             fp.close()
-
-"""Input:plantName - name of plant trying to be created
+        return
+        """Input:plantName - name of plant trying to be created
     Function: checks if plat has already been created before
     Output: True if it exist; flase if it doesnt"""
     def doesExist(plantName):
-
         if os.name == 'posix':
             check = os.path.isfile('files/PlantFiles/%s.csv'%plantName)
         else:
