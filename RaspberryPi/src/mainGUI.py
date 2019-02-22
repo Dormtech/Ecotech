@@ -193,10 +193,12 @@ class newPlantScreen(Screen):
 
     if os.name == 'posix':
         fp = open("files/GuiFiles/strains.txt", mode='r')
+        strains = fp.readlines()
+        fp.close()
     else:
         fp = open("files\GuiFiles\strains.txt", mode='r')
-     strains = fp.readlines()
-     fp.close()
+        strains = fp.readlines()
+        fp.close()
 
     currentStrain = StringProperty('None')
     plantName = StringProperty('')
@@ -208,6 +210,11 @@ class newPlantScreen(Screen):
     def confirmStrain(self):
         if (self.currentStrain == 'None') | (self.plantName == ''):
             return
+        if plant_csv.create_CSV(self.currentStrain, self.plantName) == False:
+            #print popupmessage that file exists
+            self.manager.current = 'open'
+            return
+
         self.setGlobalGUI()
         self.startBox()
         self.manager.current = 'main'
@@ -221,23 +228,12 @@ class newPlantScreen(Screen):
         strain = self.currentStrain
         name = self.plantName
 
-        try:
-            if os.name == 'posix':
-                fp = open("files/PlantFiles/strains.txt", mode='r')
-            else:
-                fp = open("files\PlantFiles\strains.txt", mode='r')
-            #print PopUp error Message
-            self.manager.current = 'open'
-
-        except FileNotFoundError:
-            newFile = plant_csv.create_CSV(name, strain)
-
     #starts the nessacry programs to operate all box functions
     def startBox(self):
         Clock.schedule_interval(ecozoneApp.boxFunctions,5)
         pass
 
- class continuePlantScreen(Screen):
+class continuePlantScreen(Screen):
 
     plants = ListProperty()
 

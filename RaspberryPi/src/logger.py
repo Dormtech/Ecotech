@@ -12,6 +12,37 @@ import csv
 import shutil
 import datetime
 from time import gmtime,strftime
+import pandas as pd
+
+class plant_csv():
+
+    def __init__(self):
+        pass
+
+    def create_CSV(strain, plantName):
+        if plant_csv.doesExist(plantName) == True:
+            return False
+
+        plantDays = 20
+        newPlantFile = pd.DataFrame({"Day":pd.Series(range(plantDays)),
+        "Strain": strain,
+        "Name": plantName,
+        "Done": 'F'})
+
+        if os.name == 'posix':
+            newPlantFile.to_csv('files/PlantFiles/%s.csv'%plantName)
+        else:
+            newPlantFile.to_csv("files\PlantFiles\%s.csv"%plantName)
+
+        return True
+
+    def doesExist(plantName):
+
+        if os.name == 'posix':
+            check = os.path.isfile('files/PlantFiles/%s.csv'%plantName)
+        else:
+            check = os.path.isfile('files\PlantFiles\%s.csv'%plantName)
+        return check
 
 class deviceLog():
 
