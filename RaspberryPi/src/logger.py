@@ -34,7 +34,18 @@ class plant_csv():
         else:
             newPlantFile.to_csv("files\PlantFiles\%s.csv"%plantName)
 
+        plant_csv.add_plant(plantName)
         return True
+
+    def add_plant(plantName):
+        if os.name == 'posix':
+            fp = open("files/GuiFiles/plants.txt", mode='r+')
+            fp.write(plantName+'\n')
+            fp.close()
+        else:
+            fp = open("files\GuiFiles\plants.txt", mode='r+')
+            fp.write(plantName+'\n')
+            fp.close()
 
     def doesExist(plantName):
 
