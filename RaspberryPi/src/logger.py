@@ -2,8 +2,8 @@
  * @file logg.py
  * @authors Steven Kalapos & Ben Bellerose
  * @date May 2018
- * @modified August 13 2018
- * @modifiedby BB
+ * @modified Feb 22 2019
+ * @modifiedby Sk
  * @brief logging systems for device
  */
  """
@@ -19,6 +19,10 @@ class plant_csv():
     def __init__(self):
         super(create_CSV, self).__init__(**kwargs)
 
+        """Input: strain - name of strain of the plant
+                  plantNmae - name of plant trying to be created
+            Function: creates csv log for a new plant
+            Output: True if sucessful; else false"""
     def create_CSV(strain, plantName):
         if plant_csv.doesExist(plantName) == True:
             return False
@@ -37,6 +41,9 @@ class plant_csv():
         plant_csv.add_plant(plantName)
         return True
 
+    """Input:plantName - name of plant trying to be added
+        Function: adds plant to the beginning of the plant list (displayed first in contnue)
+        Output: NULL"""
     def add_plant(plantName):
         if os.name == 'posix':
             fp = open("files/GuiFiles/plants.txt", mode='r+')
@@ -47,6 +54,9 @@ class plant_csv():
             fp.write(plantName+'\n')
             fp.close()
 
+"""Input:plantName - name of plant trying to be created
+    Function: checks if plat has already been created before
+    Output: True if it exist; flase if it doesnt"""
     def doesExist(plantName):
 
         if os.name == 'posix':
@@ -55,13 +65,15 @@ class plant_csv():
             check = os.path.isfile('files\PlantFiles\%s.csv'%plantName)
         return check
 
-class strain_csv(object):
+class strain_csv():
     """docstring for strain_csv.
-    holds all the functions to create and read strain documents"""
+    holds all the functions to read strain documents"""
     def __init__(self, arg):
         super(strain_csv, self).__init__()
         self.arg = arg
 
+    def getStrain():
+        pass
 
 class deviceLog():
 
