@@ -274,7 +274,7 @@ class continuePlantScreen(Screen):
 
         name = self.currentPlant
 
-        strain = fp.loc[fp['Name'] == name]['Strain']
+        strain = fp.loc[fp['Name'] == name]['Strain'].values[0]
 
     #starts the nessacry programs to operate all box functions
     def startBox(self):
