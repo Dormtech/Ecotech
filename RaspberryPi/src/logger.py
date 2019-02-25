@@ -54,7 +54,8 @@ class plant_csv():
             fp.write(plantName+'\n')
             fp.close()
         return
-        """Input:plantName - name of plant trying to be created
+       
+    """Input:plantName - name of plant trying to be created
     Function: checks if plat has already been created before
     Output: True if it exist; flase if it doesnt"""
     def doesExist(plantName):
