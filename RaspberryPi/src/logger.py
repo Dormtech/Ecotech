@@ -19,10 +19,10 @@ class plant_csv():
     def __init__(self):
         super(create_CSV, self).__init__(**kwargs)
 
-        """Input: strain - name of strain of the plant
-                  plantNmae - name of plant trying to be created
-            Function: creates csv log for a new plant
-            Output: True if sucessful; else false"""
+    """Input: strain - name of strain of the plant
+              plantNmae - name of plant trying to be created
+       Function: creates csv log for a new plant
+       Output: True if sucessful; else false"""
     def create_CSV(strain, plantName):
         if plant_csv.doesExist(plantName) == True:
             return False
@@ -56,8 +56,8 @@ class plant_csv():
         return
        
     """Input:plantName - name of plant trying to be created
-    Function: checks if plat has already been created before
-    Output: True if it exist; flase if it doesnt"""
+       Function: checks if plat has already been created before
+       Output: True if it exist; flase if it doesnt"""
     def doesExist(plantName):
         if os.name == 'posix':
             check = os.path.isfile('files/PlantFiles/%s.csv'%plantName)
@@ -84,8 +84,8 @@ class deviceLog():
 
     """Input: type - string containing error code relarted to error type
               description - string containing description of what caused error
-        Function: logs what vaused the error in desired location
-        Output: returns a boolean value to inform user of log state"""
+       Function: logs what vaused the error in desired location
+       Output: returns a boolean value to inform user of log state"""
     def errorLog(self,errorType,description):
         if errorType is not None:
             if description is not None:
@@ -107,8 +107,8 @@ class deviceLog():
               name = string containing name specific for the current plant
               strain = string containing current strain of the plant
               stats = list containing current machine statistics
-        Function: logs daily machine stats for further processing
-        Output: writes boolean value to show user success of the process"""
+       Function: logs daily machine stats for further processing
+       Output: writes boolean value to show user success of the process"""
     def dayLog(self,index,name,strain,stats):
         if index is not None:
             if name is not None:
