@@ -54,7 +54,7 @@ class plant_csv():
             fp.write(plantName+'\n')
             fp.close()
         return
-       
+
     """Input:plantName - name of plant trying to be created
        Function: checks if plat has already been created before
        Output: True if it exist; flase if it doesnt"""
@@ -64,6 +64,12 @@ class plant_csv():
         else:
             check = os.path.isfile('files\PlantFiles\%s.csv'%plantName)
         return check
+
+    """Input:day - day the plant is on
+       Function: gets the days setpoints for the plant
+       Output: list of setpoints (temp,humidity,lightDur,lightInt, maxCO2, phRange)"""
+    def getSetPoints(day):
+        pass
 
 class strain_csv():
     """docstring for strain_csv.
