@@ -2,8 +2,8 @@
  * @file logg.py
  * @authors Steven Kalapos & Ben Bellerose
  * @date May 2018
- * @modified August 13 2018
- * @modifiedby BB
+ * @modified Feb 22 2019
+ * @modifiedby Sk
  * @brief logging systems for device
  */
  """
@@ -12,6 +12,68 @@ import csv
 import shutil
 import datetime
 from time import gmtime,strftime
+import pandas as pd
+
+class plant_csv():
+
+    def __init__(self):
+        super(create_CSV, self).__init__(**kwargs)
+
+    """Input: strain - name of strain of the plant
+              plantNmae - name of plant trying to be created
+       Function: creates csv log for a new plant
+       Output: True if sucessful; else false"""
+    def create_CSV(strain, plantName):
+        if plant_csv.doesExist(plantName) == True:
+            return False
+
+        plantDays = 20
+        newPlantFile = pd.DataFrame({"Day":pd.Series(range(plantDays)),
+        "Strain": strain,
+        "Name": plantName,
+        "Done": 'F'})
+
+        if os.name == 'posix':
+            newPlantFile.to_csv('files/PlantFiles/%s.csv'%plantName)
+        else:
+            newPlantFile.to_csv("files\PlantFiles\%s.csv"%plantName)
+
+        plant_csv.add_plant(plantName)
+        return True
+
+    """Input:plantName - name of plant trying to be added
+        Function: adds plant to the beginning of the plant list (displayed first in contnue)
+        Output: NULL"""
+    def add_plant(plantName):
+        if os.name == 'posix':
+            fp = open("files/GuiFiles/plants.txt", mode='r+')
+            fp.write(plantName+'\n')
+            fp.close()
+        else:
+            fp = open("files\GuiFiles\plants.txt", mode='r+')
+            fp.write(plantName+'\n')
+            fp.close()
+        return
+       
+    """Input:plantName - name of plant trying to be created
+       Function: checks if plat has already been created before
+       Output: True if it exist; flase if it doesnt"""
+    def doesExist(plantName):
+        if os.name == 'posix':
+            check = os.path.isfile('files/PlantFiles/%s.csv'%plantName)
+        else:
+            check = os.path.isfile('files\PlantFiles\%s.csv'%plantName)
+        return check
+
+class strain_csv():
+    """docstring for strain_csv.
+    holds all the functions to read strain documents"""
+    def __init__(self, arg):
+        super(strain_csv, self).__init__()
+        self.arg = arg
+
+    def getStrain():
+        pass
 
 class deviceLog():
 
@@ -22,8 +84,8 @@ class deviceLog():
 
     """Input: type - string containing error code relarted to error type
               description - string containing description of what caused error
-        Function: logs what vaused the error in desired location
-        Output: returns a boolean value to inform user of log state"""
+       Function: logs what vaused the error in desired location
+       Output: returns a boolean value to inform user of log state"""
     def errorLog(self,errorType,description):
         if errorType is not None:
             if description is not None:
@@ -45,8 +107,8 @@ class deviceLog():
               name = string containing name specific for the current plant
               strain = string containing current strain of the plant
               stats = list containing current machine statistics
-        Function: logs daily machine stats for further processing
-        Output: writes boolean value to show user success of the process"""
+       Function: logs daily machine stats for further processing
+       Output: writes boolean value to show user success of the process"""
     def dayLog(self,index,name,strain,stats):
         if index is not None:
             if name is not None:
